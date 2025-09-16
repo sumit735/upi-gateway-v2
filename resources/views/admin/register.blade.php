@@ -32,8 +32,6 @@
 	<!-- Main CSS -->
 	<link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}">
 
-	<script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
-
 </head>
 
 <body class="bg-white">
@@ -71,7 +69,7 @@
 					<div class="col-lg-7 col-md-12 col-sm-12">
 						<div class="row justify-content-center align-items-center vh-100 overflow-auto flex-wrap">
 							<div class="col-md-7 mx-auto vh-100">
-								<form action="{{ route('login.submit') }}" method="POST" class="vh-100" id="loginForm">
+								<form action="{{ route('register.submit') }}" method="POST" class="vh-100" id="registerForm" novalidate>
 									@csrf
 									<div class="vh-100 d-flex flex-column justify-content-between p-4 pb-0">
 										<div class=" mx-auto mb-5 text-center">
@@ -80,8 +78,20 @@
 										</div>
 										<div class="">
 											<div class="text-center mb-3">
-												<h2 class="mb-2">Sign In</h2>
-												<p class="mb-0">Please enter your details to sign in</p>
+												<h2 class="mb-2">Create Account</h2>
+												<p class="mb-0">Please enter your details to create account</p>
+											</div>
+											<div class="mb-3">
+												<label class="form-label">Name</label>
+												<div class="input-group">
+													<input type="text" name="name" value="{{ old('name') }}" class="form-control border-end-0" required>
+													<span class="input-group-text border-start-0">
+														<i class="ti ti-user"></i>
+													</span>
+												</div>
+												@error('name')
+													<div class="text-danger">{{ $message }}</div>
+												@enderror
 											</div>
 											<div class="mb-3">
 												<label class="form-label">Email Address</label>
@@ -96,29 +106,61 @@
 												@enderror
 											</div>
 											<div class="mb-3">
+												<label class="form-label">Phone</label>
+												<div class="input-group">
+													<input type="text" name="phone" value="{{ old('phone') }}" class="form-control border-end-0" required>
+													<span class="input-group-text border-start-0">
+														<i class="ti ti-phone"></i>
+													</span>
+												</div>
+												@error('phone')
+													<div class="text-danger">{{ $message }}</div>
+												@enderror
+											</div>
+											<div class="mb-3">
+												<label class="form-label">Aadhaar</label>
+												<div class="input-group">
+													<input type="text" name="aadhaar" value="{{ old('aadhaar') }}" class="form-control border-end-0" required>
+													<span class="input-group-text border-start-0">
+														<i class="ti ti-id"></i>
+													</span>
+												</div>
+												@error('aadhaar')
+													<div class="text-danger">{{ $message }}</div>
+												@enderror
+											</div>
+											<div class="mb-3">
+												<label class="form-label">PAN Card</label>
+												<div class="input-group">
+													<input type="text" name="pancard" value="{{ old('pancard') }}" class="form-control border-end-0" required>
+													<span class="input-group-text border-start-0">
+														<i class="ti ti-credit-card"></i>
+													</span>
+												</div>
+												@error('pancard')
+													<div class="text-danger">{{ $message }}</div>
+												@enderror
+											</div>
+											<div class="mb-3">
 												<label class="form-label">Password</label>
 												<div class="pass-group">
 													<input type="password" name="password" class="pass-input form-control" required>
 													<span class="ti toggle-password ti-eye-off"></span>
 												</div>
 											</div>
-											<div class="d-flex align-items-center justify-content-between mb-3">
-												<div class="d-flex align-items-center">
-													<div class="form-check form-check-md mb-0">
-														<input class="form-check-input" id="remember_me" name="remember" type="checkbox">
-														<label for="remember_me" class="form-check-label mt-0">Remember Me</label>
-													</div>
-												</div>
-												<div class="text-end">
-													<a href="forgot-password.html" class="link-danger">Forgot Password?</a>
+											<div class="mb-3">
+												<label class="form-label">Confirm Password</label>
+												<div class="pass-group">
+													<input type="password" name="password_confirmation" class="pass-input form-control" required>
+													<span class="ti toggle-password ti-eye-off"></span>
 												</div>
 											</div>
 											<div class="mb-3">
-												<button type="submit" class="btn btn-primary w-100">Sign In</button>
+												<button type="submit" class="btn btn-primary w-100">Create Account</button>
 											</div>
 											<div class="text-center">
-												<h6 class="fw-normal text-dark mb-0">Don’t have an account?
-													<a href="{{ route('register') }}" class="hover-a"> Create Account</a>
+												<h6 class="fw-normal text-dark mb-0">Already have an account?
+													<a href="{{ route('login') }}" class="hover-a"> Sign In</a>
 												</h6>
 											</div>
 											<div class="login-or">
@@ -174,20 +216,63 @@
 	<!-- Custom JS -->
 	<script src="{{ asset('admin/assets/js/script.js') }}"></script>
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+
 <script>
-$(document).ready(function(){
-	$("#loginForm").validate({
-		rules:{
-			email:{ required:true, email:true },
-			password:{ required:true, minlength:6 }
-		},
-		messages:{
-			email:{ required:"Email is required", email:"Enter a valid email" },
-			password:{ required:"Password is required", minlength:"At least 6 characters" }
-		}
+	$(function () {
+		// Aadhaar rule
+		$.validator.addMethod("aadhaarValid", function (value) {
+			return /^[0-9]{12}$/.test(value);
+		}, "Enter a valid 12-digit Aadhaar number.");
+
+		// PAN rule
+		$.validator.addMethod("panValid", function (value) {
+			return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(value);
+		}, "Enter a valid PAN (ABCDE1234F).");
+
+		// Indian phone
+		$.validator.addMethod("phoneIN", function (value) {
+			return /^[6-9]\d{9}$/.test(value);
+		}, "Enter a valid 10-digit mobile number.");
+
+		$("#registerForm").validate({
+			rules: {
+				name: { required: true, maxlength: 255 },
+				email: { required: true, email: true },
+				phone: { required: true, phoneIN: true },
+				aadhaar: { required: true, aadhaarValid: true },
+				pancard: { required: true, panValid: true },
+				password: { required: true, minlength: 8 },
+				password_confirmation: { required: true, equalTo: "input[name='password']" }
+			},
+			messages: {
+				password_confirmation: { equalTo: "Passwords do not match." }
+			},
+			errorElement: 'div',
+			errorClass: 'text-danger',
+			errorPlacement: function (error, element) {
+				if (element.hasClass('pass-input')) {
+					error.insertAfter(element.closest('.pass-group'));
+				} else {
+					error.insertAfter(element.closest('.input-group'));
+				}
+			},
+			highlight: function (element) {
+				$(element).addClass('is-invalid');
+			},
+			unhighlight: function (element) {
+				$(element).removeClass('is-invalid');
+			},
+			onkeyup: function (element) {
+				$(element).valid();
+			},
+			onfocusout: function (element) {
+				$(element).valid();
+			}
+		});
 	});
-});
-</script>
+	</script>
 
 </body>
+
 </html>
