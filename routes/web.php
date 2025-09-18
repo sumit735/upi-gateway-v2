@@ -7,7 +7,9 @@ Route::get('/dashboard', function () {
     return view('admin.dashboard');
 })->name('dashboard')->middleware('admin');
 
-
+Route::get('/', function () {
+    return view('frontend.index');
+})->name('home');
 
 Route::get('/login', [AuthenticateController::class, 'loginPage'])->name('login');
 Route::get('/register', [AuthenticateController::class, 'index'])->name('register');

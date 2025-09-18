@@ -21,7 +21,7 @@ class AdminAuthenticate
         }
 
         if (Auth::user()->is_admin != 1) {
-            return redirect()->route('welcome');
+            return redirect()->route('home');
         }
 
         return $next($request);

@@ -101,6 +101,9 @@
 													<input type="password" name="password" class="pass-input form-control" required>
 													<span class="ti toggle-password ti-eye-off"></span>
 												</div>
+												@error('password')
+													<div class="text-danger">{{ $message }}</div>
+												@enderror
 											</div>
 											<div class="d-flex align-items-center justify-content-between mb-3">
 												<div class="d-flex align-items-center">
