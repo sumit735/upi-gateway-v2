@@ -51,7 +51,7 @@
 							<li><a href="index.html">Home<span data-uk-navbar-parent-icon></span></a>
 								<div class="uk-navbar-dropdown">
 									<ul class="uk-nav uk-navbar-dropdown-nav">
-										<li><a href="homepage2.html">Homepage 1st</a></li>
+										<li><a href="homepage2.html">Homepage test</a></li>
 										<li><a href="homepage3.html">Homepage 2nd</a></li>
 										<li><a href="homepage4.html">Homepage 3d</a></li>
 									</ul>
