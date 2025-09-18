@@ -27,7 +27,7 @@
 	<link rel="shortcut icon" href="{{ asset('frontend/img/favicon.ico') }}" type="image/x-icon">
 	<!-- touch icon -->
 	<link rel="apple-touch-icon-precomposed" href="{{ asset('frontend/img/apple-touch-icon.png') }}">
-	<title>Homepage - Liquid HTML5 Template</title>
+	<title>Homepage - API Cloud</title>
 </head>
 
 <body>
@@ -51,9 +51,9 @@
 							<li><a href="index.html">Home<span data-uk-navbar-parent-icon></span></a>
 								<div class="uk-navbar-dropdown">
 									<ul class="uk-nav uk-navbar-dropdown-nav">
-										<li><a href="homepage2.html">Homepage 2</a></li>
-										<li><a href="homepage3.html">Homepage 3</a></li>
-										<li><a href="homepage4.html">Homepage 4</a></li>
+										<li><a href="homepage2.html">Homepage 1st</a></li>
+										<li><a href="homepage3.html">Homepage 2nd</a></li>
+										<li><a href="homepage4.html">Homepage 3d</a></li>
 									</ul>
 								</div>
 							</li>
