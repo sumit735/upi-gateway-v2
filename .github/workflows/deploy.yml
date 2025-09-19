@@ -20,10 +20,10 @@ jobs:
           ssh-keyscan -H tryapi.site >> ~/.ssh/known_hosts
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no tryapi@tryapi.site "echo ✅ SSH connected"
 
-
       - name: Push to cPanel
         run: |
-          git remote add cpanel ssh://tryapi@tryapi.site/home1/tryapi/repositories/upi-gateway-v2
+          git remote remove cpanel || true
+          git remote add cpanel ssh://tryapi@tryapi.site/home1/tryapi/repositories/upi-gateway-v2.git
           git push cpanel main --force
         env:
           GIT_SSH_COMMAND: "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no"
