@@ -31,11 +31,11 @@ jobs:
           GIT_SSH_COMMAND: "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no"
       - name: Set deployment status
         if: ${{ success() }}
-        run: echo "STATUS=success" >> $GITHUB_ENV
+        run: echo "STATUS=✅ [SUCCESS]" >> $GITHUB_ENV
 
       - name: Set deployment status
         if: ${{ failure() }}
-        run: echo "STATUS=failure" >> $GITHUB_ENV
+        run: echo "STATUS=❌ [FAILURE]" >> $GITHUB_ENV
 
       - name: Send WhatsApp Deployment Update
         run: |
@@ -60,7 +60,7 @@ jobs:
                       {\"type\": \"text\", \"text\": \"${{ github.actor }}: ${{ github.event.head_commit.message }}\"},
                       {\"type\": \"text\", \"text\": \"${{ github.run_number }}\"},
                       {\"type\": \"text\", \"text\": \"${{ env.STATUS }}\"},
-                      {\"type\": \"text\", \"text\": \"$(date '+%Y-%m-%d %H:%M:%S')\"}
+                      {\"type\": \"text\", \"text\": \"$(date -u -d '+5 hours 30 minutes' '+%Y-%m-%d %H:%M:%S IST')\"}
                     ]
                   }]
                 }
