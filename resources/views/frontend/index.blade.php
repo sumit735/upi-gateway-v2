@@ -483,7 +483,7 @@
 									<i class="fas fa-history"></i>
 								</div>
 								<div>
-									<h6 class="uk-margin-remove">25 years of Excellence</h6>
+									<h6 class="uk-margin-remove">20 years of Excellence</h6>
 								</div>
 							</div>
 							<div class="uk-flex uk-flex-middle uk-flex-center@m">
