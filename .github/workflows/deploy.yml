@@ -9,7 +9,6 @@ on:
       run_migrations:
         description: "Run database migrations after deploy?"
         required: true
-        default: "no"
         type: choice
         options:
           - "yes"
@@ -17,7 +16,6 @@ on:
       optimize:
         description: "Optimize Laravel config after deploy?"
         required: true
-        default: "no"
         type: choice
         options:
           - "yes"
