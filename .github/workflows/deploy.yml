@@ -37,17 +37,6 @@ jobs:
         if: ${{ failure() }}
         run: echo "STATUS=failure" >> $GITHUB_ENV
 
-      - name: Generate Long-Lived WhatsApp Token
-        id: generate_token
-        run: |
-          LONG_LIVED_TOKEN=$(curl -s -G "https://graph.facebook.com/v22.0/oauth/access_token" \
-            --data-urlencode "grant_type=fb_exchange_token" \
-            --data-urlencode "client_id=${{ secrets.WHATSAPP_APP_ID }}" \
-            --data-urlencode "client_secret=${{ secrets.WHATSAPP_APP_SECRET }}" \
-            --data-urlencode "fb_exchange_token=${{ secrets.WHATSAPP_SHORT_LIVED_TOKEN }}" \
-            | jq -r '.access_token')
-          echo "LONG_LIVED_TOKEN=$LONG_LIVED_TOKEN" >> $GITHUB_ENV
-
       - name: Send WhatsApp Deployment Update
         run: |
           for number in 919853174100 919706415590 919668772575
