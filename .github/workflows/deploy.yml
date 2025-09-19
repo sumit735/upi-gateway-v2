@@ -23,7 +23,7 @@ jobs:
       - name: Push to cPanel
         run: |
           git remote remove cpanel || true
-          git remote add cpanel ssh://tryapi@tryapi.site/home1/tryapi/repositories/upi-gateway-v2.git
+          git remote add cpanel ssh://tryapi@tryapi.site/home1/tryapi/repositories/upi-gateway-v2
           git push cpanel main --force
         env:
           GIT_SSH_COMMAND: "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no"
