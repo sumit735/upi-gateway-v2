@@ -27,7 +27,7 @@
 	<link rel="shortcut icon" href="{{ asset('frontend/img/favicon.ico') }}" type="image/x-icon">
 	<!-- touch icon -->
 	<link rel="apple-touch-icon-precomposed" href="{{ asset('frontend/img/apple-touch-icon.png') }}">
-	<title>Homepage - API Cloud</title>
+	<title>Homepage - API Cloud2</title>
 </head>
 
 <body>
