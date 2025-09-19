@@ -51,7 +51,7 @@
 							<li><a href="index.html">Home<span data-uk-navbar-parent-icon></span></a>
 								<div class="uk-navbar-dropdown">
 									<ul class="uk-nav uk-navbar-dropdown-nav">
-										<li><a href="homepage2.html">Homepage test</a></li>
+										<li><a href="homepage2.html">Homepage test{{asset('frontend/')}}</a></li>
 										<li><a href="homepage3.html">Homepage 2nd</a></li>
 										<li><a href="homepage4.html">Homepage 3d</a></li>
 									</ul>
@@ -190,7 +190,7 @@
 					<div>
 						<div class="uk-card uk-card-secondary uk-border-rounded uk-cover-container">
 							<div class="uk-card-media-top">
-								<img src="img/in-lazy.gif" data-src="img/in-liquid-object-1.svg" alt="sample-image" width="350" height="296" data-uk-img>
+								<img src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-object-1.svg')}}" alt="sample-image" width="350" height="296" data-uk-img>
 							</div>
 							<div class="uk-card-body">
 								<h3>Various assets</h3>
@@ -201,7 +201,7 @@
 					<div>
 						<div class="uk-card uk-card-secondary uk-border-rounded uk-cover-container">
 							<div class="uk-card-media-top">
-								<img src="img/in-lazy.gif" data-src="img/in-liquid-object-2.svg" alt="sample-image" width="350" height="296" data-uk-img>
+								<img src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-object-2.svg')}}" alt="sample-image" width="350" height="296" data-uk-img>
 							</div>
 							<div class="uk-card-body">
 								<h3>Market analysis</h3>
@@ -212,7 +212,7 @@
 					<div>
 						<div class="uk-card uk-card-secondary uk-border-rounded uk-cover-container">
 							<div class="uk-card-media-top">
-								<img src="img/in-lazy.gif" data-src="img/in-liquid-object-3.svg" alt="sample-image" width="350" height="296" data-uk-img>
+								<img src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-object-3.svg')}}" alt="sample-image" width="350" height="296" data-uk-img>
 							</div>
 							<div class="uk-card-body">
 								<h3>Enhanced tools</h3>
@@ -230,7 +230,7 @@
 				<div class="uk-grid-large uk-child-width-1-2@m" data-uk-grid>
 					<div class="uk-flex uk-flex-left">
 						<div class="uk-margin-right">
-							<img src="img/in-lazy.gif" data-src="img/in-liquid-icon-1.svg" alt="sample-icon" width="128" height="128" data-uk-img>
+							<img src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-icon-1.svg')}}" alt="sample-icon" width="128" height="128" data-uk-img>
 						</div>
 						<div>
 							<h3>Expert service</h3>
@@ -240,7 +240,7 @@
 					</div>
 					<div class="uk-flex uk-flex-left">
 						<div class="uk-margin-right">
-							<img src="img/in-lazy.gif" data-src="img/in-liquid-icon-2.svg" alt="sample-icon" width="128" height="128" data-uk-img>
+							<img src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-icon-2.svg')}}" alt="sample-icon" width="128" height="128" data-uk-img>
 						</div>
 						<div>
 							<h3>Trusted and credible</h3>
@@ -250,7 +250,7 @@
 					</div>
 					<div class="uk-flex uk-flex-left">
 						<div class="uk-margin-right">
-							<img src="img/in-lazy.gif" data-src="img/in-liquid-icon-3.svg" alt="sample-icon" width="128" height="128" data-uk-img>
+							<img src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-icon-3.svg')}}" alt="sample-icon" width="128" height="128" data-uk-img>
 						</div>
 						<div>
 							<h3>Financial strength</h3>
@@ -260,7 +260,7 @@
 					</div>
 					<div class="uk-flex uk-flex-left">
 						<div class="uk-margin-right">
-							<img src="img/in-lazy.gif" data-src="img/in-liquid-icon-4.svg" alt="sample-icon" width="128" height="128" data-uk-img>
+							<img src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-icon-4.svg')}}" alt="sample-icon" width="128" height="128" data-uk-img>
 						</div>
 						<div>
 							<h3>Integrated support</h3>
@@ -271,7 +271,7 @@
 				</div>
 				<div class="uk-grid uk-flex uk-flex-center">
 					<div class="uk-width-5-6@m uk-margin-medium-top">
-						<div class="uk-card uk-card-default uk-card-body uk-background-contain uk-background-top-left" style="background-image: url(img/in-liquid-card-bg.png);" data-uk-img>
+						<div class="uk-card uk-card-default uk-card-body uk-background-contain uk-background-top-left" style="background-image: url({{asset('frontend/img/in-liquid-card-bg.png')}});" data-uk-img>
 							<div class="uk-grid uk-child-width-1-3@s uk-child-width-1-3@m uk-text-center" data-uk-grid>
 								<div class="uk-width-1-1">
 									<h4><span>Simple steps to start trade.</span></h4>
@@ -302,7 +302,7 @@
 					<div class="uk-width-5-6@m uk-inline">
 						<div class="uk-grid-large uk-flex uk-flex-middle uk-flex-right" data-uk-grid>
 							<div class="uk-position-top-left">
-								<img src="img/in-lazy.gif" data-src="img/in-liquid-3-mockup.png" alt="sample-images" width="650" height="469" data-uk-img>
+								<img src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-3-mockup.png')}}" alt="sample-images" width="650" height="469" data-uk-img>
 							</div>
 							<div class="uk-width-1-2@m">
 								<span class="uk-label in-liquid-label uk-margin-bottom">Available on multiple platform</span>
@@ -409,22 +409,22 @@
 					<div class="uk-width-5-6@m uk-inline">
 						<div class="uk-grid-medium uk-child-width-1-3@s uk-child-width-1-4@m uk-text-center uk-margin-medium-top" data-uk-grid>
 							<div>
-								<img src="img/in-lazy.gif" data-src="img/in-liquid-award.svg" alt="award" width="71" height="58" data-uk-img>
+								<img src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-award.svg')}}" alt="award" width="71" height="58" data-uk-img>
 								<h6 class="uk-margin-small-top uk-margin-remove-bottom">Best CFD Broker</h6>
 								<p class="uk-text-small uk-margin-remove-top">TradeON Summit 2020</p>
 							</div>
 							<div>
-								<img src="img/in-lazy.gif" data-src="img/in-liquid-award.svg" alt="award" width="71" height="58" data-uk-img>
+								<img src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-award.svg')}}" alt="award" width="71" height="58" data-uk-img>
 								<h6 class="uk-margin-small-top uk-margin-remove-bottom">Best Execution Broker</h6>
 								<p class="uk-text-small uk-margin-remove-top">Forex EXPO Dubai 2020</p>
 							</div>
 							<div>
-								<img src="img/in-lazy.gif" data-src="img/in-liquid-award.svg" alt="award" width="71" height="58" data-uk-img>
+								<img src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-award.svg')}}" alt="award" width="71" height="58" data-uk-img>
 								<h6 class="uk-margin-small-top uk-margin-remove-bottom">Best Trading Platform</h6>
 								<p class="uk-text-small uk-margin-remove-top">London Summit 2020</p>
 							</div>
 							<div class="uk-visible@m">
-								<img src="img/in-lazy.gif" data-src="img/in-liquid-award.svg" alt="award" width="71" height="58" data-uk-img>
+								<img src="{{asset('frontend/')}}img/in-lazy.gif" data-src="{{asset('frontend/')}}img/in-liquid-award.svg" alt="award" width="71" height="58" data-uk-img>
 								<h6 class="uk-margin-small-top uk-margin-remove-bottom">Best Broker Asia</h6>
 								<p class="uk-text-small uk-margin-remove-top">iFX EXPO 2020</p>
 							</div>

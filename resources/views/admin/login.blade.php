@@ -71,6 +71,23 @@
 					<div class="col-lg-7 col-md-12 col-sm-12">
 						<div class="row justify-content-center align-items-center vh-100 overflow-auto flex-wrap">
 							<div class="col-md-7 mx-auto vh-100">
+									@if ($errors->any())
+										<div class="position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+											<div class="toast align-items-center text-bg-danger border-0 fade show mb-4"
+												role="alert" aria-live="assertive" aria-atomic="true">
+												<div class="d-flex">
+													<div class="toast-body">
+														@foreach ($errors->all() as $error)
+															{{ $error }} <br>
+														@endforeach
+													</div>
+													<button type="button" class="btn-close btn-close-white me-2 m-auto"
+														data-bs-dismiss="toast" aria-label="Close"></button>
+												</div>
+											</div>
+										</div>
+									@endif
+
 								<form action="{{ route('login.submit') }}" method="POST" class="vh-100" id="loginForm">
 									@csrf
 									<div class="vh-100 d-flex flex-column justify-content-between p-4 pb-0">
