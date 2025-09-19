@@ -296,7 +296,7 @@
 		</div>
 		<!-- section content end -->
 		<!-- section content begin -->
-		<div class="uk-section uk-section-muted uk-padding-large@m in-liquid-3 uk-background-contain uk-background-center-center" style="background-image: url(img/in-liquid-3-bg.png);" data-uk-img>
+		<div class="uk-section uk-section-muted uk-padding-large@m in-liquid-3 uk-background-contain uk-background-center-center" style="background-image: url({{asset('frontend/img/in-liquid-3-bg.png')}});" data-uk-img>
 			<div class="uk-container">
 				<div class="uk-grid uk-flex uk-flex-center">
 					<div class="uk-width-5-6@m uk-inline">
@@ -424,7 +424,7 @@
 								<p class="uk-text-small uk-margin-remove-top">London Summit 2020</p>
 							</div>
 							<div class="uk-visible@m">
-								<img src="{{asset('frontend/')}}img/in-lazy.gif" data-src="{{asset('frontend/')}}img/in-liquid-award.svg" alt="award" width="71" height="58" data-uk-img>
+								<img src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-award.svg')}}" alt="award" width="71" height="58" data-uk-img>
 								<h6 class="uk-margin-small-top uk-margin-remove-bottom">Best Broker Asia</h6>
 								<p class="uk-text-small uk-margin-remove-top">iFX EXPO 2020</p>
 							</div>
@@ -444,22 +444,22 @@
 						</div>
 						<div class="uk-grid-collapse uk-child-width-1-2@s uk-child-width-1-6@m uk-text-center uk-margin-medium in-client-logo-6" data-uk-grid>
 							<div class="uk-tile">
-								<img class="uk-margin-remove" src="img/in-lazy.gif" data-src="img/in-liquid-payment-1.svg" alt="payment-image" width="167" height="55" data-uk-img>
+								<img class="uk-margin-remove" src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-payment-1.svg')}}" alt="payment-image" width="167" height="55" data-uk-img>
 							</div>
 							<div class="uk-tile">
-								<img class="uk-margin-remove" src="img/in-lazy.gif" data-src="img/in-liquid-payment-2.svg" alt="payment-image" width="167" height="55" data-uk-img>
+								<img class="uk-margin-remove" src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-payment-2.svg')}}" alt="payment-image" width="167" height="55" data-uk-img>
 							</div>
 							<div class="uk-tile">
-								<img class="uk-margin-remove" src="img/in-lazy.gif" data-src="img/in-liquid-payment-3.svg" alt="payment-image" width="167" height="55" data-uk-img>
+								<img class="uk-margin-remove" src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-payment-3.svg')}}" alt="payment-image" width="167" height="55" data-uk-img>
 							</div>
 							<div class="uk-tile">
-								<img class="uk-margin-remove" src="img/in-lazy.gif" data-src="img/in-liquid-payment-4.svg" alt="payment-image" width="167" height="55" data-uk-img>
+								<img class="uk-margin-remove" src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-payment-4.svg')}}" alt="payment-image" width="167" height="55" data-uk-img>
 							</div>
 							<div class="uk-tile">
-								<img class="uk-margin-remove" src="img/in-lazy.gif" data-src="img/in-liquid-payment-5.svg" alt="payment-image" width="167" height="55" data-uk-img>
+								<img class="uk-margin-remove" src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-payment-5.svg')}}" alt="payment-image" width="167" height="55" data-uk-img>
 							</div>
 							<div class="uk-tile">
-								<img class="uk-margin-remove" src="img/in-lazy.gif" data-src="img/in-liquid-payment-6.svg" alt="payment-image" width="167" height="55" data-uk-img>
+								<img class="uk-margin-remove" src="{{asset('frontend/img/in-lazy.gif')}}" data-src="{{asset('frontend/img/in-liquid-payment-6.svg')}}" alt="payment-image" width="167" height="55" data-uk-img>
 							</div>
 						</div>
 						<div class="uk-text-center uk-text-small in-border-text">
