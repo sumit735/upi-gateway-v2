@@ -43,7 +43,7 @@ jobs:
           do
             curl -i -X POST \
               https://graph.facebook.com/v22.0/${{ secrets.WHATSAPP_PHONE_NUMBER_ID }}/messages \
-              -H "Authorization: Bearer ${{ env.LONG_LIVED_TOKEN }}" \
+              -H "Authorization: Bearer ${{ secrets.WHATSAPP_TOKEN }}" \
               -H "Content-Type: application/json" \
               -d "{
                 \"messaging_product\": \"whatsapp\",
