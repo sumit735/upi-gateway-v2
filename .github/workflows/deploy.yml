@@ -36,13 +36,25 @@ jobs:
       - name: Set deployment status
         if: ${{ failure() }}
         run: echo "STATUS=failure" >> $GITHUB_ENV
+
+      - name: Generate Long-Lived WhatsApp Token
+        id: generate_token
+        run: |
+          LONG_LIVED_TOKEN=$(curl -s -G "https://graph.facebook.com/v22.0/oauth/access_token" \
+            --data-urlencode "grant_type=fb_exchange_token" \
+            --data-urlencode "client_id=${{ secrets.WHATSAPP_APP_ID }}" \
+            --data-urlencode "client_secret=${{ secrets.WHATSAPP_APP_SECRET }}" \
+            --data-urlencode "fb_exchange_token=${{ secrets.WHATSAPP_SHORT_LIVED_TOKEN }}" \
+            | jq -r '.access_token')
+          echo "LONG_LIVED_TOKEN=$LONG_LIVED_TOKEN" >> $GITHUB_ENV
+
       - name: Send WhatsApp Deployment Update
         run: |
           for number in 919853174100 919706415590 919668772575
           do
             curl -i -X POST \
               https://graph.facebook.com/v22.0/${{ secrets.WHATSAPP_PHONE_NUMBER_ID }}/messages \
-              -H "Authorization: Bearer ${{ secrets.WHATSAPP_TOKEN }}" \
+              -H "Authorization: Bearer ${{ env.LONG_LIVED_TOKEN }}" \
               -H "Content-Type: application/json" \
               -d "{
                 \"messaging_product\": \"whatsapp\",
@@ -58,7 +70,7 @@ jobs:
                       {\"type\": \"text\", \"text\": \"${{ github.ref_name }}\"},
                       {\"type\": \"text\", \"text\": \"${{ github.actor }}: ${{ github.event.head_commit.message }}\"},
                       {\"type\": \"text\", \"text\": \"${{ github.run_number }}\"},
-                      {\"type\": \"text\", \"text\": \"${{ job.status }}\"},
+                      {\"type\": \"text\", \"text\": \"${{ env.STATUS }}\"},
                       {\"type\": \"text\", \"text\": \"$(date '+%Y-%m-%d %H:%M:%S')\"}
                     ]
                   }]
