@@ -107,7 +107,7 @@
 	<main>
 		<!-- slideshow content begin -->
 		<div class="uk-section uk-padding-remove-vertical">
-			<div class="uk-light in-slideshow uk-background-cover uk-background-top-center" style="background-image: url(img/in-liquid-slide-bg.png);" data-uk-slideshow>
+			<div class="uk-light in-slideshow uk-background-cover uk-background-top-center" style="background-image: url({{ asset('frontend/img/in-liquid-slide-bg.png') }});" data-uk-slideshow>
 				<ul class="uk-slideshow-items">
 					<li>
 						<div class="uk-container">
@@ -120,7 +120,7 @@
 									</div>
 								</div>
 								<div class="uk-width-1-2@s">
-									<img class="in-slide-img" src="img/in-lazy.gif" data-src="img/in-liquid-slide-1.svg" alt="image-slide" width="500" height="400"
+									<img class="in-slide-img" src="img/in-lazy.gif" data-src="{{ asset('frontend/img/in-liquid-slide-1.svg') }}" alt="image-slide" width="500" height="400"
 										data-uk-img="">
 								</div>
 							</div>
@@ -137,7 +137,7 @@
 									</div>
 								</div>
 								<div class="uk-width-1-2@s">
-									<img class="in-slide-img" src="img/in-lazy.gif" data-src="img/in-liquid-slide-2.svg" alt="image-slide" width="500" height="400"
+									<img class="in-slide-img" src="img/in-lazy.gif" data-src="{{ asset('frontend/img/in-liquid-slide-2.svg') }}" alt="image-slide" width="500" height="400"
 										data-uk-img="">
 								</div>
 							</div>
