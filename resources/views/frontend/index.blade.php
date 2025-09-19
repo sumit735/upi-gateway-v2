@@ -27,7 +27,7 @@
 	<link rel="shortcut icon" href="{{ asset('frontend/img/favicon.ico') }}" type="image/x-icon">
 	<!-- touch icon -->
 	<link rel="apple-touch-icon-precomposed" href="{{ asset('frontend/img/apple-touch-icon.png') }}">
-	<title>Homepage - API Cloud2</title>
+	<title>Homepage - API Cloud</title>
 </head>
 
 <body>
@@ -150,23 +150,23 @@
 					<div class="uk-container">
 						<ul class="uk-grid uk-child-width-1-5@m uk-text-center" data-uk-grid>
 							<li>
-								<img src="img/in-lazy.gif" data-src="img/in-liquid-ticker-1.svg" alt="ticker-image" width="85" height="22" data-uk-img>
+								<img src="img/in-lazy.gif" data-src="{{ asset('frontend/img/in-liquid-ticker-1.svg') }}" alt="ticker-image" width="85" height="22" data-uk-img>
 								<span class="uk-label uk-label-success uk-margin-left"><i class="fas fa-caret-up"></i>1,740.05</span>
 							</li>
 							<li>
-								<img src="img/in-lazy.gif" data-src="img/in-liquid-ticker-2.svg" alt="ticker-image" width="85" height="22" data-uk-img>
+								<img src="img/in-lazy.gif" data-src="{{ asset('frontend/img/in-liquid-ticker-2.svg') }}" alt="ticker-image" width="85" height="22" data-uk-img>
 								<span class="uk-label uk-label-success uk-margin-left"><i class="fas fa-caret-up"></i>217.90</span>
 							</li>
 							<li>
-								<img src="img/in-lazy.gif" data-src="img/in-liquid-ticker-3.svg" alt="ticker-image" width="85" height="22" data-uk-img>
+								<img src="img/in-lazy.gif" data-src="{{ asset('frontend/img/in-liquid-ticker-3.svg') }}" alt="ticker-image" width="85" height="22" data-uk-img>
 								<span class="uk-label uk-label-danger uk-margin-left"><i class="fas fa-caret-down"></i>270.97</span>
 							</li>
 							<li>
-								<img src="img/in-lazy.gif" data-src="img/in-liquid-ticker-4.svg" alt="ticker-image" width="71" height="21" data-uk-img>
+								<img src="img/in-lazy.gif" data-src="{{ asset('frontend/img/in-liquid-ticker-4.svg') }}" alt="ticker-image" width="71" height="21" data-uk-img>
 								<span class="uk-label uk-label-success uk-margin-left"><i class="fas fa-caret-up"></i>3,218.51</span>
 							</li>
 							<li>
-								<img src="img/in-lazy.gif" data-src="img/in-liquid-ticker-5.svg" alt="ticker-image" width="94" height="12" data-uk-img>
+								<img src="img/in-lazy.gif" data-src="{{ asset('frontend/img/in-liquid-ticker-5.svg') }}" alt="ticker-image" width="94" height="12" data-uk-img>
 								<span class="uk-label uk-label-danger uk-margin-left"><i class="fas fa-caret-down"></i>735.11</span>
 							</li>
 						</ul>
