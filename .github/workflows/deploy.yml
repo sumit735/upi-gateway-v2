@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -29,3 +29,39 @@ jobs:
           git push cpanel main --force
         env:
           GIT_SSH_COMMAND: "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no"
+      - name: Set deployment status
+        if: ${{ success() }}
+        run: echo "STATUS=success" >> $GITHUB_ENV
+
+      - name: Set deployment status
+        if: ${{ failure() }}
+        run: echo "STATUS=failure" >> $GITHUB_ENV
+      - name: Send WhatsApp Deployment Update
+        run: |
+          for number in 919853174100 919706415590 919668772575
+          do
+            curl -i -X POST \
+              https://graph.facebook.com/v22.0/${{ secrets.WHATSAPP_PHONE_NUMBER_ID }}/messages \
+              -H "Authorization: Bearer ${{ secrets.WHATSAPP_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d "{
+                \"messaging_product\": \"whatsapp\",
+                \"to\": \"$number\",
+                \"type\": \"template\",
+                \"template\": {
+                  \"name\": \"deployment_update\",
+                  \"language\": { \"code\": \"en_US\" },
+                  \"components\": [{
+                    \"type\": \"body\",
+                    \"parameters\": [
+                      {\"type\": \"text\", \"text\": \"${{ github.repository }}\"},
+                      {\"type\": \"text\", \"text\": \"${{ github.ref_name }}\"},
+                      {\"type\": \"text\", \"text\": \"${{ github.actor }}: ${{ github.event.head_commit.message }}\"},
+                      {\"type\": \"text\", \"text\": \"${{ github.run_number }}\"},
+                      {\"type\": \"text\", \"text\": \"${{ job.status }}\"},
+                      {\"type\": \"text\", \"text\": \"$(date '+%Y-%m-%d %H:%M:%S')\"}
+                    ]
+                  }]
+                }
+              }"
+          done
