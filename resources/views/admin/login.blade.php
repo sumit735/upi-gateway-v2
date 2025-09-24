@@ -1,213 +1,136 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-	<meta name="description" content="Smarthr - Bootstrap Admin Template">
-	<meta name="keywords" content="admin, estimates, bootstrap, business, html5, responsive, Projects">
-	<meta name="author" content="Dreams technologies - Bootstrap Admin Template">
-	<meta name="robots" content="noindex, nofollow">
-	<title>Smarthr Admin Template</title>
+    <!-- meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Premium HTML5 Template by Indonez">
+    <meta name="keywords" content="blockit, uikit3, indonez, handlebars, scss, javascript">
+    <meta name="author" content="Indonez">
+    <meta name="theme-color" content="#FC5B3F">
 
-	<!-- Favicon -->
-	<link rel="shortcut icon" type="image/x-icon" href="{{ asset('admin/assets/img/favicon.png') }}">
+    <!-- preload assets -->
+    <link rel="preload" href="{{ asset('frontend/fonts/fa-brands-400.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/fa-solid-900.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-regular.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-500.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-700.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('frontend/css/style.css') }}" as="style">
+    <link rel="preload" href="{{ asset('frontend/js/vendors/uikit.min.js') }}" as="script">
+    <link rel="preload" href="{{ asset('frontend/js/utilities.min.js') }}" as="script">
+    <link rel="preload" href="{{ asset('frontend/js/config-theme.js') }}" as="script">
 
-	<!-- Apple Touch Icon -->
-	<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('admin/assets/img/apple-touch-icon.png') }}">
-
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="{{ asset('admin/assets/css/bootstrap.min.css') }}">
-
-	<!-- Feather CSS -->
-	<link rel="stylesheet" href="{{ asset('admin/assets/plugins/icons/feather/feather.css') }}">
-
-	<!-- Tabler Icon CSS -->
-    <link rel="stylesheet" href="{{ asset('admin/assets/plugins/tabler-icons/tabler-icons.min.css') }}">
-
-	<!-- Fontawesome CSS -->
-	<link rel="stylesheet" href="{{ asset('admin/assets/plugins/fontawesome/css/fontawesome.min.css') }}">
-	<link rel="stylesheet" href="{{ asset('admin/assets/plugins/fontawesome/css/all.min.css') }}">
-
-	<!-- Main CSS -->
-	<link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}">
-
-	<script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
-
+    <!-- stylesheet -->
+    <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
+    <!-- uikit -->
+    <script src="{{ asset('frontend/js/vendors/uikit.min.js') }}"></script>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{{ asset('frontend/img/favicon.ico') }}" type="image/x-icon">
+    <!-- touch icon -->
+    <link rel="apple-touch-icon-precomposed" href="{{ asset('frontend/img/apple-touch-icon.png') }}">
+    <title>Login - Liquid HTML5 Template</title>
 </head>
 
-<body class="bg-white">
+<body>
+    <!-- page loader begin -->
+    <div class="page-loader">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <!-- page loader end -->
 
-	<div id="global-loader" style="display: none;">
-		<div class="page-loader"></div>
-	</div>
+    <main>
+        <!-- section content begin -->
+        <div class="uk-section uk-section-secondary uk-light uk-padding-remove-vertical">
+            <div class="uk-container uk-container-expand">
+                <div class="uk-grid" data-uk-height-viewport="expand: true">
+                    <!-- left image -->
+                    <div class="uk-width-3-5@m uk-background-cover uk-background-center-right uk-visible@m uk-box-shadow-xlarge" 
+                         style="background-image: url({{ asset('frontend/img/signin.jpg') }});">
+                    </div>
 
-	<!-- Main Wrapper -->
-	<div class="main-wrapper">
+                    <!-- login form -->
+                    <div class="uk-width-expand@m uk-flex uk-flex-middle">
+                        <div class="uk-grid uk-flex-center">
+                            <div class="uk-width-3-5@m">
+                                <div class="uk-text-center in-padding-horizontal@s">
+                                    <a class="uk-logo" href="{{ url('/') }}">
+                                        <img src="{{ asset('frontend/img/in-lazy.gif') }}" 
+                                             data-src="{{ asset('frontend/img/user/header-logo-6ohuZh.svg') }}" 
+                                             alt="logo" width="160" height="34" data-uk-img>
+                                    </a>
+                                    <p class="uk-text-lead uk-margin-small-top uk-margin-medium-bottom">
+                                        Log into your account
+                                    </p>
 
-		<div class="container-fuild">
-			<div class="w-100 overflow-hidden position-relative flex-wrap d-block vh-100">
-				<div class="row">
-					<div class="col-lg-5">
-						<div class="login-background position-relative d-lg-flex align-items-center justify-content-center d-none flex-wrap vh-100">
-							<div class="bg-overlay-img">
-								<img src="{{ asset('admin/assets/img/bg/bg-01.png') }}" class="bg-1" alt="Img">
-								<img src="{{ asset('admin/assets/img/bg/bg-02.png') }}" class="bg-2" alt="Img">
-								<img src="{{ asset('admin/assets/img/bg/bg-03.png') }}" class="bg-3" alt="Img">
-							</div>
-							<div class="authentication-card w-100">
-								<div class="authen-overlay-item border w-100">
-									<h1 class="text-white display-1">Empowering people <br> through seamless HR <br> management.</h1>
-									<div class="my-4 mx-auto authen-overlay-img">
-										<img src="{{ asset('admin/assets/img/bg/authentication-bg-01.png') }}" alt="Img">
-									</div>
-									<div>
-										<p class="text-white fs-20 fw-semibold text-center">Efficiently manage your workforce, streamline <br> operations effortlessly.</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-7 col-md-12 col-sm-12">
-						<div class="row justify-content-center align-items-center vh-100 overflow-auto flex-wrap">
-							<div class="col-md-7 mx-auto vh-100">
-									@if ($errors->any())
-										<div class="position-fixed top-0 end-0 p-3" style="z-index: 1055;">
-											<div class="toast align-items-center text-bg-danger border-0 fade show mb-4"
-												role="alert" aria-live="assertive" aria-atomic="true">
-												<div class="d-flex">
-													<div class="toast-body">
-														@foreach ($errors->all() as $error)
-															{{ $error }} <br>
-														@endforeach
-													</div>
-													<button type="button" class="btn-close btn-close-white me-2 m-auto"
-														data-bs-dismiss="toast" aria-label="Close"></button>
-												</div>
-											</div>
-										</div>
-									@endif
+                                    <!-- login form begin -->
+                                    <form method="POST" action="{{ route('login') }}" class="uk-grid uk-form">
+                                        @csrf
+                                        <div class="uk-margin-small uk-width-1-1 uk-inline">
+                                            <span class="uk-form-icon uk-form-icon-flip fas fa-user fa-sm"></span>
+                                            <input class="uk-input uk-border-rounded" 
+                                                   id="email" 
+                                                   name="email" 
+                                                   value="{{ old('email') }}" 
+                                                   type="email" 
+                                                   placeholder="Email" 
+                                                   required autofocus>
+                                        </div>
+                                        <div class="uk-margin-small uk-width-1-1 uk-inline">
+                                            <span class="uk-form-icon uk-form-icon-flip fas fa-lock fa-sm"></span>
+                                            <input class="uk-input uk-border-rounded" 
+                                                   id="password" 
+                                                   name="password" 
+                                                   type="password" 
+                                                   placeholder="Password" 
+                                                   required>
+                                        </div>
+                                        <div class="uk-margin-small uk-width-auto uk-text-small">
+                                            <label>
+                                                <input class="uk-checkbox" type="checkbox" name="remember"> Remember me
+                                            </label>
+                                        </div>
+                                        <div class="uk-margin-small uk-width-expand uk-text-small">
+                                            <label class="uk-align-right">
+                                                <a class="uk-link-reset" href="#">
+                                                    Forgot password?
+                                                </a>
+                                            </label>
+                                        </div>
+                                        <div class="uk-margin-small uk-width-1-1">
+                                            <button class="uk-button uk-width-1-1 uk-button-primary uk-border-rounded uk-float-left" 
+                                                    type="submit">Sign in</button>
+                                        </div>
+                                    </form>
+                                    <!-- login form end -->
 
-								<form action="{{ route('login.submit') }}" method="POST" class="vh-100" id="loginForm">
-									@csrf
-									<div class="vh-100 d-flex flex-column justify-content-between p-4 pb-0">
-										<div class=" mx-auto mb-5 text-center">
-											<img src="{{ asset('admin/assets/img/logo.svg') }}"
-												class="img-fluid" alt="Logo">
-										</div>
-										<div class="">
-											<div class="text-center mb-3">
-												<h2 class="mb-2">Sign In</h2>
-												<p class="mb-0">Please enter your details to sign in</p>
-											</div>
-											<div class="mb-3">
-												<label class="form-label">Email Address</label>
-												<div class="input-group">
-													<input type="email" name="email" value="{{ old('email') }}" class="form-control border-end-0" required>
-													<span class="input-group-text border-start-0">
-														<i class="ti ti-mail"></i>
-													</span>
-												</div>
-												@error('email')
-													<div class="text-danger">{{ $message }}</div>
-												@enderror
-											</div>
-											<div class="mb-3">
-												<label class="form-label">Password</label>
-												<div class="pass-group">
-													<input type="password" name="password" class="pass-input form-control" required>
-													<span class="ti toggle-password ti-eye-off"></span>
-												</div>
-												@error('password')
-													<div class="text-danger">{{ $message }}</div>
-												@enderror
-											</div>
-											<div class="d-flex align-items-center justify-content-between mb-3">
-												<div class="d-flex align-items-center">
-													<div class="form-check form-check-md mb-0">
-														<input class="form-check-input" id="remember_me" name="remember" type="checkbox">
-														<label for="remember_me" class="form-check-label mt-0">Remember Me</label>
-													</div>
-												</div>
-												<div class="text-end">
-													<a href="forgot-password.html" class="link-danger">Forgot Password?</a>
-												</div>
-											</div>
-											<div class="mb-3">
-												<button type="submit" class="btn btn-primary w-100">Sign In</button>
-											</div>
-											<div class="text-center">
-												<h6 class="fw-normal text-dark mb-0">Don’t have an account?
-													<a href="{{ route('register') }}" class="hover-a"> Create Account</a>
-												</h6>
-											</div>
-											<div class="login-or">
-												<span class="span-or">Or</span>
-											</div>
-											<div class="mt-2">
-												<div class="d-flex align-items-center justify-content-center flex-wrap">
-													<div class="text-center me-2 flex-fill">
-														<a href="javascript:void(0);"
-															class="br-10 p-2 btn btn-info d-flex align-items-center justify-content-center">
-															<img class="img-fluid m-1" src="{{ asset('admin/assets/img/icons/facebook-logo.svg') }}" alt="Facebook">
-														</a>
-													</div>
-													<div class="text-center me-2 flex-fill">
-														<a href="javascript:void(0);"
-															class="br-10 p-2 btn btn-outline-light border d-flex align-items-center justify-content-center">
-															<img class="img-fluid m-1" src="{{ asset('admin/assets/img/icons/google-logo.svg') }}" alt="Facebook">
-														</a>
-													</div>
-													<div class="text-center flex-fill">
-														<a href="javascript:void(0);"
-															class="bg-dark br-10 p-2 btn btn-dark d-flex align-items-center justify-content-center">
-															<img class="img-fluid m-1" src="{{ asset('admin/assets/img/icons/apple-logo.svg') }}" alt="Apple">
-														</a>
-													</div>
-												</div>
-											</div>
-										</div>
-                                        <div class="mt-5 pb-4 text-center">
-											<p class="mb-0 text-gray-9">Copyright &copy; 2024 - Smarthr</p>
-										</div>
-									</div>
-								</form>
-							</div>
+                                    <p class="uk-heading-line"><span>Or sign in with</span></p>
+                                    <div class="uk-margin-medium-bottom">
+                                        <a class="uk-button uk-button-small uk-border-rounded color-google" href="#">
+                                            <i class="fab fa-google uk-margin-small-right"></i>Google
+                                        </a>
+                                        <a class="uk-button uk-button-small uk-border-rounded uk-margin-small-left color-facebook" href="#">
+                                            <i class="fab fa-facebook-f uk-margin-small-right"></i>Facebook
+                                        </a>
+                                    </div>
+                                    <span class="uk-text-small">
+                                        Don't have an account? <a href="{{ route('register') }}">Register here</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- login form end -->
+                </div>
+            </div>
+        </div>
+        <!-- section content end -->
+    </main>
 
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- /Main Wrapper -->
-
-	<!-- jQuery -->
-	<script src="{{ asset('admin/assets/js/jquery-3.7.1.min.js') }}"></script>
-
-	<!-- Bootstrap Core JS -->
-	<script src="{{ asset('admin/assets/js/bootstrap.bundle.min.js') }}"></script>
-
-	<!-- Feather Icon JS -->
-	<script src="{{ asset('admin/assets/js/feather.min.js') }}"></script>
-
-	<!-- Custom JS -->
-	<script src="{{ asset('admin/assets/js/script.js') }}"></script>
-
-<script>
-$(document).ready(function(){
-	$("#loginForm").validate({
-		rules:{
-			email:{ required:true, email:true },
-			password:{ required:true, minlength:6 }
-		},
-		messages:{
-			email:{ required:"Email is required", email:"Enter a valid email" },
-			password:{ required:"Password is required", minlength:"At least 6 characters" }
-		}
-	});
-});
-</script>
-
+    <!-- javascript -->
+    <script src="{{ asset('frontend/js/utilities.min.js') }}"></script>
+    <script src="{{ asset('frontend/js/config-theme.js') }}"></script>
 </body>
 </html>

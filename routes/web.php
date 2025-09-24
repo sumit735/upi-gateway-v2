@@ -10,6 +10,9 @@ Route::get('/dashboard', function () {
 Route::get('/', function () {
     return view('frontend.index');
 })->name('home');
+Route::get('/reg', function () {
+    return view('admin.register2');
+})->name('home');
 
 Route::get('/login', [AuthenticateController::class, 'loginPage'])->name('login');
 Route::get('/register', [AuthenticateController::class, 'index'])->name('register');

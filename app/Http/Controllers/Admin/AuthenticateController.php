@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\UserDetail;
 
 class AuthenticateController extends Controller
 {
@@ -33,7 +34,12 @@ class AuthenticateController extends Controller
             'aadhaar'  => ['required','digits:12','unique:users,aadhaar'],
             'pancard'  => ['required','regex:/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/','unique:users,pancard'],
             'password' => 'required|string|min:8|confirmed',
+            'company_name' => 'required|string|max:255',
+            'district'     => 'required|string|max:255',
+            'state'        => 'required|string|max:255',
+            'pincode'      => 'required|digits:6',
         ]);
+        
 
         $user = User::create([
             'name'     => $request->name,
@@ -43,7 +49,14 @@ class AuthenticateController extends Controller
             'pancard'  => $request->pancard,
             'password' => Hash::make($request->password),
         ]);
-
+        $userDetail = UserDetail::create([
+            'user_id'      => $user->id,
+            'company_name' => $request->company_name,
+            'district'     => $request->district,
+            'state'        => $request->state,
+            'pincode'      => $request->pincode,
+        ]);
+//dd($userDetail);
         Auth::login($user); // auto login after registration
 
         return redirect()->route('dashboard')->with('success', 'Registration successful!');

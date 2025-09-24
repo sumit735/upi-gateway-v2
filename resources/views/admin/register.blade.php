@@ -1,294 +1,185 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-	<meta name="description" content="Smarthr - Bootstrap Admin Template">
-	<meta name="keywords" content="admin, estimates, bootstrap, business, html5, responsive, Projects">
-	<meta name="author" content="Dreams technologies - Bootstrap Admin Template">
-	<meta name="robots" content="noindex, nofollow">
-	<title>Smarthr Admin Template</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Register - Liquid Template with Backend">
+	<meta name="keywords" content="register, laravel, uikit, bootstrap, validation">
+	<meta name="author" content="Custom">
+	<meta name="theme-color" content="#FC5B3F">
 
-	<!-- Favicon -->
-	<link rel="shortcut icon" type="image/x-icon" href="{{ asset('admin/assets/img/favicon.png') }}">
-
-	<!-- Apple Touch Icon -->
-	<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('admin/assets/img/apple-touch-icon.png') }}">
-
-	<!-- Bootstrap CSS -->
+	<!-- preload + styles -->
+	<link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
 	<link rel="stylesheet" href="{{ asset('admin/assets/css/bootstrap.min.css') }}">
-
-	<!-- Feather CSS -->
-	<link rel="stylesheet" href="{{ asset('admin/assets/plugins/icons/feather/feather.css') }}">
-
-	<!-- Tabler Icon CSS -->
-    <link rel="stylesheet" href="{{ asset('admin/assets/plugins/tabler-icons/tabler-icons.min.css') }}">
-
-	<!-- Fontawesome CSS -->
-	<link rel="stylesheet" href="{{ asset('admin/assets/plugins/fontawesome/css/fontawesome.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('admin/assets/plugins/fontawesome/css/all.min.css') }}">
-
-	<!-- Main CSS -->
 	<link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}">
-
+	<script src="{{ asset('frontend/js/vendors/uikit.min.js') }}"></script>
+	<title>Register</title>
 </head>
 
-<body class="bg-white">
+<body>
+	<!-- Laravel validation errors (toast style) -->
+	@if ($errors->any())
+		<div class="position-fixed top-0 end-0 p-3" style="z-index:1055;">
+			<div class="toast align-items-center text-bg-danger border-0 fade show mb-4" role="alert">
+				<div class="d-flex">
+					<div class="toast-body">
+						@foreach ($errors->all() as $error)
+							{{ $error }}<br>
+						@endforeach
+					</div>
+					<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+				</div>
+			</div>
+		</div>
+	@endif
 
-	<div id="global-loader" style="display: none;">
-		<div class="page-loader"></div>
-	</div>
+	<main>
+		<div class="uk-section uk-section-secondary uk-light uk-padding-remove-vertical">
+			<div class="uk-container uk-container-expand">
+				<div class="uk-grid" data-uk-height-viewport="expand: true">
+					<div class="uk-width-3-5@m uk-background-cover uk-background-center-right uk-visible@m uk-box-shadow-xlarge" style="background-image: url({{ asset('frontend/img/signin.jpg') }});"></div>
+					
+					<div class="uk-width-expand@m uk-flex uk-flex-middle">
+						<div class="uk-grid uk-flex-center">
+							<div class="uk-width-3-5@m">
+								<div class="uk-text-center in-padding-horizontal@s">
+									<a class="uk-logo" href="{{ url('/') }}">
+										<img src="{{ asset('frontend/img/user/header-logo-6ohuZh.svg') }}" alt="logo" width="160">
+									</a>
+									<p class="uk-text-lead uk-margin-small-top">Create your account</p>
 
-	<!-- Main Wrapper -->
-	<div class="main-wrapper">
+									<!-- Register form -->
+									<form id="registerForm" method="POST" action="{{ route('register.submit') }}" class="uk-grid uk-form">
+										@csrf
 
-		<div class="container-fuild">
-			<div class="w-100 overflow-hidden position-relative flex-wrap d-block vh-100">
-				<div class="row">
-					<div class="col-lg-5">
-						<div class="login-background position-relative d-lg-flex align-items-center justify-content-center d-none flex-wrap vh-100">
-							<div class="bg-overlay-img">
-								<img src="{{ asset('admin/assets/img/bg/bg-01.png') }}" class="bg-1" alt="Img">
-								<img src="{{ asset('admin/assets/img/bg/bg-02.png') }}" class="bg-2" alt="Img">
-								<img src="{{ asset('admin/assets/img/bg/bg-03.png') }}" class="bg-3" alt="Img">
-							</div>
-							<div class="authentication-card w-100">
-								<div class="authen-overlay-item border w-100">
-									<h1 class="text-white display-1">Empowering people <br> through seamless HR <br> management.</h1>
-									<div class="my-4 mx-auto authen-overlay-img">
-										<img src="{{ asset('admin/assets/img/bg/authentication-bg-01.png') }}" alt="Img">
-									</div>
-									<div>
-										<p class="text-white fs-20 fw-semibold text-center">Efficiently manage your workforce, streamline <br> operations effortlessly.</p>
-									</div>
+										<!-- Step Indicators -->
+										<div class="mb-3 d-flex justify-content-between">
+											<span id="step1Indicator" class="fw-bold text-primary">Step 1: Personal Info</span>
+											<span id="step2Indicator" class="fw-bold text-muted">Step 2: Account Details</span>
+										</div>
+
+										<!-- Step 1 -->
+										<div id="step1">
+											<div class="uk-margin-small uk-width-1-1 uk-inline">
+												<input class="uk-input uk-border-rounded" type="text" name="name" value="{{ old('name') }}" placeholder="Full Name" required>
+											</div>
+											<div class="uk-margin-small uk-width-1-1 uk-inline">
+												<input class="uk-input uk-border-rounded" type="text" name="phone" value="{{ old('phone') }}" placeholder="Phone" required>
+											</div>
+											<div class="uk-margin-small uk-width-1-1 uk-inline">
+												<input class="uk-input uk-border-rounded" type="email" name="email" value="{{ old('email') }}" placeholder="Email" required>
+											</div>
+											<div class="uk-margin-small uk-width-1-1 uk-inline">
+												<input class="uk-input uk-border-rounded" type="text" name="pancard" value="{{ old('pancard') }}" placeholder="PAN Card" required>
+											</div>
+											<div class="uk-margin-small uk-width-1-1 uk-inline">
+												<input class="uk-input uk-border-rounded" type="text" name="aadhaar" value="{{ old('aadhaar') }}" placeholder="Aadhaar" required>
+											</div>
+											
+											<div class="uk-margin-small uk-width-1-1">
+												<button type="button" id="continueBtn" class="uk-button uk-button-primary uk-border-rounded uk-width-1-1">Continue</button>
+											</div>
+										</div>
+
+										<!-- Step 2 -->
+										<div id="step2" class="d-none">
+											<div class="uk-margin-small uk-width-1-1 uk-inline">
+												<input class="uk-input uk-border-rounded" type="text" name="company_name" value="{{ old('company_name') }}" placeholder="Company Name" required>
+											</div>
+											<div class="uk-margin-small uk-width-1-1 uk-inline">
+												<input class="uk-input uk-border-rounded" type="text" name="district" value="{{ old('district') }}" placeholder="District" required>
+											</div>
+											<div class="uk-margin-small uk-width-1-1">
+												<select name="state" class="uk-input uk-border-rounded" required>
+													<option value="">-- Select State --</option>
+													<option value="Odisha" {{ old('state')=='Odisha' ? 'selected':'' }}>Odisha</option>
+													<option value="West Bengal" {{ old('state')=='West Bengal' ? 'selected':'' }}>West Bengal</option>
+													<option value="Delhi" {{ old('state')=='Delhi' ? 'selected':'' }}>Delhi</option>
+													<!-- Add all states as in your Smarthr code -->
+												</select>
+											</div>
+											<div class="uk-margin-small uk-width-1-1 uk-inline">
+												<input class="uk-input uk-border-rounded" type="text" name="pincode" value="{{ old('pincode') }}" placeholder="Pincode" required>
+											</div>
+											<div class="uk-margin-small uk-width-1-1 uk-inline">
+												<input class="uk-input uk-border-rounded" type="password" name="password" placeholder="Password" required>
+											</div>
+											<div class="uk-margin-small uk-width-1-1 uk-inline">
+												<input class="uk-input uk-border-rounded" type="password" name="password_confirmation" placeholder="Confirm Password" required>
+											</div>
+											<div class="d-flex justify-content-between">
+												<button type="button" id="backBtn" class="uk-button uk-button-secondary uk-border-rounded">Back</button>
+												<button type="submit" class="uk-button uk-button-primary uk-border-rounded">Create Account</button>
+											</div>
+										</div>
+									</form>
+
+									<p class="uk-margin-top uk-text-small">Already have an account? <a href="{{ route('login') }}">Sign in here</a></p>
 								</div>
 							</div>
-						</div>
-					</div>
-					<div class="col-lg-7 col-md-12 col-sm-12">
-						<div class="row justify-content-center align-items-center vh-100 overflow-auto flex-wrap">
-							<div class="col-md-7 mx-auto vh-100">
-									@if ($errors->any())
-										<div class="position-fixed top-0 end-0 p-3" style="z-index: 1055;">
-											<div class="toast align-items-center text-bg-danger border-0 fade show mb-4"
-												role="alert" aria-live="assertive" aria-atomic="true">
-												<div class="d-flex">
-													<div class="toast-body">
-														@foreach ($errors->all() as $error)
-															{{ $error }} <br>
-														@endforeach
-													</div>
-													<button type="button" class="btn-close btn-close-white me-2 m-auto"
-														data-bs-dismiss="toast" aria-label="Close"></button>
-												</div>
-											</div>
-										</div>
-									@endif
-								<form action="{{ route('register.submit') }}" method="POST" class="vh-100" id="registerForm" novalidate>
-									@csrf
-									<div class="vh-100 d-flex flex-column justify-content-between p-4 pb-0">
-										<div class=" mx-auto mb-5 text-center">
-											<img src="{{ asset('admin/assets/img/logo.svg') }}"
-												class="img-fluid" alt="Logo">
-										</div>
-										<div class="">
-											<div class="text-center mb-3">
-												<h2 class="mb-2">Create Account</h2>
-												<p class="mb-0">Please enter your details to create account</p>
-											</div>
-											<div class="mb-3">
-												<label class="form-label">Name</label>
-												<div class="input-group">
-													<input type="text" name="name" value="{{ old('name') }}" class="form-control border-end-0" required>
-													<span class="input-group-text border-start-0">
-														<i class="ti ti-user"></i>
-													</span>
-												</div>
-												@error('name')
-													<div class="text-danger">{{ $message }}</div>
-												@enderror
-											</div>
-											<div class="mb-3">
-												<label class="form-label">Email Address</label>
-												<div class="input-group">
-													<input type="email" name="email" value="{{ old('email') }}" class="form-control border-end-0" required>
-													<span class="input-group-text border-start-0">
-														<i class="ti ti-mail"></i>
-													</span>
-												</div>
-												@error('email')
-													<div class="text-danger">{{ $message }}</div>
-												@enderror
-											</div>
-											<div class="mb-3">
-												<label class="form-label">Phone</label>
-												<div class="input-group">
-													<input type="text" name="phone" value="{{ old('phone') }}" class="form-control border-end-0" required>
-													<span class="input-group-text border-start-0">
-														<i class="ti ti-phone"></i>
-													</span>
-												</div>
-												@error('phone')
-													<div class="text-danger">{{ $message }}</div>
-												@enderror
-											</div>
-											<div class="mb-3">
-												<label class="form-label">Aadhaar</label>
-												<div class="input-group">
-													<input type="text" name="aadhaar" value="{{ old('aadhaar') }}" class="form-control border-end-0" required>
-													<span class="input-group-text border-start-0">
-														<i class="ti ti-id"></i>
-													</span>
-												</div>
-												@error('aadhaar')
-													<div class="text-danger">{{ $message }}</div>
-												@enderror
-											</div>
-											<div class="mb-3">
-												<label class="form-label">PAN Card</label>
-												<div class="input-group">
-													<input type="text" name="pancard" value="{{ old('pancard') }}" class="form-control border-end-0" required>
-													<span class="input-group-text border-start-0">
-														<i class="ti ti-credit-card"></i>
-													</span>
-												</div>
-												@error('pancard')
-													<div class="text-danger">{{ $message }}</div>
-												@enderror
-											</div>
-											<div class="mb-3">
-												<label class="form-label">Password</label>
-												<div class="pass-group">
-													<input type="password" name="password" class="pass-input form-control" required>
-													<span class="ti toggle-password ti-eye-off"></span>
-												</div>
-											</div>
-											<div class="mb-3">
-												<label class="form-label">Confirm Password</label>
-												<div class="pass-group">
-													<input type="password" name="password_confirmation" class="pass-input form-control" required>
-													<span class="ti toggle-password ti-eye-off"></span>
-												</div>
-											</div>
-											<div class="mb-3">
-												<button type="submit" class="btn btn-primary w-100">Create Account</button>
-											</div>
-											<div class="text-center">
-												<h6 class="fw-normal text-dark mb-0">Already have an account?
-													<a href="{{ route('login') }}" class="hover-a"> Sign In</a>
-												</h6>
-											</div>
-											<div class="login-or">
-												<span class="span-or">Or</span>
-											</div>
-											<div class="mt-2">
-												<div class="d-flex align-items-center justify-content-center flex-wrap">
-													<div class="text-center me-2 flex-fill">
-														<a href="javascript:void(0);"
-															class="br-10 p-2 btn btn-info d-flex align-items-center justify-content-center">
-															<img class="img-fluid m-1" src="{{ asset('admin/assets/img/icons/facebook-logo.svg') }}" alt="Facebook">
-														</a>
-													</div>
-													<div class="text-center me-2 flex-fill">
-														<a href="javascript:void(0);"
-															class="br-10 p-2 btn btn-outline-light border d-flex align-items-center justify-content-center">
-															<img class="img-fluid m-1" src="{{ asset('admin/assets/img/icons/google-logo.svg') }}" alt="Facebook">
-														</a>
-													</div>
-													<div class="text-center flex-fill">
-														<a href="javascript:void(0);"
-															class="bg-dark br-10 p-2 btn btn-dark d-flex align-items-center justify-content-center">
-															<img class="img-fluid m-1" src="{{ asset('admin/assets/img/icons/apple-logo.svg') }}" alt="Apple">
-														</a>
-													</div>
-												</div>
-											</div>
-										</div>
-                                        <div class="mt-5 pb-4 text-center">
-											<p class="mb-0 text-gray-9">Copyright &copy; 2024 - Smarthr</p>
-										</div>
-									</div>
-								</form>
-							</div>
-
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<!-- /Main Wrapper -->
+	</main>
 
-	<!-- jQuery -->
+	<!-- scripts -->
 	<script src="{{ asset('admin/assets/js/jquery-3.7.1.min.js') }}"></script>
-
-	<!-- Bootstrap Core JS -->
 	<script src="{{ asset('admin/assets/js/bootstrap.bundle.min.js') }}"></script>
-
-	<!-- Feather Icon JS -->
-	<script src="{{ asset('admin/assets/js/feather.min.js') }}"></script>
-
-	<!-- Custom JS -->
-	<script src="{{ asset('admin/assets/js/script.js') }}"></script>
-
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
-<script>
-	$(function () {
-		// Aadhaar rule
-		$.validator.addMethod("aadhaarValid", function (value) {
-			return /^[0-9]{12}$/.test(value);
-		}, "Enter a valid 12-digit Aadhaar number.");
+	<script>
+		$(function () {
+			// Aadhaar rule
+			$.validator.addMethod("aadhaarValid", v => /^[0-9]{12}$/.test(v), "Enter valid 12-digit Aadhaar.");
+			// PAN rule
+			$.validator.addMethod("panValid", v => /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(v), "Enter valid PAN (ABCDE1234F).");
+			// Phone rule
+			$.validator.addMethod("phoneIN", v => /^[6-9]\d{9}$/.test(v), "Enter valid 10-digit mobile number.");
 
-		// PAN rule
-		$.validator.addMethod("panValid", function (value) {
-			return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(value);
-		}, "Enter a valid PAN (ABCDE1234F).");
+			$("#registerForm").validate({
+				rules: {
+					name: { required: true, maxlength: 255 },
+					email: { required: true, email: true },
+					phone: { required: true, phoneIN: true },
+					aadhaar: { required: true, aadhaarValid: true },
+					pancard: { required: true, panValid: true },
+					company_name: { required: true },
+					district: { required: true },
+					state: { required: true },
+					pincode: { required: true, digits: true, minlength: 6, maxlength: 6 },
+					password: { required: true, minlength: 8 },
+					password_confirmation: { required: true, equalTo: "input[name='password']" }
+				},
+				messages: {
+					password_confirmation: { equalTo: "Passwords do not match." }
+				},
+				errorElement: 'div',
+				errorClass: 'text-danger',
+				highlight: e => $(e).addClass('is-invalid'),
+				unhighlight: e => $(e).removeClass('is-invalid')
+			});
 
-		// Indian phone
-		$.validator.addMethod("phoneIN", function (value) {
-			return /^[6-9]\d{9}$/.test(value);
-		}, "Enter a valid 10-digit mobile number.");
-
-		$("#registerForm").validate({
-			rules: {
-				name: { required: true, maxlength: 255 },
-				email: { required: true, email: true },
-				phone: { required: true, phoneIN: true },
-				aadhaar: { required: true, aadhaarValid: true },
-				pancard: { required: true, panValid: true },
-				password: { required: true, minlength: 8 },
-				password_confirmation: { required: true, equalTo: "input[name='password']" }
-			},
-			messages: {
-				password_confirmation: { equalTo: "Passwords do not match." }
-			},
-			errorElement: 'div',
-			errorClass: 'text-danger',
-			errorPlacement: function (error, element) {
-				if (element.hasClass('pass-input')) {
-					error.insertAfter(element.closest('.pass-group'));
-				} else {
-					error.insertAfter(element.closest('.input-group'));
+			// Step nav
+			$("#continueBtn").click(() => {
+				if ($("#registerForm").valid()) {
+					$("#step1").addClass("d-none");
+					$("#step2").removeClass("d-none");
+					$("#step1Indicator").removeClass("text-primary").addClass("text-muted");
+					$("#step2Indicator").removeClass("text-muted").addClass("text-primary");
 				}
-			},
-			highlight: function (element) {
-				$(element).addClass('is-invalid');
-			},
-			unhighlight: function (element) {
-				$(element).removeClass('is-invalid');
-			},
-			onkeyup: function (element) {
-				$(element).valid();
-			},
-			onfocusout: function (element) {
-				$(element).valid();
-			}
+			});
+			$("#backBtn").click(() => {
+				$("#step2").addClass("d-none");
+				$("#step1").removeClass("d-none");
+				$("#step2Indicator").removeClass("text-primary").addClass("text-muted");
+				$("#step1Indicator").removeClass("text-muted").addClass("text-primary");
+			});
 		});
-	});
 	</script>
-
 </body>
 
 </html>
