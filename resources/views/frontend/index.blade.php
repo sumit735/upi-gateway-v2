@@ -95,8 +95,9 @@
 					</div>
 					<div class="uk-navbar-right">
 						<div class="uk-navbar-item uk-visible@m in-optional-nav">
-							<a href="#" class="uk-button uk-button-primary uk-border-rounded">Create account</a>
-							<a href="signin.html" class="uk-button uk-button-link">Sign in<i class="fas fa-user-circle"></i></a>
+							
+							<a href="{{ route('register') }}" class="uk-button uk-button-primary uk-border-rounded">Create account</a>
+							<a href="{{ route('login') }}" class="uk-button uk-button-link">Sign in<i class="fas fa-user-circle"></i></a>
 						</div>
 					</div>
 				</div>
