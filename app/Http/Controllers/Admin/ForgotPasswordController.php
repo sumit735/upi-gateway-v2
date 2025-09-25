@@ -102,7 +102,9 @@ class ForgotPasswordController extends Controller
     // Show reset password form (after OTP validation)
     public function showResetForm()
     {
-        
+        if (!session()->has('admin_password_reset_email')) {
+            return redirect()->route('admin.forgot.password.form')->withErrors(['error' => 'Please validate your OTP first']);
+        }
         return view('admin.reset-password');
     }
 
@@ -141,11 +143,16 @@ class ForgotPasswordController extends Controller
         // Step 3: Return response
         if ($user) {
             // ✅ User matched
-            return redirect()->route('admin.reset.password.form')
+            return view('admin.userdetails-alldata',compact('user'))
                 ->with('success', 'User verified successfully. Please reset your password.');
         } else {
             // ❌ User not found
             return back()->withErrors(['User details do not match our records.'])->withInput();
         }
     }
+    //    public function showUserDetails()
+    // {
+    //     return view('admin.forgot-password-user-details');
+    // }
+
 }

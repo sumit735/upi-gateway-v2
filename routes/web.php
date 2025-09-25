@@ -37,4 +37,5 @@ Route::get('/reset-password', [ForgotPasswordController::class, 'showResetForm']
 Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('admin.reset.password');
 Route::get('/userdetails', [ForgotPasswordController::class, 'showUserForm'])->name('admin.userdetails.form');
 Route::post('/reset-userdetails', [ForgotPasswordController::class, 'validateDetails'])->name('admin.userdetails.validate');
+Route::get('/userdetails', [ForgotPasswordController::class, 'showUserForm'])->name('admin.userdetails.form');
 });
