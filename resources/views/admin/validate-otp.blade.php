@@ -111,6 +111,7 @@
                                     <p class="uk-margin-top uk-text-small">
                                         <a href="{{ route('login') }}">Back to Login</a>
                                     </p>
+                                    
                                 </div>
                             </div>
                         </div>

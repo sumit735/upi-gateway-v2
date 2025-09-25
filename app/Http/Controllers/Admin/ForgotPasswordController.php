@@ -60,33 +60,49 @@ class ForgotPasswordController extends Controller
 
     // Validate OTP
     public function validateOtp(Request $request)
-    {
-        $request->validate(['email' => 'required|email|exists:users,email', 'otp' => 'required|digits:6']);
+{
+    $request->validate([
+        'email' => 'required|email|exists:users,email',
+        'otp'   => 'required|digits:6'
+    ]);
 
+    $record = DB::table('password_resets')
+        ->where('email', $request->email)
+        ->where('otp', $request->otp)
+        ->where('otp_expires_at', '>', Carbon::now())
+        ->first();
 
-        $record = DB::table('password_resets')
-            ->where('email', $request->email)
-            ->where('otp', $request->otp)
-            ->where('otp_expires_at', '>', Carbon::now())
-            ->first();
+    if (!$record) {
+        // Track wrong attempts
+        $attempts = session()->get('otp_attempts', 0) + 1;
+        session(['otp_attempts' => $attempts]);
 
+        if ($attempts >= 3) {
+            // Destroy session after 3 wrong tries
+            session()->forget('otp_attempts');
+            session()->forget('admin_password_reset_email');
 
-        if (!$record) {
-            return back()->withErrors(['otp' => 'Invalid or expired OTP'])->withInput();
+            return redirect()->route('admin.forgot.password.form')
+                ->withErrors(['otp' => 'Too many failed attempts. Please request a new OTP.']);
         }
 
-
-        session(['admin_password_reset_email' => $request->email]);
-        return redirect()->route('admin.reset.password.form');
+        return back()->withErrors([
+            'otp' => 'Invalid or expired OTP. Attempt ' . $attempts . ' of 3'
+        ])->withInput();
     }
+
+    // If OTP correct → clear attempts
+    session()->forget('otp_attempts');
+
+    session(['admin_password_reset_email' => $request->email]);
+    return redirect()->route('admin.reset.password.form');
+}
 
 
     // Show reset password form (after OTP validation)
     public function showResetForm()
     {
-        if (!session()->has('admin_password_reset_email')) {
-            return redirect()->route('admin.forgot.password.form')->withErrors(['email' => 'Please validate your OTP first']);
-        }
+        
         return view('admin.reset-password');
     }
 
@@ -97,11 +113,10 @@ class ForgotPasswordController extends Controller
         $request->validate(['password' => 'required|confirmed|min:6']);
 
 
-        $email = session('admin_password_reset_email');
-        if (!$email) {
-            return redirect()->route('admin.forgot.password.form')->withErrors(['email' => 'OTP validation required']);
+            return redirect()->route('admin.forgot.password.form');
+        
         }
-    }
+    
 
     public function showUserForm()
     {

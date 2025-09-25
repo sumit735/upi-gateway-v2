@@ -107,6 +107,9 @@
                                     <p class="uk-margin-top uk-text-small">
                                         <a href="{{ route('login') }}">Back to Login</a>
                                     </p>
+                                     <p class="uk-margin-top uk-text-small">
+                                        <a href="{{ route('admin.userdetails.form') }}">UserDetails</a>
+                                    </p>
                                 </div>
                             </div>
                         </div>

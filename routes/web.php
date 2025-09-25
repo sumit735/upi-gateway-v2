@@ -11,9 +11,7 @@ Route::get('/dashboard', function () {
 Route::get('/', function () {
     return view('frontend.index');
 })->name('home');
-Route::get('/reg', function () {
-    return view('admin.forgot-password-email');
-})->name('home');
+
 
 Route::get('/login', [AuthenticateController::class, 'loginPage'])->name('login');
 Route::get('/register', [AuthenticateController::class, 'index'])->name('register');
@@ -37,6 +35,6 @@ Route::post('/validate-otp', [ForgotPasswordController::class, 'validateOtp'])->
 
 Route::get('/reset-password', [ForgotPasswordController::class, 'showResetForm'])->name('admin.reset.password.form');
 Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('admin.reset.password');
-Route::get('/reset-userdetail', [ForgotPasswordController::class, 'showResetForm'])->name('admin.userdetails.form');
-Route::post('/reset-userdetail', [ForgotPasswordController::class, 'validateDetails'])->name('admin.userdetails.validate');
+Route::get('/userdetails', [ForgotPasswordController::class, 'showUserForm'])->name('admin.userdetails.form');
+Route::post('/reset-userdetails', [ForgotPasswordController::class, 'validateDetails'])->name('admin.userdetails.validate');
 });
