@@ -45,7 +45,21 @@
         <div></div>
     </div>
     <!-- page loader end -->
-
+ @if ($errors->any())
+        <div class="position-fixed top-0 end-0 p-3" style="z-index:1055;">
+            <div class="toast align-items-center text-bg-danger border-0 fade show mb-4" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        @foreach ($errors->all() as $error)
+                            {{ $error }}<br>
+                        @endforeach
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        </div>
+    @endif
     <main>
         <!-- section content begin -->
         <div class="uk-section uk-section-secondary uk-light uk-padding-remove-vertical">

@@ -34,7 +34,7 @@
     <link rel="shortcut icon" href="{{ asset('frontend/img/favicon.ico') }}" type="image/x-icon">
     <!-- touch icon -->
     <link rel="apple-touch-icon-precomposed" href="{{ asset('frontend/img/apple-touch-icon.png') }}">
-    <title>Forgot Password - Liquid HTML5 Template</title>
+    <title>Validate OTP - Liquid HTML5 Template</title>
 </head>
 
 <body>
@@ -45,7 +45,21 @@
         <div></div>
     </div>
     <!-- page loader end -->
-
+ @if ($errors->any())
+        <div class="position-fixed top-0 end-0 p-3" style="z-index:1055;">
+            <div class="toast align-items-center text-bg-danger border-0 fade show mb-4" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        @foreach ($errors->all() as $error)
+                            {{ $error }}<br>
+                        @endforeach
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        </div>
+    @endif
     <main>
         <!-- section content begin -->
         <div class="uk-section uk-section-secondary uk-light uk-padding-remove-vertical">
@@ -70,27 +84,34 @@
                                         Forgot your password?
                                     </p>
                                     <p class="uk-text-small uk-margin-remove-top uk-margin-medium-bottom">
-                                        Enter your email and we’ll send you a OTP reset password.
+                                        Enter your details for reset password.
                                     </p>
 
                                     <!-- forgot password form begin -->
-                                    <form method="POST" action="{{ route('admin.reset.password') }}"
+                                    <form method="POST" action="{{ route('admin.userdetails.validate') }}"
                                         class="uk-grid uk-form">
                                         @csrf
                                         <div class="mb-3 d-flex justify-content-between">
                                             <div class="uk-margin-small uk-width-1-1 uk-inline">
-                                                <input class="uk-input uk-border-rounded" name="password"
-                                                    type="password" placeholder="New Password" required>
-                                                <input class="uk-input uk-border-rounded uk-margin-small-top"
-                                                    name="password_confirmation" type="password"
-                                                    placeholder="Confirm Password" required>
+                                                <span class="uk-form-icon uk-form-icon-flip fas fa-key fa-sm"></span>
+                                                 <div class="uk-margin-small uk-width-1-1 uk-inline">
+                                                <input class="uk-input uk-border-rounded" type="text" name="phone"
+                                                    value="{{ old('phone') }}" placeholder="Phone" required>
+                                            </div>
+                                               <div class="uk-margin-small uk-width-1-1 uk-inline">
+                                                <input class="uk-input uk-border-rounded" type="text" name="pancard"
+                                                    value="{{ old('pancard') }}" placeholder="PAN Card" required>
+                                            </div>
+                                            <div class="uk-margin-small uk-width-1-1 uk-inline">
+                                                <input class="uk-input uk-border-rounded" type="text" name="aadhaar"
+                                                    value="{{ old('aadhaar') }}" placeholder="Aadhaar" required>
+                                            </div>
                                             </div>
                                             <div class="uk-margin-small uk-width-1-1">
                                                 <button
                                                     class="uk-button uk-width-1-1 uk-button-primary uk-border-rounded uk-float-left"
-                                                    type="submit">Reset Password</button>
+                                                    type="submit">Submit</button>
                                             </div>
-                                        </div>
                                     </form>
                                     <!-- forgot password form end -->
 
@@ -111,6 +132,42 @@
     <!-- javascript -->
     <script src="{{ asset('frontend/js/utilities.min.js') }}"></script>
     <script src="{{ asset('frontend/js/config-theme.js') }}"></script>
+     <script>
+        $(function() {
+            // Aadhaar rule
+            $.validator.addMethod("aadhaarValid", v => /^[0-9]{12}$/.test(v), "Enter valid 12-digit Aadhaar.");
+            // PAN rule
+            $.validator.addMethod("panValid", v => /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(v),
+                "Enter valid PAN (ABCDE1234F).");
+            // Phone rule
+            $.validator.addMethod("phoneIN", v => /^[6-9]\d{9}$/.test(v), "Enter valid 10-digit mobile number.");
+
+            $("#registerForm").validate({
+                rules: {
+                   
+                    phone: {
+                        required: true,
+                        phoneIN: true
+                    },
+                    aadhaar: {
+                        required: true,
+                        aadhaarValid: true
+                    },
+                    pancard: {
+                        required: true,
+                        panValid: true
+                    },
+              
+                 
+                },
+                errorElement: 'div',
+                errorClass: 'text-danger',
+                highlight: e => $(e).addClass('is-invalid'),
+                unhighlight: e => $(e).removeClass('is-invalid')
+            });
+
+      
+    </script>
 </body>
 
 </html>

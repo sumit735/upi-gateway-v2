@@ -37,4 +37,6 @@ Route::post('/validate-otp', [ForgotPasswordController::class, 'validateOtp'])->
 
 Route::get('/reset-password', [ForgotPasswordController::class, 'showResetForm'])->name('admin.reset.password.form');
 Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('admin.reset.password');
+Route::get('/reset-userdetail', [ForgotPasswordController::class, 'showResetForm'])->name('admin.userdetails.form');
+Route::post('/reset-userdetail', [ForgotPasswordController::class, 'validateDetails'])->name('admin.userdetails.validate');
 });

@@ -102,4 +102,35 @@ class ForgotPasswordController extends Controller
             return redirect()->route('admin.forgot.password.form')->withErrors(['email' => 'OTP validation required']);
         }
     }
+
+    public function showUserForm()
+    {
+        return view('admin.forgot-password-user-details');
+    }
+
+       public function validateDetails(Request $request)
+    {
+        // Step 1: Validate inputs
+        $request->validate([
+            'phone'   => ['required', 'regex:/^[6-9]\d{9}$/'],
+            'pancard' => ['required', 'regex:/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/'],
+            'aadhaar' => ['required', 'digits:12'],
+        ]);
+
+        // Step 2: Check user in DB
+        $user = User::where('phone', $request->phone)
+            ->where('pancard', $request->pancard)
+            ->where('aadhaar', $request->aadhaar)
+            ->first();
+
+        // Step 3: Return response
+        if ($user) {
+            // ✅ User matched
+            return redirect()->route('admin.reset.password.form')
+                ->with('success', 'User verified successfully. Please reset your password.');
+        } else {
+            // ❌ User not found
+            return back()->withErrors(['User details do not match our records.'])->withInput();
+        }
+    }
 }
