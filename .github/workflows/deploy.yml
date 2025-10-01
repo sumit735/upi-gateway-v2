@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0   # 👈 important to avoid shallow push errors
 
       - name: Setup SSH
         run: |
@@ -29,3 +29,48 @@ jobs:
           git push cpanel main --force
         env:
           GIT_SSH_COMMAND: "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no"
+
+      - name: Set deployment status
+        if: ${{ success() }}
+        run: echo "STATUS=✅ [SUCCESS]" >> $GITHUB_ENV
+
+      - name: Set deployment status
+        if: ${{ failure() }}
+        run: echo "STATUS=❌ [FAILURE]" >> $GITHUB_ENV
+
+      - name: Send WhatsApp Deployment Update
+        run: |
+          for number in 919853174100 919706415590 919668772575
+          do
+            curl -i -X POST \
+              https://graph.facebook.com/v22.0/${{ secrets.WHATSAPP_PHONE_NUMBER_ID }}/messages \
+              -H "Authorization: Bearer ${{ secrets.WHATSAPP_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d "{
+                \"messaging_product\": \"whatsapp\",
+                \"to\": \"$number\",
+                \"type\": \"template\",
+                \"template\": {
+                  \"name\": \"deployment_update\",
+                  \"language\": { \"code\": \"en_US\" },
+                  \"components\": [{
+                    \"type\": \"body\",
+                    \"parameters\": [
+                      {\"type\": \"text\", \"text\": \"${{ github.repository }}\"},
+                      {\"type\": \"text\", \"text\": \"${{ github.ref_name }}\"},
+                      {\"type\": \"text\", \"text\": \"${{ github.actor }}: ${{ github.event.head_commit.message }}\"},
+                      {\"type\": \"text\", \"text\": \"${{ github.run_number }}\"},
+                      {\"type\": \"text\", \"text\": \"${{ env.STATUS }}\"},
+                      {\"type\": \"text\", \"text\": \"$(date -u -d '+5 hours 30 minutes' '+%Y-%m-%d %H:%M:%S IST')\"}
+                    ]
+                  }]
+                }
+              }"
+          done
+      - name: Trigger post-deploy workflow
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/actions/workflows/post-deploy.yml/dispatches \
+            -d "{\"ref\":\"${{ github.ref_name }}\"}"
