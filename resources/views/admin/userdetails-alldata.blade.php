@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Premium HTML5 Template by Indonez">
+    <meta name="keywords" content="blockit, uikit3, indonez, handlebars, scss, javascript">
+    <meta name="author" content="Indonez">
+    <meta name="theme-color" content="#FC5B3F">
+
+    <!-- preload assets -->
+    <link rel="preload" href="{{ asset('frontend/fonts/fa-brands-400.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/fa-solid-900.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-regular.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-500.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-700.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('frontend/css/style.css') }}" as="style">
+    <link rel="preload" href="{{ asset('frontend/js/vendors/uikit.min.js') }}" as="script">
+    <link rel="preload" href="{{ asset('frontend/js/utilities.min.js') }}" as="script">
+    <link rel="preload" href="{{ asset('frontend/js/config-theme.js') }}" as="script">
+
+    <!-- stylesheet -->
+    <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
+    <!-- uikit -->
+    <script src="{{ asset('frontend/js/vendors/uikit.min.js') }}"></script>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{{ asset('frontend/img/favicon.ico') }}" type="image/x-icon">
+    <!-- touch icon -->
+    <link rel="apple-touch-icon-precomposed" href="{{ asset('frontend/img/apple-touch-icon.png') }}">
+    <title>User Details - Validate OTP</title>
+</head>
+
+<body>
+    <!-- page loader begin -->
+    <div class="page-loader">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <!-- page loader end -->
+
+    @if ($errors->any())
+        <div class="position-fixed top-0 end-0 p-3" style="z-index:1055;">
+            <div class="toast align-items-center text-bg-danger border-0 fade show mb-4" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        @foreach ($errors->all() as $error)
+                            {{ $error }}<br>
+                        @endforeach
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <main>
+        <div class="uk-section uk-section-secondary uk-light uk-padding-remove-vertical">
+            <div class="uk-container uk-container-expand">
+                <div class="uk-grid" data-uk-height-viewport="expand: true">
+
+                    <!-- left image -->
+                    <div class="uk-width-3-5@m uk-background-cover uk-background-center-right uk-visible@m uk-box-shadow-xlarge"
+                        style="background-image: url({{ asset('frontend/img/signin.jpg') }});">
+                    </div>
+
+                    <!-- right section: user details -->
+                    <div class="uk-width-expand@m uk-flex uk-flex-middle">
+                        <div class="uk-grid uk-flex-center">
+                            <div class="uk-width-4-5@m"> <!-- increased width -->
+                                <div class="uk-text-center in-padding-horizontal@s">
+
+                                    <!-- logo -->
+                                    <a class="uk-logo" href="{{ url('/') }}">
+                                        <img src="{{ asset('frontend/img/in-lazy.gif') }}"
+                                            data-src="{{ asset('frontend/img/user/header-logo-6ohuZh.svg') }}"
+                                            alt="logo" width="160" height="34" data-uk-img>
+                                    </a>
+
+                                  <h3 class="uk-card-title uk-text-bold uk-text-primary">User Details</h3>
+
+                                    <!-- user details card -->
+                                    <div class="in-stretch p-4 uk-flex uk-flex-center">
+                                        <article class="uk-card uk-card-default uk-border-rounded uk-box-shadow-large uk-width-1-1">
+                                            <div class="uk-card-body">
+                                                
+                                                <p><strong>Full Name:</strong> {{ $user->name }}</p>
+                                                <p><strong>Email:</strong> {{ $user->email }}</p>
+                                                <p><strong>Phone:</strong> {{ $user->phone }}</p>
+                                                <p><strong>Joined:</strong> {{ $user->created_at->format('d M, Y') }}</p>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <!-- end user details card -->
+
+                                    <p class="uk-margin-top uk-text-small">
+                                        <a href="{{ route('login') }}">Back to Login</a>
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end right section -->
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- javascript -->
+    <script src="{{ asset('frontend/js/utilities.min.js') }}"></script>
+    <script src="{{ asset('frontend/js/config-theme.js') }}"></script>
+</body>
+
+</html>

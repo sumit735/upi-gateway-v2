@@ -51,9 +51,9 @@
 							<li><a href="index.html">Home<span data-uk-navbar-parent-icon></span></a>
 								<div class="uk-navbar-dropdown">
 									<ul class="uk-nav uk-navbar-dropdown-nav">
-										<li><a href="homepage2.html">Homepage test{{asset('frontend/')}}</a></li>
+										<li><a href="homepage2.html">Homepage 1st </a></li>
 										<li><a href="homepage3.html">Homepage 2nd</a></li>
-										<li><a href="homepage4.html">Homepage 3d</a></li>
+										<li><a href="homepage4.html">Homepage 3rd</a></li>
 									</ul>
 								</div>
 							</li>
@@ -95,8 +95,9 @@
 					</div>
 					<div class="uk-navbar-right">
 						<div class="uk-navbar-item uk-visible@m in-optional-nav">
-							<a href="#" class="uk-button uk-button-primary uk-border-rounded">Create account</a>
-							<a href="signin.html" class="uk-button uk-button-link">Sign in<i class="fas fa-user-circle"></i></a>
+							
+							<a href="{{ route('register') }}" class="uk-button uk-button-primary uk-border-rounded">Create account</a>
+							<a href="{{ route('login') }}" class="uk-button uk-button-link">Sign in<i class="fas fa-user-circle"></i></a>
 						</div>
 					</div>
 				</div>
@@ -107,7 +108,7 @@
 	<main>
 		<!-- slideshow content begin -->
 		<div class="uk-section uk-padding-remove-vertical">
-			<div class="uk-light in-slideshow uk-background-cover uk-background-top-center" style="background-image: url(img/in-liquid-slide-bg.png);" data-uk-slideshow>
+			<div class="uk-light in-slideshow uk-background-cover uk-background-top-center" style="background-image: url({{ asset('frontend/img/in-liquid-slide-bg.png') }});" data-uk-slideshow>
 				<ul class="uk-slideshow-items">
 					<li>
 						<div class="uk-container">
@@ -120,7 +121,7 @@
 									</div>
 								</div>
 								<div class="uk-width-1-2@s">
-									<img class="in-slide-img" src="img/in-lazy.gif" data-src="img/in-liquid-slide-1.svg" alt="image-slide" width="500" height="400"
+									<img class="in-slide-img" src="img/in-lazy.gif" data-src="{{ asset('frontend/img/in-liquid-slide-1.svg') }}" alt="image-slide" width="500" height="400"
 										data-uk-img="">
 								</div>
 							</div>
@@ -137,7 +138,7 @@
 									</div>
 								</div>
 								<div class="uk-width-1-2@s">
-									<img class="in-slide-img" src="img/in-lazy.gif" data-src="img/in-liquid-slide-2.svg" alt="image-slide" width="500" height="400"
+									<img class="in-slide-img" src="img/in-lazy.gif" data-src="{{ asset('frontend/img/in-liquid-slide-2.svg') }}" alt="image-slide" width="500" height="400"
 										data-uk-img="">
 								</div>
 							</div>

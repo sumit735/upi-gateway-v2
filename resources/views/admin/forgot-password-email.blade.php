@@ -29,7 +29,7 @@
     <link rel="shortcut icon" href="{{ asset('frontend/img/favicon.ico') }}" type="image/x-icon">
     <!-- touch icon -->
     <link rel="apple-touch-icon-precomposed" href="{{ asset('frontend/img/apple-touch-icon.png') }}">
-    <title>Login - Liquid HTML5 Template</title>
+    <title>Forgot Password - Liquid HTML5 Template</title>
 </head>
 
 <body>
@@ -40,7 +40,21 @@
         <div></div>
     </div>
     <!-- page loader end -->
-
+ @if ($errors->any())
+        <div class="position-fixed top-0 end-0 p-3" style="z-index:1055;">
+            <div class="toast align-items-center text-bg-danger border-0 fade show mb-4" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        @foreach ($errors->all() as $error)
+                            {{ $error }}<br>
+                        @endforeach
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        </div>
+    @endif
     <main>
         <!-- section content begin -->
         <div class="uk-section uk-section-secondary uk-light uk-padding-remove-vertical">
@@ -51,7 +65,7 @@
                          style="background-image: url({{ asset('frontend/img/signin.jpg') }});">
                     </div>
 
-                    <!-- login form -->
+                    <!-- forgot password form -->
                     <div class="uk-width-expand@m uk-flex uk-flex-middle">
                         <div class="uk-grid uk-flex-center">
                             <div class="uk-width-3-5@m">
@@ -62,14 +76,18 @@
                                              alt="logo" width="160" height="34" data-uk-img>
                                     </a>
                                     <p class="uk-text-lead uk-margin-small-top uk-margin-medium-bottom">
-                                        Log into your account
+                                        Forgot your password?
+                                    </p>
+                                    <p class="uk-text-small uk-margin-remove-top uk-margin-medium-bottom">
+                                        Enter your email and we’ll send you a OTP reset password.
                                     </p>
 
-                                    <!-- login form begin -->
-                                    <form method="POST" action="{{ route('login') }}" class="uk-grid uk-form">
+                                    <!-- forgot password form begin -->
+                                    <form method="POST" action="{{ route('admin.forgot.password.send') }}" class="uk-grid uk-form">
                                         @csrf
+                                         <div class="mb-3 d-flex justify-content-between">
                                         <div class="uk-margin-small uk-width-1-1 uk-inline">
-                                            <span class="uk-form-icon uk-form-icon-flip fas fa-user fa-sm"></span>
+                                            <span class="uk-form-icon uk-form-icon-flip fas fa-envelope fa-sm"></span>
                                             <input class="uk-input uk-border-rounded" 
                                                    id="email" 
                                                    name="email" 
@@ -78,51 +96,25 @@
                                                    placeholder="Email" 
                                                    required autofocus>
                                         </div>
-                                        <div class="uk-margin-small uk-width-1-1 uk-inline">
-                                            <span class="uk-form-icon uk-form-icon-flip fas fa-lock fa-sm"></span>
-                                            <input class="uk-input uk-border-rounded" 
-                                                   id="password" 
-                                                   name="password" 
-                                                   type="password" 
-                                                   placeholder="Password" 
-                                                   required>
-                                        </div>
-                                        <div class="uk-margin-small uk-width-auto uk-text-small">
-                                            <label>
-                                                <input class="uk-checkbox" type="checkbox" name="remember"> Remember me
-                                            </label>
-                                        </div>
-                                        <div class="uk-margin-small uk-width-expand uk-text-small">
-                                            <label class="uk-align-right">
-                                                <a class="uk-link-reset" href="{{ route('admin.forgot.password.form') }}">
-                                                    Forgot password?
-                                                </a>
-                                            </label>
-                                        </div>
                                         <div class="uk-margin-small uk-width-1-1">
                                             <button class="uk-button uk-width-1-1 uk-button-primary uk-border-rounded uk-float-left" 
-                                                    type="submit">Sign in</button>
+                                                    type="submit">Send OTP</button>
+                                        </div>
                                         </div>
                                     </form>
-                                    <!-- login form end -->
+                                    <!-- forgot password form end -->
 
-                                    <p class="uk-heading-line"><span>Or sign in with</span></p>
-                                    <div class="uk-margin-medium-bottom">
-                                        <a class="uk-button uk-button-small uk-border-rounded color-google" href="#">
-                                            <i class="fab fa-google uk-margin-small-right"></i>Google
-                                        </a>
-                                        <a class="uk-button uk-button-small uk-border-rounded uk-margin-small-left color-facebook" href="#">
-                                            <i class="fab fa-facebook-f uk-margin-small-right"></i>Facebook
-                                        </a>
-                                    </div>
-                                    <span class="uk-text-small">
-                                        Don't have an account? <a href="{{ route('register') }}">Register here</a>
-                                    </span>
+                                    <p class="uk-margin-top uk-text-small">
+                                        <a href="{{ route('login') }}">Back to Login</a>
+                                    </p>
+                                     <p class="uk-margin-top uk-text-small">
+                                        <a href="{{ route('admin.userdetails.form') }}">UserDetails</a>
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- login form end -->
+                    <!-- forgot password form end -->
                 </div>
             </div>
         </div>
