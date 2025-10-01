@@ -24,12 +24,67 @@ jobs:
   post-deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H tryapi.site >> ~/.ssh/known_hosts
+
+      - name: Test SSH Connection
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no tryapi@tryapi.site "echo '✅ SSH connected for post-deploy'"
+
       - name: Run migrations (if selected)
         if: ${{ github.event.inputs.run_migrations == 'yes' }}
         run: |
+          echo "🔄 Running database migrations..."
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no tryapi@tryapi.site "cd /home1/tryapi/public_html && php artisan migrate --force"
+          echo "✅ Migrations completed"
 
       - name: Optimize (if selected)
         if: ${{ github.event.inputs.optimize == 'yes' }}
         run: |
+          echo "⚡ Optimizing Laravel..."
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no tryapi@tryapi.site "cd /home1/tryapi/public_html && php artisan optimize"
+          echo "✅ Optimization completed"
+
+      - name: Send WhatsApp Status Update
+        if: always()
+        run: |
+          # Determine what was run
+          ACTIONS_RUN=""
+          if [ "${{ github.event.inputs.run_migrations }}" == "yes" ]; then
+            ACTIONS_RUN="${ACTIONS_RUN}✅ Migrations run\n"
+          else
+            ACTIONS_RUN="${ACTIONS_RUN}⏭️ Migrations skipped\n"
+          fi
+          
+          if [ "${{ github.event.inputs.optimize }}" == "yes" ]; then
+            ACTIONS_RUN="${ACTIONS_RUN}✅ Optimization run"
+          else
+            ACTIONS_RUN="${ACTIONS_RUN}⏭️ Optimization skipped"
+          fi
+
+          # Determine overall status
+          if [ "${{ job.status }}" == "success" ]; then
+            STATUS="✅ SUCCESS"
+          else
+            STATUS="❌ FAILED"
+          fi
+
+          for number in 919853174100 919706415590 919668772575
+          do
+            curl -s -X POST \
+              https://graph.facebook.com/v22.0/${{ secrets.WHATSAPP_PHONE_NUMBER_ID }}/messages \
+              -H "Authorization: Bearer ${{ secrets.WHATSAPP_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d "{
+                \"messaging_product\": \"whatsapp\",
+                \"to\": \"$number\",
+                \"type\": \"text\",
+                \"text\": {
+                  \"body\": \"🔧 Post-Deploy Actions: ${STATUS}\n\n📦 Repo: ${{ github.repository }}\n🌿 Branch: ${{ github.ref }}\n\n${ACTIONS_RUN}\n\n🕐 Time: $(date -u -d '+5 hours 30 minutes' '+%Y-%m-%d %H:%M:%S IST')\"
+                }
+              }" > /dev/null
+          done
