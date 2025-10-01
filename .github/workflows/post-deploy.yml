@@ -1,0 +1,35 @@
+name: Post-Deploy Actions
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_migrations:
+        description: "Run database migrations?"
+        required: true
+        default: "no"
+        type: choice
+        options:
+          - "yes"
+          - "no"
+      optimize:
+        description: "Optimize Laravel config?"
+        required: true
+        default: "no"
+        type: choice
+        options:
+          - "yes"
+          - "no"
+
+jobs:
+  post-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run migrations (if selected)
+        if: ${{ github.event.inputs.run_migrations == 'yes' }}
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no tryapi@tryapi.site "cd /home1/tryapi/public_html && php artisan migrate --force"
+
+      - name: Optimize (if selected)
+        if: ${{ github.event.inputs.optimize == 'yes' }}
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no tryapi@tryapi.site "cd /home1/tryapi/public_html && php artisan optimize"

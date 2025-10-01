@@ -4,30 +4,14 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
-    inputs:
-      run_migrations:
-        description: "Run database migrations after deploy?"
-        required: true
-        type: choice
-        options:
-          - "yes"
-          - "no"
-      optimize:
-        description: "Optimize Laravel config after deploy?"
-        required: true
-        type: choice
-        options:
-          - "yes"
-          - "no"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -35,6 +19,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H tryapi.site >> ~/.ssh/known_hosts
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no tryapi@tryapi.site "echo ✅ SSH connected"
+
       - name: Push to cPanel
         run: |
           git remote remove cpanel || true
@@ -42,46 +27,3 @@ jobs:
           git push cpanel main --force
         env:
           GIT_SSH_COMMAND: "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no"
-      - name: Run migrations (if selected)
-        if: ${{ github.event.inputs.run_migrations == 'yes' }}
-        run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no tryapi@tryapi.site "cd /home1/tryapi/public_html && php artisan migrate --force"
-      - name: Optimize (if selected)
-        if: ${{ github.event.inputs.optimize == 'yes' }}
-        run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no tryapi@tryapi.site "cd /home1/tryapi/public_html && php artisan optimize"
-      - name: Set deployment status
-        if: ${{ success() }}
-        run: echo "STATUS=✅ [SUCCESS]" >> $GITHUB_ENV
-      - name: Set deployment status
-        if: ${{ failure() }}
-        run: echo "STATUS=❌ [FAILURE]" >> $GITHUB_ENV
-      - name: Send WhatsApp Deployment Update
-        run: |
-          for number in 919853174100 919706415590 919668772575
-          do
-            curl -i -X POST \
-              https://graph.facebook.com/v22.0/${{ secrets.WHATSAPP_PHONE_NUMBER_ID }}/messages \
-              -H "Authorization: Bearer ${{ secrets.WHATSAPP_TOKEN }}" \
-              -H "Content-Type: application/json" \
-              -d "{
-                \"messaging_product\": \"whatsapp\",
-                \"to\": \"$number\",
-                \"type\": \"template\",
-                \"template\": {
-                  \"name\": \"deployment_update\",
-                  \"language\": { \"code\": \"en_US\" },
-                  \"components\": [{
-                    \"type\": \"body\",
-                    \"parameters\": [
-                      {\"type\": \"text\", \"text\": \"${{ github.repository }}\"},
-                      {\"type\": \"text\", \"text\": \"${{ github.ref_name }}\"},
-                      {\"type\": \"text\", \"text\": \"${{ github.actor }}: ${{ github.event.head_commit.message }}\"},
-                      {\"type\": \"text\", \"text\": \"${{ github.run_number }}\"},
-                      {\"type\": \"text\", \"text\": \"${{ env.STATUS }}\"},
-                      {\"type\": \"text\", \"text\": \"$(date -u -d '+5 hours 30 minutes' '+%Y-%m-%d %H:%M:%S IST')\"}
-                    ]
-                  }]
-                }
-              }"
-          done
