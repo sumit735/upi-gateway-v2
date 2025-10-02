@@ -11,11 +11,15 @@
     <meta name="theme-color" content="#FC5B3F">
 
     <!-- preload assets -->
-    <link rel="preload" href="{{ asset('frontend/fonts/fa-brands-400.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/fa-brands-400.woff2') }}" as="font" type="font/woff2"
+        crossorigin>
     <link rel="preload" href="{{ asset('frontend/fonts/fa-solid-900.woff2') }}" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-regular.woff2') }}" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-500.woff2') }}" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-700.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-regular.woff2') }}" as="font" type="font/woff2"
+        crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-500.woff2') }}" as="font" type="font/woff2"
+        crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-700.woff2') }}" as="font" type="font/woff2"
+        crossorigin>
     <link rel="preload" href="{{ asset('frontend/css/style.css') }}" as="style">
     <link rel="preload" href="{{ asset('frontend/js/vendors/uikit.min.js') }}" as="script">
     <link rel="preload" href="{{ asset('frontend/js/utilities.min.js') }}" as="script">
@@ -40,29 +44,15 @@
         <div></div>
     </div>
     <!-- page loader end -->
- @if ($errors->any())
-        <div class="position-fixed top-0 end-0 p-3" style="z-index:1055;">
-            <div class="toast align-items-center text-bg-danger border-0 fade show mb-4" role="alert">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        @foreach ($errors->all() as $error)
-                            {{ $error }}<br>
-                        @endforeach
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                        data-bs-dismiss="toast"></button>
-                </div>
-            </div>
-        </div>
-    @endif
+
     <main>
         <!-- section content begin -->
         <div class="uk-section uk-section-secondary uk-light uk-padding-remove-vertical">
             <div class="uk-container uk-container-expand">
                 <div class="uk-grid" data-uk-height-viewport="expand: true">
                     <!-- left image -->
-                    <div class="uk-width-3-5@m uk-background-cover uk-background-center-right uk-visible@m uk-box-shadow-xlarge" 
-                         style="background-image: url({{ asset('frontend/img/signin.jpg') }});">
+                    <div class="uk-width-3-5@m uk-background-cover uk-background-center-right uk-visible@m uk-box-shadow-xlarge"
+                        style="background-image: url({{ asset('frontend/img/signin.jpg') }});">
                     </div>
 
                     <!-- forgot password form -->
@@ -71,35 +61,36 @@
                             <div class="uk-width-3-5@m">
                                 <div class="uk-text-center in-padding-horizontal@s">
                                     <a class="uk-logo" href="{{ url('/') }}">
-                                        <img src="{{ asset('frontend/img/in-lazy.gif') }}" 
-                                             data-src="{{ asset('frontend/img/user/header-logo-6ohuZh.svg') }}" 
-                                             alt="logo" width="160" height="34" data-uk-img>
+                                        <img src="{{ asset('frontend/img/in-lazy.gif') }}"
+                                            data-src="{{ asset('frontend/img/user/header-logo-6ohuZh.svg') }}"
+                                            alt="logo" width="160" height="34" data-uk-img>
                                     </a>
                                     <p class="uk-text-lead uk-margin-small-top uk-margin-medium-bottom">
                                         Forgot your password?
                                     </p>
                                     <p class="uk-text-small uk-margin-remove-top uk-margin-medium-bottom">
-                                        Enter your email and we’ll send you a OTP reset password.
+                                        Enter your email and we'll send you a OTP reset password.
                                     </p>
 
                                     <!-- forgot password form begin -->
-                                    <form method="POST" action="{{ route('admin.forgot.password.send') }}" class="uk-grid uk-form">
+                                    <form method="POST" action="{{ route('admin.forgot.password.send') }}"
+                                        class="uk-grid uk-form">
                                         @csrf
-                                         <div class="mb-3 d-flex justify-content-between">
                                         <div class="uk-margin-small uk-width-1-1 uk-inline">
                                             <span class="uk-form-icon uk-form-icon-flip fas fa-envelope fa-sm"></span>
-                                            <input class="uk-input uk-border-rounded" 
-                                                   id="email" 
-                                                   name="email" 
-                                                   value="{{ old('email') }}" 
-                                                   type="email" 
-                                                   placeholder="Email" 
-                                                   required autofocus>
+                                            <input class="uk-input uk-border-rounded" id="email" name="email"
+                                                value="{{ old('email') }}" type="email" placeholder="Email" required
+                                                autofocus>
+                                        </div>
+                                        <div class="uk-margin-small uk-width-1-1 uk-inline">
+                                        </div>
+
+                                        <div class="uk-margin-small uk-width-1-1 uk-inline">
                                         </div>
                                         <div class="uk-margin-small uk-width-1-1">
-                                            <button class="uk-button uk-width-1-1 uk-button-primary uk-border-rounded uk-float-left" 
-                                                    type="submit">Send OTP</button>
-                                        </div>
+                                            <button
+                                                class="uk-button uk-width-1-1 uk-button-primary uk-border-rounded uk-float-left"
+                                                type="submit">Send OTP</button>
                                         </div>
                                     </form>
                                     <!-- forgot password form end -->
@@ -107,7 +98,7 @@
                                     <p class="uk-margin-top uk-text-small">
                                         <a href="{{ route('login') }}">Back to Login</a>
                                     </p>
-                                     <p class="uk-margin-top uk-text-small">
+                                    <p class="uk-margin-top uk-text-small">
                                         <a href="{{ route('admin.userdetails.form') }}">UserDetails</a>
                                     </p>
                                 </div>
@@ -124,5 +115,17 @@
     <!-- javascript -->
     <script src="{{ asset('frontend/js/utilities.min.js') }}"></script>
     <script src="{{ asset('frontend/js/config-theme.js') }}"></script>
+
+    @if ($errors->any())
+        <script>
+            UIkit.notification({
+                message: '@foreach ($errors->all() as $error){{ $error }}<br>@endforeach',
+                status: 'danger',
+                pos: 'top-right',
+                timeout: 5000
+            });
+        </script>
+    @endif
 </body>
+
 </html>

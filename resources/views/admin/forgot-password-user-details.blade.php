@@ -11,11 +11,15 @@
     <meta name="theme-color" content="#FC5B3F">
 
     <!-- preload assets -->
-    <link rel="preload" href="{{ asset('frontend/fonts/fa-brands-400.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/fa-brands-400.woff2') }}" as="font" type="font/woff2"
+        crossorigin>
     <link rel="preload" href="{{ asset('frontend/fonts/fa-solid-900.woff2') }}" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-regular.woff2') }}" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-500.woff2') }}" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-700.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-regular.woff2') }}" as="font" type="font/woff2"
+        crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-500.woff2') }}" as="font" type="font/woff2"
+        crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-700.woff2') }}" as="font" type="font/woff2"
+        crossorigin>
     <link rel="preload" href="{{ asset('frontend/css/style.css') }}" as="style">
     <link rel="preload" href="{{ asset('frontend/js/vendors/uikit.min.js') }}" as="script">
     <link rel="preload" href="{{ asset('frontend/js/utilities.min.js') }}" as="script">
@@ -135,7 +139,7 @@
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
 
     <script>
-        $(function() {
+        $(function () {
             // Aadhaar rule
             $.validator.addMethod("aadhaarValid", v => /^[0-9]{12}$/.test(v), "Enter valid 12-digit Aadhaar.");
             // PAN rule
@@ -167,4 +171,5 @@
         });
     </script>
 </body>
+
 </html>
