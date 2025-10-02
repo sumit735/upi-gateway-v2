@@ -11,11 +11,15 @@
     <meta name="theme-color" content="#FC5B3F">
 
     <!-- preload assets -->
-    <link rel="preload" href="{{ asset('frontend/fonts/fa-brands-400.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/fa-brands-400.woff2') }}" as="font" type="font/woff2"
+        crossorigin>
     <link rel="preload" href="{{ asset('frontend/fonts/fa-solid-900.woff2') }}" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-regular.woff2') }}" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-500.woff2') }}" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-700.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-regular.woff2') }}" as="font" type="font/woff2"
+        crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-500.woff2') }}" as="font" type="font/woff2"
+        crossorigin>
+    <link rel="preload" href="{{ asset('frontend/fonts/inter-v12-latin-700.woff2') }}" as="font" type="font/woff2"
+        crossorigin>
     <link rel="preload" href="{{ asset('frontend/css/style.css') }}" as="style">
     <link rel="preload" href="{{ asset('frontend/js/vendors/uikit.min.js') }}" as="script">
     <link rel="preload" href="{{ asset('frontend/js/utilities.min.js') }}" as="script">
@@ -47,8 +51,8 @@
             <div class="uk-container uk-container-expand">
                 <div class="uk-grid" data-uk-height-viewport="expand: true">
                     <!-- left image -->
-                    <div class="uk-width-3-5@m uk-background-cover uk-background-center-right uk-visible@m uk-box-shadow-xlarge" 
-                         style="background-image: url({{ asset('frontend/img/signin.jpg') }});">
+                    <div class="uk-width-3-5@m uk-background-cover uk-background-center-right uk-visible@m uk-box-shadow-xlarge"
+                        style="background-image: url({{ asset('frontend/img/signin.jpg') }});">
                     </div>
 
                     <!-- login form -->
@@ -57,35 +61,26 @@
                             <div class="uk-width-3-5@m">
                                 <div class="uk-text-center in-padding-horizontal@s">
                                     <a class="uk-logo" href="{{ url('/') }}">
-                                        <img src="{{ asset('frontend/img/in-lazy.gif') }}" 
-                                             data-src="{{ asset('frontend/img/user/header-logo-6ohuZh.svg') }}" 
-                                             alt="logo" width="160" height="34" data-uk-img>
+                                        <img src="{{ asset('frontend/img/in-lazy.gif') }}"
+                                            data-src="{{ asset('frontend/img/user/header-logo-6ohuZh.svg') }}"
+                                            alt="logo" width="160" height="34" data-uk-img>
                                     </a>
                                     <p class="uk-text-lead uk-margin-small-top uk-margin-medium-bottom">
                                         Log into your account
                                     </p>
-
                                     <!-- login form begin -->
                                     <form method="POST" action="{{ route('login') }}" class="uk-grid uk-form">
                                         @csrf
                                         <div class="uk-margin-small uk-width-1-1 uk-inline">
                                             <span class="uk-form-icon uk-form-icon-flip fas fa-user fa-sm"></span>
-                                            <input class="uk-input uk-border-rounded" 
-                                                   id="email" 
-                                                   name="email" 
-                                                   value="{{ old('email') }}" 
-                                                   type="email" 
-                                                   placeholder="Email" 
-                                                   required autofocus>
+                                            <input class="uk-input uk-border-rounded" id="email" name="email"
+                                                value="{{ old('email') }}" type="email" placeholder="Email" required
+                                                autofocus>
                                         </div>
                                         <div class="uk-margin-small uk-width-1-1 uk-inline">
                                             <span class="uk-form-icon uk-form-icon-flip fas fa-lock fa-sm"></span>
-                                            <input class="uk-input uk-border-rounded" 
-                                                   id="password" 
-                                                   name="password" 
-                                                   type="password" 
-                                                   placeholder="Password" 
-                                                   required>
+                                            <input class="uk-input uk-border-rounded" id="password" name="password"
+                                                type="password" placeholder="Password" required>
                                         </div>
                                         <div class="uk-margin-small uk-width-auto uk-text-small">
                                             <label>
@@ -94,14 +89,16 @@
                                         </div>
                                         <div class="uk-margin-small uk-width-expand uk-text-small">
                                             <label class="uk-align-right">
-                                                <a class="uk-link-reset" href="{{ route('admin.forgot.password.form') }}">
+                                                <a class="uk-link-reset"
+                                                    href="{{ route('admin.forgot.password.form') }}">
                                                     Forgot password?
                                                 </a>
                                             </label>
                                         </div>
                                         <div class="uk-margin-small uk-width-1-1">
-                                            <button class="uk-button uk-width-1-1 uk-button-primary uk-border-rounded uk-float-left" 
-                                                    type="submit">Sign in</button>
+                                            <button
+                                                class="uk-button uk-width-1-1 uk-button-primary uk-border-rounded uk-float-left"
+                                                type="submit">Sign in</button>
                                         </div>
                                     </form>
                                     <!-- login form end -->
@@ -111,7 +108,8 @@
                                         <a class="uk-button uk-button-small uk-border-rounded color-google" href="#">
                                             <i class="fab fa-google uk-margin-small-right"></i>Google
                                         </a>
-                                        <a class="uk-button uk-button-small uk-border-rounded uk-margin-small-left color-facebook" href="#">
+                                        <a class="uk-button uk-button-small uk-border-rounded uk-margin-small-left color-facebook"
+                                            href="#">
                                             <i class="fab fa-facebook-f uk-margin-small-right"></i>Facebook
                                         </a>
                                     </div>
@@ -132,5 +130,16 @@
     <!-- javascript -->
     <script src="{{ asset('frontend/js/utilities.min.js') }}"></script>
     <script src="{{ asset('frontend/js/config-theme.js') }}"></script>
+    @if ($errors->any())
+        <script>
+            UIkit.notification({
+                message: '@foreach ($errors->all() as $error){{ $error }}<br>@endforeach',
+                status: 'danger',
+                pos: 'top-right',
+                timeout: 5000
+            });
+        </script>
+    @endif
 </body>
+
 </html>
