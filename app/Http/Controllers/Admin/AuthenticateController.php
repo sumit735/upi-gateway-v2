@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\UserDetail;
 
@@ -71,10 +72,74 @@ class AuthenticateController extends Controller
         ]);
 
         if (Auth::attempt($request->only('email', 'password'), $request->remember)) {
+            $user = Auth::user();
+
+            // Check if user is blocked
+            if ($user->is_blocked) {
+                Auth::logout();
+                return back()->withErrors(['email' => 'Your account has been blocked. Contact administrator.']);
+            }
+
+            // Reset invalid attempts on successful login
+            $user->update(['invalid_attempts' => 0]);
+
+            // Cache user permissions in session
+            $this->cacheUserPermissions($user);
+
             return redirect()->route('dashboard')->with('success', 'Login successful!');
         }
 
+        // Increment invalid login attempts
+        $user = User::where('email', $request->email)->first();
+        if ($user) {
+            $user->increment('invalid_attempts');
+            
+            // Block user after 5 failed attempts
+            if ($user->invalid_attempts >= 5) {
+                $user->update(['is_blocked' => true]);
+                return back()->withErrors(['email' => 'Too many failed attempts. Your account has been blocked.']);
+            }
+        }
+
         return back()->withErrors(['email' => 'Invalid credentials'])->withInput();
+    }
+
+    /**
+     * Cache user permissions in session
+     *
+     * @param User $user
+     * @return void
+     */
+    protected function cacheUserPermissions(User $user): void
+    {
+        if (!$user->role_id) {
+            session(['user_permissions' => []]);
+            return;
+        }
+
+        // Fetch all permissions for the user's role
+        $permissions = DB::table('role_permissions')
+            ->join('pages', 'role_permissions.page_id', '=', 'pages.id')
+            ->join('actions', 'role_permissions.action_id', '=', 'actions.id')
+            ->where('role_permissions.role_id', $user->role_id)
+            ->select(
+                'pages.route_pattern',
+                'actions.slug as action_slug',
+                'role_permissions.scope'
+            )
+            ->get()
+            ->groupBy('route_pattern')
+            ->map(function ($perms) {
+                return $perms->map(function ($perm) {
+                    return [
+                        'action_slug' => $perm->action_slug,
+                        'scope' => $perm->scope,
+                    ];
+                })->toArray();
+            })
+            ->toArray();
+
+        session(['user_permissions' => $permissions]);
     }
 
     // Handle logout
@@ -83,6 +148,9 @@ class AuthenticateController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+        
+        // Clear permissions cache
+        session()->forget('user_permissions');
 
         return redirect()->route('login')->with('success', 'Logged out successfully!');
     }
