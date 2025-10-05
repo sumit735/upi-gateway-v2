@@ -7,6 +7,10 @@ use App\Models\Role;
 use App\Models\Page;
 use App\Models\Action;
 use App\Models\RolePermission;
+use App\Enums\RoleEnum;
+use App\Enums\PageEnum;
+use App\Enums\ActionEnum;
+use App\Enums\ScopeEnum;
 
 class RolePermissionSeeder extends Seeder
 {
@@ -15,43 +19,58 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create roles
+        // Create roles using enum
         $adminRole = Role::create([
-            'name' => 'admin',
-            'description' => 'Administrator with full access',
-            'is_default' => false,
+            'name' => RoleEnum::ADMIN->value,
+            'description' => RoleEnum::ADMIN->description(),
+            'is_default' => RoleEnum::ADMIN->isDefault(),
         ]);
 
         $userRole = Role::create([
-            'name' => 'user',
-            'description' => 'Regular user with limited access',
-            'is_default' => true,
+            'name' => RoleEnum::USER->value,
+            'description' => RoleEnum::USER->description(),
+            'is_default' => RoleEnum::USER->isDefault(),
         ]);
 
-        // Create pages
+        // Create pages using enum
         $dashboard = Page::create([
-            'name' => 'Dashboard',
-            'route_pattern' => 'dashboard',
-            'description' => 'Main dashboard page',
+            'name' => PageEnum::DASHBOARD->label(),
+            'route_pattern' => PageEnum::DASHBOARD->value,
+            'description' => PageEnum::DASHBOARD->description(),
         ]);
 
         $users = Page::create([
-            'name' => 'User Management',
-            'route_pattern' => 'admin.users.*',
-            'description' => 'Manage users',
+            'name' => PageEnum::USER_MANAGEMENT->label(),
+            'route_pattern' => PageEnum::USER_MANAGEMENT->value,
+            'description' => PageEnum::USER_MANAGEMENT->description(),
         ]);
 
         $profile = Page::create([
-            'name' => 'Profile',
-            'route_pattern' => 'profile.*',
-            'description' => 'User profile management',
+            'name' => PageEnum::PROFILE->label(),
+            'route_pattern' => PageEnum::PROFILE->value,
+            'description' => PageEnum::PROFILE->description(),
         ]);
 
-        // Create actions
-        $view = Action::create(['name' => 'View', 'slug' => 'view']);
-        $create = Action::create(['name' => 'Create', 'slug' => 'create']);
-        $edit = Action::create(['name' => 'Edit', 'slug' => 'edit']);
-        $delete = Action::create(['name' => 'Delete', 'slug' => 'delete']);
+        // Create actions using enum
+        $view = Action::create([
+            'name' => ActionEnum::VIEW->label(),
+            'slug' => ActionEnum::VIEW->value
+        ]);
+        
+        $create = Action::create([
+            'name' => ActionEnum::CREATE->label(),
+            'slug' => ActionEnum::CREATE->value
+        ]);
+        
+        $edit = Action::create([
+            'name' => ActionEnum::EDIT->label(),
+            'slug' => ActionEnum::EDIT->value
+        ]);
+        
+        $delete = Action::create([
+            'name' => ActionEnum::DELETE->label(),
+            'slug' => ActionEnum::DELETE->value
+        ]);
 
         // Admin permissions - full access to everything with 'all' scope
         $adminPages = [$dashboard, $users, $profile];
@@ -63,7 +82,7 @@ class RolePermissionSeeder extends Seeder
                     'role_id' => $adminRole->id,
                     'page_id' => $page->id,
                     'action_id' => $action->id,
-                    'scope' => 'all',
+                    'scope' => ScopeEnum::ALL->value,
                 ]);
             }
         }
@@ -74,7 +93,7 @@ class RolePermissionSeeder extends Seeder
             'role_id' => $userRole->id,
             'page_id' => $dashboard->id,
             'action_id' => $view->id,
-            'scope' => 'self',
+            'scope' => ScopeEnum::SELF->value,
         ]);
 
         // Profile - view and edit their own profile
@@ -82,14 +101,14 @@ class RolePermissionSeeder extends Seeder
             'role_id' => $userRole->id,
             'page_id' => $profile->id,
             'action_id' => $view->id,
-            'scope' => 'self',
+            'scope' => ScopeEnum::SELF->value,
         ]);
 
         RolePermission::create([
             'role_id' => $userRole->id,
             'page_id' => $profile->id,
             'action_id' => $edit->id,
-            'scope' => 'self',
+            'scope' => ScopeEnum::SELF->value,
         ]);
 
         $this->command->info('Roles, Pages, Actions, and Permissions seeded successfully!');
