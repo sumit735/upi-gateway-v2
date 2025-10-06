@@ -5,7 +5,7 @@
 			<div class="sidebar sidebar-twocol">
 				<div class="twocol-mini">
 					<a href="index.html" class="logo-small">
-						<img src="assets/img/logo-small.svg" alt="Logo">
+						<img src="{{ asset('admin/assets/img/logo-small.svg') }}" alt="Logo">
 					</a>
 					<div class="sidebar-left slimscroll">
 						<div class="nav flex-column align-items-center nav-pills" id="sidebar-tabs" role="tablist" aria-orientation="vertical">
@@ -59,17 +59,17 @@
 				<div class="sidebar-right">
 					<div class="sidebar-logo mb-4">
 						<a href="index.html" class="logo logo-normal">
-							<img src="assets/img/logo.svg" alt="Logo">
+							<img src="{{ asset('admin/assets/img/logo.svg') }}" alt="Logo">
 						</a>
 						<a href="index.html" class="dark-logo">
-							<img src="assets/img/logo-white.svg" alt="Logo">
+							<img src="{{ asset('admin/assets/img/logo-white.svg') }}" alt="Logo">
 						</a>
 					</div>
 					<div class="sidebar-scroll">
 						<h6 class="mb-3">Welcome to SmartHR</h6>
 						<div class="text-center rounded bg-light p-3 mb-4">
 							<div class="avatar avatar-lg online mb-3">
-								<img src="assets/img/profiles/avatar-02.jpg" alt="Img" class="img-fluid rounded-circle">
+								<img src="{{ asset('admin/assets/img/profiles/avatar-02.jpg') }}" alt="Img" class="img-fluid rounded-circle">
 							</div>
 							<h6 class="fs-12 fw-normal mb-1">Adrian Herman</h6>
 							<p class="fs-10">System Admin</p>
@@ -693,7 +693,7 @@
 			<div class="sidebar sidebar-stacked" style="display: flex !important;">
 				<div class="stacked-mini">
 					<a href="index.html" class="logo-small">
-						<img src="assets/img/logo-small.svg" alt="Logo">
+						<img src="{{ asset('admin/assets/img/logo-small.svg') }}" alt="Logo">
 					</a>
 					<div class="sidebar-left slimscroll">
 						<div class="d-flex align-items-center flex-column">
@@ -732,7 +732,7 @@
 						<h6 class="mb-3">Welcome to SmartHR</h6>
 						<div class="sidebar-profile text-center rounded bg-light p-3 mb-4">
 							<div class="avatar avatar-lg online mb-3">
-								<img src="assets/img/profiles/avatar-02.jpg" alt="Img" class="img-fluid rounded-circle">
+								<img src="{{ asset('admin/assets/img/profiles/avatar-02.jpg') }}" alt="Img" class="img-fluid rounded-circle">
 							</div>
 							<h6 class="fs-12 fw-normal mb-1">Adrian Herman</h6>
 							<p class="fs-10">System Admin</p>
@@ -1437,7 +1437,7 @@
 					<div class="card-body d-flex align-items-center justify-content-between flex-wrap pb-1">
 						<div class="d-flex align-items-center mb-3">
 							<span class="avatar avatar-xl flex-shrink-0">
-								<img src="assets/img/profiles/avatar-31.jpg" class="rounded-circle" alt="img">
+								<img src="{{ asset('admin/assets/img/profiles/avatar-31.jpg') }}" class="rounded-circle" alt="img">
 							</span>
 							<div class="ms-3">
 								<h3 class="mb-2">Welcome Back, Adrian <a href="javascript:void(0);" class="edit-icon"><i class="ti ti-edit fs-14"></i></a></h3>
@@ -1669,7 +1669,7 @@
 											<i class="ti ti-award-filled text-primary fs-24"></i>
 										</span>
 										<a href="employee-details.html" class="avatar avatar-md me-2">
-											<img src="assets/img/profiles/avatar-24.jpg" class="rounded-circle border border-white" alt="img">
+											<img src="{{ asset('admin/assets/img/profiles/avatar-24.jpg') }}" class="rounded-circle border border-white" alt="img">
 										</a>
 										<div>
 											<h6 class="text-truncate mb-1 fs-14 fw-medium"><a href="employee-details.html">Daniel Esbella</a></h6>
@@ -1739,16 +1739,16 @@
 										<p class="mb-2 me-2">Total Absenties</p>
 										<div class="avatar-list-stacked avatar-group-sm mb-2">
 											<span class="avatar avatar-rounded">
-												<img class="border border-white" src="assets/img/profiles/avatar-27.jpg" alt="img">
+												<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-27.jpg') }}" alt="img">
 											</span>
 											<span class="avatar avatar-rounded">
-												<img class="border border-white" src="assets/img/profiles/avatar-30.jpg" alt="img">
+												<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-30.jpg') }}" alt="img">
 											</span>
 											<span class="avatar avatar-rounded">
-												<img src="assets/img/profiles/avatar-14.jpg" alt="img">
+												<img src="{{ asset('admin/assets/img/profiles/avatar-14.jpg') }}" alt="img">
 											</span>
 											<span class="avatar avatar-rounded">
-												<img src="assets/img/profiles/avatar-29.jpg" alt="img">
+												<img src="{{ asset('admin/assets/img/profiles/avatar-29.jpg') }}" alt="img">
 											</span>
 											<a class="avatar bg-primary avatar-rounded text-fixed-white fs-10" href="javascript:void(0);">
 												+1
@@ -1808,7 +1808,7 @@
 										class="d-flex align-items-center justify-content-between mb-3 p-2 border border-dashed br-5">
 										<div class="d-flex align-items-center">
 											<a href="javascript:void(0);" class="avatar flex-shrink-0">
-												<img src="assets/img/profiles/avatar-24.jpg" class="rounded-circle border border-2" alt="img">
+												<img src="{{ asset('admin/assets/img/profiles/avatar-24.jpg') }}" class="rounded-circle border border-2" alt="img">
 											</a>
 											<div class="ms-2">
 												<h6 class="fs-14 fw-medium text-truncate">Daniel Esbella</h6>
@@ -1823,7 +1823,7 @@
 									<div class="d-flex align-items-center justify-content-between mb-3 p-2 border br-5">
 										<div class="d-flex align-items-center">
 											<a href="javascript:void(0);" class="avatar flex-shrink-0">
-												<img src="assets/img/profiles/avatar-23.jpg" class="rounded-circle border border-2" alt="img">
+												<img src="{{ asset('admin/assets/img/profiles/avatar-23.jpg') }}" class="rounded-circle border border-2" alt="img">
 											</a>
 											<div class="ms-2">
 												<h6 class="fs-14 fw-medium">Doglas Martini</h6>
@@ -1839,7 +1839,7 @@
 										<div class="d-flex align-items-center justify-content-between">
 											<div class="d-flex align-items-center">
 												<a href="javascript:void(0);" class="avatar flex-shrink-0">
-													<img src="assets/img/profiles/avatar-27.jpg" class="rounded-circle border border-2" alt="img">
+													<img src="{{ asset('admin/assets/img/profiles/avatar-27.jpg') }}" class="rounded-circle border border-2" alt="img">
 												</a>
 												<div class="ms-2">
 													<h6 class="fs-14 fw-medium text-truncate">Brian Villalobos</h6>
@@ -1872,7 +1872,7 @@
 								<div class="d-flex align-items-center justify-content-between mb-3 p-2 border border-dashed br-5">
 									<div class="d-flex align-items-center">
 										<span class="avatar flex-shrink-0">
-											<img src="assets/img/profiles/avatar-29.jpg" class="rounded-circle border border-2" alt="img">
+											<img src="{{ asset('admin/assets/img/profiles/avatar-29.jpg') }}" class="rounded-circle border border-2" alt="img">
 										</span>
 										<div class="ms-2">
 											<h6 class="fs-14 fw-medium text-truncate">Anthony Lewis <span class="fs-10 fw-medium d-inline-flex align-items-center badge badge-success"><i class="ti ti-clock-hour-11 me-1"></i>30 Min</span></h6>
@@ -1915,7 +1915,7 @@
 										<div class="d-flex align-items-center justify-content-between mb-4">
 											<div class="d-flex align-items-center">
 												<a href="#" class="avatar overflow-hidden flex-shrink-0 bg-gray-100">
-													<img src="assets/img/icons/apple.svg" class="img-fluid rounded-circle w-auto h-auto" alt="img">
+													<img src="{{ asset('admin/assets/img/icons/apple.svg') }}" class="img-fluid rounded-circle w-auto h-auto" alt="img">
 												</a>
 												<div class="ms-2 overflow-hidden">
 													<p class="text-dark fw-medium text-truncate mb-0"><a href="javascript:void(0);">Senior IOS Developer</a></p>
@@ -1927,7 +1927,7 @@
 										<div class="d-flex align-items-center justify-content-between mb-4">
 											<div class="d-flex align-items-center">
 												<a href="#" class="avatar overflow-hidden flex-shrink-0 bg-gray-100">
-													<img src="assets/img/icons/php.svg" class="img-fluid w-auto h-auto" alt="img">
+													<img src="{{ asset('admin/assets/img/icons/php.svg') }}" class="img-fluid w-auto h-auto" alt="img">
 												</a>
 												<div class="ms-2 overflow-hidden">
 													<p class="text-dark fw-medium text-truncate mb-0"><a href="javascript:void(0);">Junior PHP Developer</a></p>
@@ -1939,7 +1939,7 @@
 										<div class="d-flex align-items-center justify-content-between mb-4">
 											<div class="d-flex align-items-center">
 												<a href="#" class="avatar overflow-hidden flex-shrink-0 bg-gray-100">
-													<img src="assets/img/icons/react.svg" class="img-fluid w-auto h-auto" alt="img">
+													<img src="{{ asset('admin/assets/img/icons/react.svg') }}" class="img-fluid w-auto h-auto" alt="img">
 												</a>
 												<div class="ms-2 overflow-hidden">
 													<p class="text-dark fw-medium text-truncate mb-0"><a href="javascript:void(0);">Junior React Developer </a></p>
@@ -1951,7 +1951,7 @@
 										<div class="d-flex align-items-center justify-content-between mb-0">
 											<div class="d-flex align-items-center">
 												<a href="#" class="avatar overflow-hidden flex-shrink-0 bg-gray-100">
-													<img src="assets/img/icons/laravel-icon.svg" class="img-fluid w-auto h-auto" alt="img">
+													<img src="{{ asset('admin/assets/img/icons/laravel-icon.svg') }}" class="img-fluid w-auto h-auto" alt="img">
 												</a>
 												<div class="ms-2 overflow-hidden">
 													<p class="text-dark fw-medium text-truncate mb-0"><a href="javascript:void(0);">Senior Laravel Developer</a></p>
@@ -1965,7 +1965,7 @@
 										<div class="d-flex align-items-center justify-content-between mb-4">
 											<div class="d-flex align-items-center">
 												<a href="#" class="avatar overflow-hidden flex-shrink-0">
-													<img src="assets/img/users/user-09.jpg" class="img-fluid rounded-circle" alt="img">
+													<img src="{{ asset('admin/assets/img/users/user-09.jpg') }}" class="img-fluid rounded-circle" alt="img">
 												</a>
 												<div class="ms-2 overflow-hidden">
 													<p class="text-dark fw-medium text-truncate mb-0"><a href="#">Brian Villalobos</a></p>
@@ -1977,7 +1977,7 @@
 										<div class="d-flex align-items-center justify-content-between mb-4">
 											<div class="d-flex align-items-center">
 												<a href="#" class="avatar overflow-hidden flex-shrink-0">
-													<img src="assets/img/users/user-32.jpg" class="img-fluid rounded-circle" alt="img">
+													<img src="{{ asset('admin/assets/img/users/user-32.jpg') }}" class="img-fluid rounded-circle" alt="img">
 												</a>
 												<div class="ms-2 overflow-hidden">
 													<p class="text-dark fw-medium text-truncate mb-0"><a href="#">Anthony Lewis</a></p>
@@ -1989,7 +1989,7 @@
 										<div class="d-flex align-items-center justify-content-between mb-4">
 											<div class="d-flex align-items-center">
 												<a href="#" class="avatar overflow-hidden flex-shrink-0">
-													<img src="assets/img/users/user-32.jpg" class="img-fluid rounded-circle" alt="img">
+													<img src="{{ asset('admin/assets/img/users/user-32.jpg') }}" class="img-fluid rounded-circle" alt="img">
 												</a>
 												<div class="ms-2 overflow-hidden">
 													<p class="text-dark fw-medium text-truncate mb-0"><a href="#">Stephan Peralt</a></p>
@@ -2001,7 +2001,7 @@
 										<div class="d-flex align-items-center justify-content-between mb-0">
 											<div class="d-flex align-items-center">
 												<a href="javascript:void(0);" class="avatar overflow-hidden flex-shrink-0">
-													<img src="assets/img/users/user-34.jpg" class="img-fluid rounded-circle" alt="img">
+													<img src="{{ asset('admin/assets/img/users/user-34.jpg') }}" class="img-fluid rounded-circle" alt="img">
 												</a>
 												<div class="ms-2 overflow-hidden">
 													<p class="text-dark fw-medium text-truncate mb-0"><a href="javascript:void(0);">Doglas Martini</a></p>
@@ -2038,7 +2038,7 @@
 												<td>
 													<div class="d-flex align-items-center">
 														<a href="javascript:void(0);" class="avatar">
-															<img src="assets/img/users/user-32.jpg" class="img-fluid rounded-circle" alt="img">
+															<img src="{{ asset('admin/assets/img/users/user-32.jpg') }}" class="img-fluid rounded-circle" alt="img">
 														</a>
 														<div class="ms-2">
 															<h6 class="fw-medium"><a href="javascript:void(0);">Anthony Lewis</a></h6>
@@ -2056,7 +2056,7 @@
 												<td>
 													<div class="d-flex align-items-center">
 														<a href="#" class="avatar">
-															<img src="assets/img/users/user-09.jpg" class="img-fluid rounded-circle" alt="img">
+															<img src="{{ asset('admin/assets/img/users/user-09.jpg') }}" class="img-fluid rounded-circle" alt="img">
 														</a>
 														<div class="ms-2">
 															<h6 class="fw-medium"><a href="#">Brian Villalobos</a></h6>
@@ -2072,7 +2072,7 @@
 												<td>
 													<div class="d-flex align-items-center">
 														<a href="#" class="avatar">
-															<img src="assets/img/users/user-01.jpg" class="img-fluid rounded-circle" alt="img">
+															<img src="{{ asset('admin/assets/img/users/user-01.jpg') }}" class="img-fluid rounded-circle" alt="img">
 														</a>
 														<div class="ms-2">
 															<h6 class="fw-medium"><a href="#">Stephan Peralt</a></h6>
@@ -2088,7 +2088,7 @@
 												<td>
 													<div class="d-flex align-items-center">
 														<a href="javascript:void(0);" class="avatar">
-															<img src="assets/img/users/user-34.jpg" class="img-fluid rounded-circle" alt="img">
+															<img src="{{ asset('admin/assets/img/users/user-34.jpg') }}" class="img-fluid rounded-circle" alt="img">
 														</a>
 														<div class="ms-2">
 															<h6 class="fw-medium"><a href="javascript:void(0);">Doglas Martini</a></h6>
@@ -2104,7 +2104,7 @@
 												<td class="border-0">
 													<div class="d-flex align-items-center">
 														<a href="javascript:void(0);" class="avatar">
-															<img src="assets/img/users/user-37.jpg" class="img-fluid rounded-circle" alt="img">
+															<img src="{{ asset('admin/assets/img/users/user-37.jpg') }}" class="img-fluid rounded-circle" alt="img">
 														</a>
 														<div class="ms-2">
 															<h6 class="fw-medium"><a href="javascript:void(0);">Anthony Lewis</a></h6>
@@ -2287,7 +2287,7 @@
 												<td class="px-0">
 													<div class="d-flex align-items-center">
 														<a href="invoice-details.html" class="avatar">
-															<img src="assets/img/users/user-39.jpg" class="img-fluid rounded-circle" alt="img">
+															<img src="{{ asset('admin/assets/img/users/user-39.jpg') }}" class="img-fluid rounded-circle" alt="img">
 														</a>
 														<div class="ms-2">
 															<h6 class="fw-medium"><a href="invoice-details.html">Redesign Website</a></h6>
@@ -2307,7 +2307,7 @@
 												<td class="px-0">
 													<div class="d-flex align-items-center">
 														<a href="invoice-details.html" class="avatar">
-															<img src="assets/img/users/user-40.jpg" class="img-fluid rounded-circle" alt="img">
+															<img src="{{ asset('admin/assets/img/users/user-40.jpg') }}" class="img-fluid rounded-circle" alt="img">
 														</a>
 														<div class="ms-2">
 															<h6 class="fw-medium"><a href="invoice-details.html">Module Completion</a></h6>
@@ -2327,7 +2327,7 @@
 												<td class="px-0">
 													<div class="d-flex align-items-center">
 														<a href="invoice-details.html" class="avatar">
-															<img src="assets/img/users/user-55.jpg" class="img-fluid rounded-circle" alt="img">
+															<img src="{{ asset('admin/assets/img/users/user-55.jpg') }}" class="img-fluid rounded-circle" alt="img">
 														</a>
 														<div class="ms-2">
 															<h6 class="fw-medium"><a href="invoice-details.html">Change on Emp Module</a></h6>
@@ -2347,7 +2347,7 @@
 												<td class="px-0">
 													<div class="d-flex align-items-center">
 														<a href="invoice-details.html" class="avatar">
-															<img src="assets/img/users/user-42.jpg" class="img-fluid rounded-circle" alt="img">
+															<img src="{{ asset('admin/assets/img/users/user-42.jpg') }}" class="img-fluid rounded-circle" alt="img">
 														</a>
 														<div class="ms-2">
 															<h6 class="fw-medium"><a href="invoice-details.html">Changes on the Board</a></h6>
@@ -2367,7 +2367,7 @@
 												<td class="px-0">
 													<div class="d-flex align-items-center">
 														<a href="invoice-details.html" class="avatar">
-															<img src="assets/img/users/user-44.jpg" class="img-fluid rounded-circle" alt="img">
+															<img src="{{ asset('admin/assets/img/users/user-44.jpg') }}" class="img-fluid rounded-circle" alt="img">
 														</a>
 														<div class="ms-2">
 															<h6 class="fw-medium"><a href="invoice-details.html">Hospital Management</a></h6>
@@ -2440,13 +2440,13 @@
 												<td>
 													<div class="avatar-list-stacked avatar-group-sm">
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-02.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-02.jpg') }}" alt="img">
 														</span>
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-03.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-03.jpg') }}" alt="img">
 														</span>
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-05.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-05.jpg') }}" alt="img">
 														</span>
 													</div>
 												</td>
@@ -2469,13 +2469,13 @@
 												<td>
 													<div class="avatar-list-stacked avatar-group-sm">
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-06.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-06.jpg') }}" alt="img">
 														</span>
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-07.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-07.jpg') }}" alt="img">
 														</span>
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-08.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-08.jpg') }}" alt="img">
 														</span>
 														<a class="avatar bg-primary avatar-rounded text-fixed-white fs-10 fw-medium" href="javascript:void(0);">
 															+1
@@ -2501,13 +2501,13 @@
 												<td>
 													<div class="avatar-list-stacked avatar-group-sm">
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-06.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-06.jpg') }}" alt="img">
 														</span>
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-08.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-08.jpg') }}" alt="img">
 														</span>
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-09.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-09.jpg') }}" alt="img">
 														</span>
 													</div>
 												</td>
@@ -2530,13 +2530,13 @@
 												<td>
 													<div class="avatar-list-stacked avatar-group-sm">
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-11.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-11.jpg') }}" alt="img">
 														</span>
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-12.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-12.jpg') }}" alt="img">
 														</span>
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-13.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-13.jpg') }}" alt="img">
 														</span>
 													</div>
 												</td>
@@ -2559,13 +2559,13 @@
 												<td>
 													<div class="avatar-list-stacked avatar-group-sm">
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-17.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-17.jpg') }}" alt="img">
 														</span>
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-18.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-18.jpg') }}" alt="img">
 														</span>
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-19.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-19.jpg') }}" alt="img">
 														</span>
 													</div>
 												</td>
@@ -2588,13 +2588,13 @@
 												<td>
 													<div class="avatar-list-stacked avatar-group-sm">
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-06.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-06.jpg') }}" alt="img">
 														</span>
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-08.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-08.jpg') }}" alt="img">
 														</span>
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-09.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-09.jpg') }}" alt="img">
 														</span>
 													</div>
 												</td>
@@ -2617,13 +2617,13 @@
 												<td class="border-0">
 													<div class="avatar-list-stacked avatar-group-sm">
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-15.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-15.jpg') }}" alt="img">
 														</span>
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-16.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-16.jpg') }}" alt="img">
 														</span>
 														<span class="avatar avatar-rounded">
-															<img class="border border-white" src="assets/img/profiles/avatar-17.jpg" alt="img">
+															<img class="border border-white" src="{{ asset('admin/assets/img/profiles/avatar-17.jpg') }}" alt="img">
 														</span>
 														<a class="avatar bg-primary avatar-rounded text-fixed-white fs-10 fw-medium" href="javascript:void(0);">
 															+2
@@ -2735,19 +2735,19 @@
 									<div class="d-flex align-items-center justify-content-between border-top mt-2 pt-3">
 										<div class="avatar-list-stacked avatar-group-sm">
 											<span class="avatar avatar-rounded">
-												<img class="border border-white" src="assets/img/users/user-49.jpg" alt="img">
+												<img class="border border-white" src="{{ asset('admin/assets/img/users/user-49.jpg') }}" alt="img">
 											</span>
 											<span class="avatar avatar-rounded">
-												<img class="border border-white" src="assets/img/users/user-13.jpg" alt="img">
+												<img class="border border-white" src="{{ asset('admin/assets/img/users/user-13.jpg') }}" alt="img">
 											</span>
 											<span class="avatar avatar-rounded">
-												<img class="border border-white" src="assets/img/users/user-11.jpg" alt="img">
+												<img class="border border-white" src="{{ asset('admin/assets/img/users/user-11.jpg') }}" alt="img">
 											</span>
 											<span class="avatar avatar-rounded">
-												<img class="border border-white" src="assets/img/users/user-22.jpg" alt="img">
+												<img class="border border-white" src="{{ asset('admin/assets/img/users/user-22.jpg') }}" alt="img">
 											</span>
 											<span class="avatar avatar-rounded">
-												<img class="border border-white" src="assets/img/users/user-58.jpg" alt="img">
+												<img class="border border-white" src="{{ asset('admin/assets/img/users/user-58.jpg') }}" alt="img">
 											</span>
 											<a class="avatar bg-primary avatar-rounded text-fixed-white fs-10 fw-medium" href="javascript:void(0);">
 												+3
@@ -2766,19 +2766,19 @@
 									<div class="d-flex align-items-center justify-content-between border-top mt-2 pt-3">
 										<div class="avatar-list-stacked avatar-group-sm">
 											<span class="avatar avatar-rounded">
-												<img class="border border-white" src="assets/img/users/user-49.jpg" alt="img">
+												<img class="border border-white" src="{{ asset('admin/assets/img/users/user-49.jpg') }}" alt="img">
 											</span>
 											<span class="avatar avatar-rounded">
-												<img class="border border-white" src="assets/img/users/user-13.jpg" alt="img">
+												<img class="border border-white" src="{{ asset('admin/assets/img/users/user-13.jpg') }}" alt="img">
 											</span>
 											<span class="avatar avatar-rounded">
-												<img class="border border-white" src="assets/img/users/user-11.jpg" alt="img">
+												<img class="border border-white" src="{{ asset('admin/assets/img/users/user-11.jpg') }}" alt="img">
 											</span>
 											<span class="avatar avatar-rounded">
-												<img class="border border-white" src="assets/img/users/user-22.jpg" alt="img">
+												<img class="border border-white" src="{{ asset('admin/assets/img/users/user-22.jpg') }}" alt="img">
 											</span>
 											<span class="avatar avatar-rounded">
-												<img class="border border-white" src="assets/img/users/user-58.jpg" alt="img">
+												<img class="border border-white" src="{{ asset('admin/assets/img/users/user-58.jpg') }}" alt="img">
 											</span>
 											<a class="avatar bg-primary avatar-rounded text-fixed-white fs-10 fw-medium" href="javascript:void(0);">
 												+3
@@ -2804,7 +2804,7 @@
 									<div class="d-flex justify-content-between">
 										<div class="d-flex align-items-center w-100">
 											<a href="javscript:void(0);" class="avatar  flex-shrink-0">
-												<img src="assets/img/users/user-38.jpg" class="rounded-circle" alt="img">
+												<img src="{{ asset('admin/assets/img/users/user-38.jpg') }}" class="rounded-circle" alt="img">
 											</a>
 											<div class="ms-2 flex-fill">
 												<div class="d-flex align-items-center justify-content-between">
@@ -2820,7 +2820,7 @@
 									<div class="d-flex justify-content-between">
 										<div class="d-flex align-items-center w-100">
 											<a href="javscript:void(0);" class="avatar  flex-shrink-0">
-												<img src="assets/img/users/user-01.jpg" class="rounded-circle" alt="img">
+												<img src="{{ asset('admin/assets/img/users/user-01.jpg') }}" class="rounded-circle" alt="img">
 											</a>
 											<div class="ms-2 flex-fill">
 												<div class="d-flex align-items-center justify-content-between">
@@ -2836,7 +2836,7 @@
 									<div class="d-flex justify-content-between">
 										<div class="d-flex align-items-center w-100">
 											<a href="javscript:void(0);" class="avatar  flex-shrink-0">
-												<img src="assets/img/users/user-19.jpg" class="rounded-circle" alt="img">
+												<img src="{{ asset('admin/assets/img/users/user-19.jpg') }}" class="rounded-circle" alt="img">
 											</a>
 											<div class="ms-2 flex-fill">
 												<div class="d-flex align-items-center justify-content-between">
@@ -2852,7 +2852,7 @@
 									<div class="d-flex justify-content-between">
 										<div class="d-flex align-items-center w-100">
 											<a href="javscript:void(0);" class="avatar  flex-shrink-0">
-												<img src="assets/img/users/user-11.jpg" class="rounded-circle" alt="img">
+												<img src="{{ asset('admin/assets/img/users/user-11.jpg') }}" class="rounded-circle" alt="img">
 											</a>
 											<div class="ms-2 flex-fill">
 												<div class="d-flex align-items-center justify-content-between">
@@ -2868,7 +2868,7 @@
 									<div class="d-flex justify-content-between">
 										<div class="d-flex align-items-center w-100">
 											<a href="javscript:void(0);" class="avatar  flex-shrink-0">
-												<img src="assets/img/users/user-20.jpg" class="rounded-circle" alt="img">
+												<img src="{{ asset('admin/assets/img/users/user-20.jpg') }}" class="rounded-circle" alt="img">
 											</a>
 											<div class="ms-2 flex-fill">
 												<div class="d-flex align-items-center justify-content-between">
@@ -2884,7 +2884,7 @@
 									<div class="d-flex justify-content-between">
 										<div class="d-flex align-items-center w-100">
 											<a href="javscript:void(0);" class="avatar  flex-shrink-0">
-												<img src="assets/img/users/user-08.jpg" class="rounded-circle" alt="img">
+												<img src="{{ asset('admin/assets/img/users/user-08.jpg') }}" class="rounded-circle" alt="img">
 											</a>
 											<div class="ms-2 flex-fill">
 												<div class="d-flex align-items-center justify-content-between">
@@ -2914,7 +2914,7 @@
 									<div class="d-flex align-items-center justify-content-between">
 										<div class="d-flex align-items-center">
 											<a href="javascript:void(0);" class="avatar">
-												<img src="assets/img/users/user-38.jpg" class="rounded-circle" alt="img">
+												<img src="{{ asset('admin/assets/img/users/user-38.jpg') }}" class="rounded-circle" alt="img">
 											</a>
 											<div class="ms-2 overflow-hidden">
 												<h6 class="fs-medium ">Andrew Jermia</h6>
@@ -2929,7 +2929,7 @@
 									<div class="d-flex align-items-center justify-content-between">
 										<div class="d-flex align-items-center">
 											<a href="javascript:void(0);" class="avatar">
-												<img src="assets/img/users/user-10.jpg" class="rounded-circle" alt="img">
+												<img src="{{ asset('admin/assets/img/users/user-10.jpg') }}" class="rounded-circle" alt="img">
 											</a>
 											<div class="ms-2 overflow-hidden">
 												<h6 class="fs-medium"><a href="javascript:void(0);">Mary Zeen</a></h6>
@@ -2943,7 +2943,7 @@
 									<div class="d-flex align-items-center justify-content-between">
 										<div class="d-flex align-items-center">
 											<a href="javascript:void(0);" class="avatar">
-												<img src="assets/img/users/user-09.jpg" class="rounded-circle" alt="img">
+												<img src="{{ asset('admin/assets/img/users/user-09.jpg') }}" class="rounded-circle" alt="img">
 											</a>
 											<div class="ms-2 overflow-hidden">
 												<h6 class="fs-medium "><a href="javascript:void(0);">Antony Lewis</a></h6>
@@ -2958,7 +2958,7 @@
 									<div class="d-flex align-items-center justify-content-between">
 										<div class="d-flex align-items-center">
 											<span class="avatar">
-												<img src="assets/img/users/user-12.jpg" class="rounded-circle" alt="img">
+												<img src="{{ asset('admin/assets/img/users/user-12.jpg') }}" class="rounded-circle" alt="img">
 											</span>
 											<div class="ms-2 overflow-hidden">
 												<h6 class="fs-medium ">Doglas Martini</h6>

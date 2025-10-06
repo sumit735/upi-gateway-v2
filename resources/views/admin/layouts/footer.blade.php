@@ -9,10 +9,10 @@
 	<script src="{{ asset('admin/assets/js/bootstrap.bundle.min.js') }}"></script>
 
 	<!-- Feather Icon JS -->
-	<script src="{{ asset('admin/') }}assets/js/feather.min.js"></script>
+	<script src="{{ asset('admin/assets/js/feather.min.js') }}"></script>
 
 	<!-- Slimscroll JS -->
-	<script src="{{ asset('admin/') }}assets/js/jquery.slimscroll.min.js"></script>
+	<script src="{{ asset('admin/assets/js/jquery.slimscroll.min.js') }}"></script>
 
 	<!-- Chart JS -->
 	<script src="{{ asset('admin/assets/plugins/apexchart/apexcharts.min.js') }}"></script>

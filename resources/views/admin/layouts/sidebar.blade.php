@@ -849,7 +849,7 @@
 			</ul>
 			<div class="d-xl-flex align-items-center d-none">
 				<a href="#" class="me-3 avatar avatar-sm">
-					<img src="assets/img/profiles/avatar-07.jpg" alt="profile" class="rounded-circle">
+					<img src="{{ asset('admin/assets/img/profiles/avatar-07.jpg') }}" alt="profile" class="rounded-circle">
 				</a>
 				<a href="#" class="btn btn-icon btn-sm rounded-circle mode-toggle">
 					<i class="ti ti-sun"></i>

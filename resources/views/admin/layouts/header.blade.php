@@ -18,7 +18,7 @@
 
 	<!-- Favicon -->
 	<link rel="icon" href="{{ asset('admin/assets/img/favicon.png') }}" type="image/x-icon">
-	<link rel="shortcut icon" href="{{ asset('admin/') }}assets/img/favicon.png" type="image/x-icon">
+	<link rel="shortcut icon" href="{{ asset('admin/assets/img/favicon.png') }}" type="image/x-icon">
 
 	<!-- Theme Script js -->
 	<script src="{{ asset('admin/assets/js/theme-script.js') }}"></script>

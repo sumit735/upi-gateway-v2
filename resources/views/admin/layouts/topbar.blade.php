@@ -4,10 +4,10 @@
 
         <div class="header-left">
             <a href="index.html" class="logo">
-                <img src="assets/img/logo.svg" alt="Logo">
+                <img src="{{ asset('admin/assets/img/logo.svg') }}" alt="Logo">
             </a>
             <a href="index.html" class="dark-logo">
-                <img src="assets/img/logo-white.svg" alt="Logo">
+                <img src="{{ asset('admin/assets/img/logo-white.svg') }}" alt="Logo">
             </a>
         </div>
 
@@ -1076,7 +1076,7 @@
                                         <a href="activity.html">
                                             <div class="d-flex">
                                                 <span class="avatar avatar-lg me-2 flex-shrink-0">
-                                                    <img src="assets/img/profiles/avatar-27.jpg" alt="Profile">
+                                                    <img src="{{ asset('admin/assets/img/profiles/avatar-27.jpg') }}" alt="Profile">
                                                 </span>
                                                 <div class="flex-grow-1">
                                                     <p class="mb-1"><span class="text-dark fw-semibold">Shawn</span>
@@ -1090,7 +1090,7 @@
                                         <a href="activity.html" class="pb-0">
                                             <div class="d-flex">
                                                 <span class="avatar avatar-lg me-2 flex-shrink-0">
-                                                    <img src="assets/img/profiles/avatar-23.jpg" alt="Profile">
+                                                    <img src="{{ asset('admin/assets/img/profiles/avatar-23.jpg') }}" alt="Profile">
                                                 </span>
                                                 <div class="flex-grow-1">
                                                     <p class="mb-1"><span class="text-dark fw-semibold">Sylvia</span>
@@ -1109,7 +1109,7 @@
                                         <a href="activity.html">
                                             <div class="d-flex">
                                                 <span class="avatar avatar-lg me-2 flex-shrink-0">
-                                                    <img src="assets/img/profiles/avatar-25.jpg" alt="Profile">
+                                                    <img src="{{ asset('admin/assets/img/profiles/avatar-25.jpg') }}" alt="Profile">
                                                 </span>
                                                 <div class="flex-grow-1">
                                                     <p class="mb-1">New student record <span
@@ -1124,7 +1124,7 @@
                                         <a href="activity.html">
                                             <div class="d-flex">
                                                 <span class="avatar avatar-lg me-2 flex-shrink-0">
-                                                    <img src="assets/img/profiles/avatar-01.jpg" alt="Profile">
+                                                    <img src="{{ asset('admin/assets/img/profiles/avatar-01.jpg') }}" alt="Profile">
                                                 </span>
                                                 <div class="flex-grow-1">
                                                     <p class="mb-1">A new teacher record for <span
@@ -1146,7 +1146,7 @@
                         <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center"
                             data-bs-toggle="dropdown">
                             <span class="avatar avatar-sm online">
-                                <img src="assets/img/profiles/avatar-12.jpg" alt="Img" class="img-fluid rounded-circle">
+                                <img src="{{ asset('admin/assets/img/profiles/avatar-12.jpg') }}" alt="Img" class="img-fluid rounded-circle">
                             </span>
                         </a>
                         <div class="dropdown-menu shadow-none">
@@ -1154,7 +1154,7 @@
                                 <div class="card-header">
                                     <div class="d-flex align-items-center">
                                         <span class="avatar avatar-lg me-2 avatar-rounded">
-                                            <img src="assets/img/profiles/avatar-12.jpg" alt="img">
+                                            <img src="{{ asset('admin/assets/img/profiles/avatar-12.jpg') }}" alt="img">
                                         </span>
                                         <div>
                                             <h5 class="mb-0">Kevin Larry</h5>
@@ -1216,20 +1216,20 @@
     <!-- Logo -->
     <div class="sidebar-logo">
         <a href="index.html" class="logo logo-normal">
-            <img src="assets/img/logo.svg" alt="Logo">
+            <img src="{{ asset('admin/assets/img/logo.svg') }}" alt="Logo">
         </a>
         <a href="index.html" class="logo-small">
-            <img src="assets/img/logo-small.svg" alt="Logo">
+            <img src="{{ asset('admin/assets/img/logo-small.svg') }}" alt="Logo">
         </a>
         <a href="index.html" class="dark-logo">
-            <img src="assets/img/logo-white.svg" alt="Logo">
+            <img src="{{ asset('admin/assets/img/logo-white.svg') }}" alt="Logo">
         </a>
     </div>
     <!-- /Logo -->
     <div class="modern-profile p-3 pb-0">
         <div class="text-center rounded bg-light p-3 mb-4 user-profile">
             <div class="avatar avatar-lg online mb-3">
-                <img src="assets/img/profiles/avatar-02.jpg" alt="Img" class="img-fluid rounded-circle">
+                <img src="{{ asset('admin/assets/img/profiles/avatar-02.jpg') }}" alt="Img" class="img-fluid rounded-circle">
             </div>
             <h6 class="fs-12 fw-normal mb-1">Adrian Herman</h6>
             <p class="fs-10">System Admin</p>
@@ -1245,7 +1245,7 @@
     <div class="sidebar-header p-3 pb-0 pt-2">
         <div class="text-center rounded bg-light p-2 mb-4 sidebar-profile d-flex align-items-center">
             <div class="avatar avatar-md onlin">
-                <img src="assets/img/profiles/avatar-02.jpg" alt="Img" class="img-fluid rounded-circle">
+                <img src="{{ asset('admin/assets/img/profiles/avatar-02.jpg') }}" alt="Img" class="img-fluid rounded-circle">
             </div>
             <div class="text-start sidebar-profile-info ms-2">
                 <h6 class="fs-12 fw-normal mb-1">Adrian Herman</h6>
