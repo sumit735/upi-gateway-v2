@@ -10,6 +10,8 @@ use App\Enums\PageEnum;
 use App\Enums\ActionEnum;
 use App\Enums\ScopeEnum;
 
+use function App\Helpers\permission;
+
 // authenticated routes
 Route::middleware(['auth'])->group(function () {
 

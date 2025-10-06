@@ -42,7 +42,12 @@ jobs:
       - name: Test SSH Connection
         run: |
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no tryapi@tryapi.site "echo '✅ SSH connected for post-deploy'"
-
+      - name: Composer Autoload Dump (if selected)
+        if: ${{ github.event.inputs.autoload-dump == 'yes' }}
+        run: |
+          echo "⚡ Dumping Composer Autoload..."
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no tryapi@tryapi.site "cd /home1/tryapi/public_html && composer dump-autoload"
+          echo "✅ Dump completed"
       - name: Run migrations (if selected)
         if: ${{ github.event.inputs.run_migrations == 'yes' }}
         run: |
@@ -56,13 +61,6 @@ jobs:
           echo "⚡ Optimizing Laravel..."
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no tryapi@tryapi.site "cd /home1/tryapi/public_html && php artisan optimize"
           echo "✅ Optimization completed"
-
-      - name: Composer Autoload Dump (if selected)
-        if: ${{ github.event.inputs.autoload-dump == 'yes' }}
-        run: |
-          echo "⚡ Dumping Composer Autoload..."
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no tryapi@tryapi.site "cd /home1/tryapi/public_html && composer dump-autoload"
-          echo "✅ Dump completed"
 
       - name: Send WhatsApp Status Update
         if: always()
