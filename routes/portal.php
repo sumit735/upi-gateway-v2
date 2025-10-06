@@ -3,8 +3,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PortalController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ProfileController;
 
 use App\Enums\PageEnum;
 use App\Enums\ActionEnum;
@@ -21,6 +22,32 @@ Route::middleware(['auth'])->group(function () {
         ->middleware(permission(PageEnum::DASHBOARD, ActionEnum::VIEW));
 
 
+    // ================================
+    // Role Management Routes (Admin Only)
+    // ================================
+    Route::get('/roles', [RoleController::class, 'index'])
+        ->name('admin.roles.index')
+        ->middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::VIEW, ScopeEnum::ALL));
+
+    Route::get('/roles/create', [RoleController::class, 'create'])
+        ->name('admin.roles.create')
+        ->middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::CREATE, ScopeEnum::ALL));
+
+    Route::post('/roles', [RoleController::class, 'store'])
+        ->name('admin.roles.store')
+        ->middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::CREATE, ScopeEnum::ALL));
+
+    Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])
+        ->name('admin.roles.edit')
+        ->middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::EDIT, ScopeEnum::ALL));
+
+    Route::put('/roles/{role}', [RoleController::class, 'update'])
+        ->name('admin.roles.update')
+        ->middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::EDIT, ScopeEnum::ALL));
+
+    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])
+        ->name('admin.roles.destroy')
+        ->middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::DELETE, ScopeEnum::ALL));
     // ================================
     // User Management Routes (Admin Only)
     // ================================
