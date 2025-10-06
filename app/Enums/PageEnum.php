@@ -7,6 +7,10 @@ enum PageEnum: string
     case DASHBOARD = 'dashboard';
     case USER_MANAGEMENT = 'admin.users.*';
     case PROFILE = 'profile.*';
+    case TRANSACTIONS = 'admin.transactions.*';
+    case PAYMENTS = 'admin.payments.*';
+    case REPORTS = 'admin.reports.*';
+    case SETTINGS = 'admin.settings.*';
     
     /**
      * Get the display name for the page
@@ -17,6 +21,10 @@ enum PageEnum: string
             self::DASHBOARD => 'Dashboard',
             self::USER_MANAGEMENT => 'User Management',
             self::PROFILE => 'Profile',
+            self::TRANSACTIONS => 'Transactions',
+            self::PAYMENTS => 'Payments',
+            self::REPORTS => 'Reports',
+            self::SETTINGS => 'Settings',
         };
     }
 
@@ -27,9 +35,76 @@ enum PageEnum: string
     {
         return match($this) {
             self::DASHBOARD => 'Main dashboard page',
-            self::USER_MANAGEMENT => 'Manage users',
+            self::USER_MANAGEMENT => 'Manage users and their roles',
             self::PROFILE => 'User profile management',
+            self::TRANSACTIONS => 'View and manage transactions',
+            self::PAYMENTS => 'Process and manage payments',
+            self::REPORTS => 'Generate and view reports',
+            self::SETTINGS => 'Application configuration',
         };
+    }
+    
+    /**
+     * Get available actions for this page
+     */
+    public function availableActions(): array
+    {
+        // Start with global actions
+        $globalActions = ActionEnum::globalActions();
+        
+        // Add page-specific actions
+        $pageSpecificActions = match($this) {
+            self::DASHBOARD => [
+                // Only view and export for dashboard
+            ],
+            self::USER_MANAGEMENT => [
+                ActionEnum::SUSPEND,
+                ActionEnum::ACTIVATE,
+                ActionEnum::SEND_NOTIFICATION,
+            ],
+            self::PROFILE => [
+                // Only global actions for profile
+            ],
+            self::TRANSACTIONS => [
+                ActionEnum::APPROVE,
+                ActionEnum::REJECT,
+                ActionEnum::RECONCILE,
+            ],
+            self::PAYMENTS => [
+                ActionEnum::APPROVE,
+                ActionEnum::REJECT,
+                ActionEnum::RECONCILE,
+            ],
+            self::REPORTS => [
+                ActionEnum::GENERATE_REPORT,
+            ],
+            self::SETTINGS => [
+                // Only global actions for settings
+            ],
+        };
+        
+        return array_merge($globalActions, $pageSpecificActions);
+    }
+    
+    /**
+     * Get actions grouped by category for this page
+     */
+    public function actionsByCategory(): array
+    {
+        $availableActions = $this->availableActions();
+        
+        return collect($availableActions)
+            ->groupBy(fn($action) => $action->category())
+            ->map(fn($actions) => $actions->values())
+            ->toArray();
+    }
+    
+    /**
+     * Check if a specific action is available for this page
+     */
+    public function hasAction(ActionEnum $action): bool
+    {
+        return in_array($action, $this->availableActions());
     }
 
     /**

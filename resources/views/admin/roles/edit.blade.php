@@ -87,37 +87,52 @@
 
                                 <div class="row">
                                     @foreach($pageEnums as $page)
+                                    @php
+                                        $availableActions = $page->availableActions();
+                                        $actionsByCategory = $page->actionsByCategory();
+                                    @endphp
                                     <div class="col-lg-6 col-xl-4 mb-3">
                                         <div class="card border permission-card">
                                             <div class="card-header bg-light py-2">
-                                                <h6 class="card-title mb-0 text-capitalize">
-                                                    <i class="ti ti-folder me-2"></i>{{ str_replace('_', ' ', $page->value) }}
+                                                <h6 class="card-title mb-0">
+                                                    <i class="ti ti-folder me-2"></i>{{ $page->label() }}
                                                 </h6>
+                                                <small class="text-muted">{{ $page->description() }}</small>
                                             </div>
                                             <div class="card-body p-3">
-                                                @foreach($actionEnums as $action)
-                                                @foreach($scopeEnums as $scope)
-                                                @php
-                                                    $permissionKey = $page->value . ',' . $action->value . ',' . $scope->value;
-                                                    $isChecked = $role->permissions()
-                                                        ->whereHas('page', fn($q) => $q->where('route_pattern', $page->value))
-                                                        ->whereHas('action', fn($q) => $q->where('slug', $action->value))
-                                                        ->where('scope', $scope->value)
-                                                        ->exists();
-                                                @endphp
-                                                <div class="form-check form-switch mb-2">
-                                                    <input class="form-check-input permission-input" 
-                                                           type="checkbox" 
-                                                           id="permission_{{ $permissionKey }}"
-                                                           name="permissions[]" 
-                                                           value="{{ $permissionKey }}"
-                                                           {{ $isChecked ? 'checked' : '' }}>
-                                                    <label class="form-check-label text-sm" for="permission_{{ $permissionKey }}">
-                                                        {{ ucfirst($action->value) }} 
-                                                        <span class="badge badge-sm bg-secondary ms-1">{{ $scope->value }}</span>
-                                                    </label>
-                                                </div>
-                                                @endforeach
+                                                @foreach($actionsByCategory as $category => $actions)
+                                                    @if(count($actions) > 0)
+                                                    <div class="mb-3">
+                                                        <h6 class="fs-12 text-muted mb-2 text-uppercase">{{ $category }}</h6>
+                                                        @foreach($actions as $action)
+                                                            @foreach($scopeEnums as $scope)
+                                                            @php
+                                                                $permissionKey = $page->value . ',' . $action->value . ',' . $scope->value;
+                                                                $isChecked = $role->permissions()
+                                                                    ->whereHas('page', fn($q) => $q->where('route_pattern', $page->value))
+                                                                    ->whereHas('action', fn($q) => $q->where('slug', $action->value))
+                                                                    ->where('scope', $scope->value)
+                                                                    ->exists();
+                                                            @endphp
+                                                            <div class="form-check form-switch mb-2">
+                                                                <input class="form-check-input permission-input" 
+                                                                       type="checkbox" 
+                                                                       id="permission_{{ $permissionKey }}"
+                                                                       name="permissions[]" 
+                                                                       value="{{ $permissionKey }}"
+                                                                       {{ $isChecked ? 'checked' : '' }}>
+                                                                <label class="form-check-label text-sm" for="permission_{{ $permissionKey }}">
+                                                                    {{ $action->label() }} 
+                                                                    <span class="badge badge-sm bg-secondary ms-1">{{ $scope->value }}</span>
+                                                                    @if(!$action->isGlobal())
+                                                                        <i class="ti ti-star fs-10 text-warning ms-1" title="Page-specific action"></i>
+                                                                    @endif
+                                                                </label>
+                                                            </div>
+                                                            @endforeach
+                                                        @endforeach
+                                                    </div>
+                                                    @endif
                                                 @endforeach
                                             </div>
                                         </div>
