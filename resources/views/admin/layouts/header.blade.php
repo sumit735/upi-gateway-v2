@@ -21,6 +21,10 @@
 	<link rel="shortcut icon" href="{{ asset('admin/assets/img/favicon.png') }}" type="image/x-icon">
 
 	<!-- Theme Script js -->
+	<script>
+		// Make asset URL available to JavaScript
+		window.assetUrl = "{{ asset('admin/assets') }}";
+	</script>
 	<script src="{{ asset('admin/assets/js/theme-script.js') }}"></script>
 
 	<!-- Bootstrap CSS -->
