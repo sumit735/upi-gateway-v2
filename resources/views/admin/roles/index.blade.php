@@ -40,112 +40,101 @@
         </div>
         @endif
 
-        <!-- Roles Grid -->
-        <div class="row">
-            @foreach($roles as $role)
-            <div class="col-xl-4 col-lg-6 col-md-6">
-                <div class="card role-card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div class="d-flex align-items-center">
-                                <div class="avatar avatar-md rounded bg-primary-transparent me-3">
-                                    <i class="ti ti-shield fs-18 text-primary"></i>
-                                </div>
-                                <div>
-                                    <h5 class="mb-1">{{ $role->name }}</h5>
+        <!-- Roles Table -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="ti ti-shield me-2"></i>Roles List
+                </h5>
+                <div class="input-group" style="max-width: 300px;">
+                    <span class="input-group-text"><i class="ti ti-search"></i></span>
+                    <input type="text" class="form-control" id="searchRoles" placeholder="Search roles...">
+                </div>
+            </div>
+            <div class="card-body">
+                @if($roles->isEmpty())
+                <div class="text-center py-5">
+                    <div class="avatar avatar-xl rounded bg-light mb-3 mx-auto">
+                        <i class="ti ti-shield fs-24 text-muted"></i>
+                    </div>
+                    <h5 class="mb-2">No Roles Found</h5>
+                    <p class="text-muted mb-3">Get started by creating your first role with custom permissions.</p>
+                    <a href="{{ route('admin.roles.create') }}" class="btn btn-primary">
+                        <i class="ti ti-plus me-2"></i>Create First Role
+                    </a>
+                </div>
+                @else
+                <div class="table-responsive">
+                    <table class="table table-hover" id="rolesTable">
+                        <thead>
+                            <tr>
+                                <th width="50">#</th>
+                                <th>Role Name</th>
+                                <th>Description</th>
+                                <th width="100" class="text-center">Users</th>
+                                <th width="120" class="text-center">Permissions</th>
+                                <th width="100" class="text-center">Status</th>
+                                <th width="150" class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($roles as $role)
+                            <tr class="role-row">
+                                <td>{{ $role->id }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar avatar-sm rounded bg-primary-transparent me-2">
+                                            <i class="ti ti-shield fs-14 text-primary"></i>
+                                        </div>
+                                        <span class="fw-semibold role-name">{{ $role->name }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="text-muted role-description">
+                                        {{ $role->description ? Str::limit($role->description, 60) : 'No description' }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-primary-transparent text-primary">
+                                        {{ $role->users_count }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-success-transparent text-success">
+                                        {{ $role->permissions->count() }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
                                     @if($role->is_default)
-                                        <span class="badge badge-sm bg-success">Default Role</span>
+                                        <span class="badge bg-success"><i class="ti ti-star me-1"></i>Default</span>
+                                    @else
+                                        <span class="badge bg-secondary">Custom</span>
                                     @endif
-                                </div>
-                            </div>
-                            <div class="dropdown">
-                                <a href="javascript:void(0);" class="btn btn-light btn-icon btn-sm" data-bs-toggle="dropdown">
-                                    <i class="ti ti-dots-vertical"></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('admin.roles.edit', $role) }}">
-                                            <i class="ti ti-edit me-2"></i>Edit Role
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <button type="button" class="btn btn-sm btn-icon btn-light" onclick="viewRoleDetails({{ $role->id }})" title="View Details">
+                                            <i class="ti ti-eye"></i>
+                                        </button>
+                                        <a href="{{ route('admin.roles.edit', $role) }}" class="btn btn-sm btn-icon btn-primary" title="Edit Role">
+                                            <i class="ti ti-edit"></i>
                                         </a>
-                                    </li>
-                                    @if(!$role->is_default && $role->users_count == 0)
-                                    <li>
-                                        <a class="dropdown-item text-danger" href="javascript:void(0);" 
-                                           onclick="deleteRole({{ $role->id }}, '{{ $role->name }}')">
-                                            <i class="ti ti-trash me-2"></i>Delete Role
-                                        </a>
-                                    </li>
-                                    @endif
-                                </ul>
-                            </div>
-                        </div>
-
-                        @if($role->description)
-                        <p class="text-muted mb-3">{{ Str::limit($role->description, 80) }}</p>
-                        @endif
-
-                        <div class="row text-center mb-3">
-                            <div class="col-6">
-                                <div class="border-end">
-                                    <h6 class="mb-1 text-primary">{{ $role->users_count }}</h6>
-                                    <p class="mb-0 fs-12 text-muted">Users</p>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <h6 class="mb-1 text-success">{{ $role->permissions->count() }}</h6>
-                                <p class="mb-0 fs-12 text-muted">Permissions</p>
-                            </div>
-                        </div>
-
-                        @if($role->permissions->count() > 0)
-                        <div class="permission-preview mb-3">
-                            <h6 class="fs-12 text-muted mb-2">Permissions Preview:</h6>
-                            <div class="d-flex flex-wrap gap-1">
-                                @foreach($role->permissions->take(3) as $permission)
-                                <span class="badge badge-sm bg-light text-dark">
-                                    {{ $permission->page->name ?? 'Unknown' }} - {{ $permission->action->name ?? 'Unknown' }}
-                                </span>
-                                @endforeach
-                                @if($role->permissions->count() > 3)
-                                <span class="badge badge-sm bg-secondary">
-                                    +{{ $role->permissions->count() - 3 }} more
-                                </span>
-                                @endif
-                            </div>
-                        </div>
-                        @endif
-
-                        <div class="d-flex gap-2">
-                            <a href="{{ route('admin.roles.edit', $role) }}" class="btn btn-outline-primary btn-sm flex-fill">
-                                <i class="ti ti-edit me-1"></i>Edit
-                            </a>
-                            <button type="button" class="btn btn-outline-info btn-sm" onclick="viewRoleDetails({{ $role->id }})">
-                                <i class="ti ti-eye me-1"></i>View
-                            </button>
-                        </div>
-                    </div>
+                                        @if(!$role->is_default && $role->users_count == 0)
+                                        <button type="button" class="btn btn-sm btn-icon btn-danger" onclick="deleteRole({{ $role->id }}, '{{ addslashes($role->name) }}')" title="Delete Role">
+                                            <i class="ti ti-trash"></i>
+                                        </button>
+                                        @endif
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
+                @endif
             </div>
-            @endforeach
-
-            @if($roles->isEmpty())
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body text-center py-5">
-                        <div class="avatar avatar-xl rounded bg-light mb-3 mx-auto">
-                            <i class="ti ti-shield fs-24 text-muted"></i>
-                        </div>
-                        <h5 class="mb-2">No Roles Found</h5>
-                        <p class="text-muted mb-3">Get started by creating your first role with custom permissions.</p>
-                        <a href="{{ route('admin.roles.create') }}" class="btn btn-primary">
-                            <i class="ti ti-plus me-2"></i>Create First Role
-                        </a>
-                    </div>
-                </div>
-            </div>
-            @endif
         </div>
-        <!-- /Roles Grid -->
+        <!-- /Roles Table -->
 
     </div>
 </div>
@@ -172,6 +161,12 @@
         </div>
     </div>
 </div>
+
+<!-- Include Reusable Confirmation Modal -->
+@include('admin.partials.confirmModal')
+
+<!-- Reusable Toast & Modal Scripts -->
+@include('admin.partials.toastAndModal')
 
 <script>
 function viewRoleDetails(roleId) {
@@ -389,82 +384,68 @@ function showError(message) {
 }
 
 function deleteRole(roleId, roleName) {
-    if (!confirm(`Are you sure you want to delete the role "${roleName}"? This action cannot be undone.`)) {
-        return;
-    }
-
-    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    
-    fetch(`{{ url('/portal/roles') }}/${roleId}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': token,
-            'X-Requested-With': 'XMLHttpRequest',
-            'Accept': 'application/json'
+    showConfirmModal({
+        title: 'Confirm Delete',
+        message: `Are you sure you want to delete the role <strong>"${roleName}"</strong>? This action cannot be undone.`,
+        type: 'danger',
+        icon: 'ti ti-trash-x',
+        confirmText: 'Yes, Delete',
+        confirmIcon: 'ti-trash',
+        onConfirm: function() {
+            // Show loading toast
+            showToast('info', 'Deleting role...');
+            
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
+            fetch(`{{ url('/portal/roles') }}/${roleId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('success', data.message || 'Role deleted successfully!');
+                    // Reload page after delay
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else {
+                    showToast('error', data.message || 'Failed to delete role');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('error', 'An error occurred while deleting the role');
+            });
         }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showToast('success', data.message || 'Role deleted successfully!');
-            // Remove the role card from the DOM
-            setTimeout(() => {
-                location.reload();
-            }, 1500);
-        } else {
-            showToast('error', data.message || 'Failed to delete role');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('error', 'An error occurred while deleting the role');
     });
 }
 
-// Toast notification system
-function showToast(type, message) {
-    const toastContainer = getOrCreateToastContainer();
-    
-    const toastId = 'toast-' + Date.now();
-    const toast = document.createElement('div');
-    toast.id = toastId;
-    toast.className = `toast align-items-center text-bg-${type === 'success' ? 'success' : 'danger'} border-0 show`;
-    toast.setAttribute('role', 'alert');
-    toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">
-                <i class="ti ti-${type === 'success' ? 'check-circle' : 'alert-circle'} me-2"></i>
-                ${message}
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" onclick="removeToast('${toastId}')"></button>
-        </div>
-    `;
-    
-    toastContainer.appendChild(toast);
-    
-    // Auto remove after 5 seconds
-    setTimeout(() => removeToast(toastId), 5000);
-}
-
-function removeToast(toastId) {
-    const toast = document.getElementById(toastId);
-    if (toast) {
-        toast.classList.add('fade');
-        setTimeout(() => toast.remove(), 150);
+// Simple search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchRoles');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', function() {
+            const searchValue = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#rolesTable tbody .role-row');
+            
+            rows.forEach(row => {
+                const roleName = row.querySelector('.role-name')?.textContent.toLowerCase() || '';
+                const roleDescription = row.querySelector('.role-description')?.textContent.toLowerCase() || '';
+                
+                if (roleName.includes(searchValue) || roleDescription.includes(searchValue)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
     }
-}
-
-function getOrCreateToastContainer() {
-    let container = document.getElementById('toast-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.id = 'toast-container';
-        container.className = 'toast-container position-fixed top-0 end-0 p-3';
-        container.style.zIndex = '9999';
-        document.body.appendChild(container);
-    }
-    return container;
-}
+});
 </script>
 @endsection

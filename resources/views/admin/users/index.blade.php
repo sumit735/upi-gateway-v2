@@ -126,26 +126,8 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body text-center">
-                    <span class="avatar avatar-xl bg-transparent-danger text-danger mb-3" id="confirmModalIcon">
-                        <i class="ti ti-trash-x fs-36"></i>
-                    </span>
-                    <h4 class="mb-1" id="confirmModalTitle">Confirm Delete</h4>
-                    <p class="mb-3" id="deleteModalMessage">Are you sure you want to delete this user? This action cannot be
-                        undone.</p>
-                    <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-light me-3" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
-                            <i class="ti ti-trash me-1"></i>Yes, Delete
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Include Reusable Confirmation Modal -->
+    @include('admin.partials.confirmModal')
 
     <!-- Include Edit User Modal -->
     @include('admin.users.modals.editUserModal')
@@ -158,6 +140,10 @@
     <!-- DataTables JS -->
     <script src="{{ asset('admin/assets/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('admin/assets/js/dataTables.bootstrap5.min.js') }}"></script>
+    
+    <!-- Reusable Toast & Modal Scripts -->
+    @include('admin.partials.toastAndModal')
+    
     <script>
         // initialize select2
         $('#roleFilter, #statusFilter').select2();
@@ -384,110 +370,66 @@
             const statusText = newStatus ? 'activate' : 'deactivate';
             const statusTextCap = newStatus ? 'Activate' : 'Deactivate';
             
-            // Show the modal
-            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            const iconElement = document.getElementById('confirmModalIcon');
-            const titleElement = document.getElementById('confirmModalTitle');
-            const messageElement = document.getElementById('deleteModalMessage');
-            const confirmBtn = document.getElementById('confirmDeleteBtn');
-            
-            // Update modal appearance based on action
-            if (newStatus) {
-                iconElement.className = 'avatar avatar-xl bg-transparent-success text-success mb-3';
-                iconElement.querySelector('i').className = 'ti ti-user-check fs-36';
-                confirmBtn.className = 'btn btn-success';
-                confirmBtn.innerHTML = '<i class="ti ti-check me-1"></i>Yes, Activate';
-                titleElement.textContent = 'Confirm Activate';
-            } else {
-                iconElement.className = 'avatar avatar-xl bg-transparent-warning text-warning mb-3';
-                iconElement.querySelector('i').className = 'ti ti-user-off fs-36';
-                confirmBtn.className = 'btn btn-warning';
-                confirmBtn.innerHTML = '<i class="ti ti-x me-1"></i>Yes, Deactivate';
-                titleElement.textContent = 'Confirm Deactivate';
-            }
-            
-            messageElement.innerHTML = `Are you sure you want to <strong>${statusText}</strong> this user?`;
-            
-            // Remove any existing click handlers
-            const newConfirmBtn = confirmBtn.cloneNode(true);
-            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
-            
-            // Add click handler for this specific status toggle
-            document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
-                // Hide the modal
-                modal.hide();
-                
-                // Show loading state
-                showToast('info', `${statusTextCap}ing user...`);
-                
-                // Perform the status toggle
-                fetch(`{{ url('/portal/users') }}/${userId}/toggle-status`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showToast('success', data.message);
-                        refreshTable();
-                    } else {
-                        showToast('error', data.message || 'Failed to update user status');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showToast('error', 'An error occurred while updating user status');
-                });
+            showConfirmModal({
+                title: `Confirm ${statusTextCap}`,
+                message: `Are you sure you want to <strong>${statusText}</strong> this user?`,
+                type: newStatus ? 'success' : 'warning',
+                icon: newStatus ? 'ti ti-user-check' : 'ti ti-user-off',
+                confirmText: `Yes, ${statusTextCap}`,
+                confirmIcon: newStatus ? 'ti ti-check' : 'ti ti-x',
+                onConfirm: function() {
+                    // Show loading state
+                    showToast('info', `${statusTextCap}ing user...`);
+                    
+                    // Perform the status toggle
+                    fetch(`{{ url('/portal/users') }}/${userId}/toggle-status`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            showToast('success', data.message);
+                            refreshTable();
+                        } else {
+                            showToast('error', data.message || 'Failed to update user status');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showToast('error', 'An error occurred while updating user status');
+                    });
+                }
             });
-            
-            // Show the modal
-            modal.show();
         }
+        
         function deleteUser(userId, userName) {
-            // Show the modal
-            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            const iconElement = document.getElementById('confirmModalIcon');
-            const titleElement = document.getElementById('confirmModalTitle');
-            const messageElement = document.getElementById('deleteModalMessage');
-            const confirmBtn = document.getElementById('confirmDeleteBtn');
+            showConfirmModal({
+                title: 'Confirm Delete',
+                message: `Are you sure you want to delete <strong>"${userName}"</strong>? This action cannot be undone.`,
+                type: 'danger',
+                icon: 'ti ti-trash-x',
+                confirmText: 'Yes, Delete',
+                confirmIcon: 'ti-trash',
+                onConfirm: function() {
+                    // Show loading state
+                    showToast('info', 'Deleting user...');
 
-            // Reset modal to delete style
-            iconElement.className = 'avatar avatar-xl bg-transparent-danger text-danger mb-3';
-            iconElement.querySelector('i').className = 'ti ti-trash-x fs-36';
-            titleElement.textContent = 'Confirm Delete';
-            confirmBtn.className = 'btn btn-danger';
-            confirmBtn.innerHTML = '<i class="ti ti-trash me-1"></i>Yes, Delete';
-
-            // Update modal message with user name
-            messageElement.innerHTML = `Are you sure you want to delete <strong>"${userName}"</strong>? This action cannot be undone.`;
-
-            // Remove any existing click handlers
-            const newConfirmBtn = confirmBtn.cloneNode(true);
-            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
-
-            // Add click handler for this specific deletion
-            document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
-                // Hide the modal
-                modal.hide();
-
-                // Show loading state
-                showToast('info', 'Deleting user...');
-
-                // Perform the delete
-                fetch(`{{ url('/portal/users') }}/${userId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json'
-                    }
-                })
+                    // Perform the delete
+                    fetch(`{{ url('/portal/users') }}/${userId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    })
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
@@ -501,69 +443,8 @@
                         console.error('Error:', error);
                         showToast('error', 'An error occurred while deleting the user');
                     });
+                }
             });
-
-            // Show the modal
-            modal.show();
-        }
-
-        function showToast(type, message) {
-            const toastContainer = getOrCreateToastContainer();
-
-            const toastId = 'toast-' + Date.now();
-            const toast = document.createElement('div');
-            toast.id = toastId;
-
-            // Map type to Bootstrap classes
-            let bgClass = 'success';
-            let icon = 'check-circle';
-
-            if (type === 'error' || type === 'danger') {
-                bgClass = 'danger';
-                icon = 'alert-circle';
-            } else if (type === 'info') {
-                bgClass = 'info';
-                icon = 'info-circle';
-            } else if (type === 'warning') {
-                bgClass = 'warning';
-                icon = 'alert-triangle';
-            }
-
-            toast.className = `toast align-items-center text-bg-${bgClass} border-0 show`;
-            toast.setAttribute('role', 'alert');
-            toast.innerHTML = `
-                        <div class="d-flex">
-                            <div class="toast-body">
-                                <i class="ti ti-${icon} me-2"></i>
-                                ${message}
-                            </div>
-                            <button type="button" class="btn-close btn-close-white me-2 m-auto" onclick="removeToast('${toastId}')"></button>
-                        </div>
-                    `;
-
-            toastContainer.appendChild(toast);
-
-            setTimeout(() => removeToast(toastId), 5000);
-        }
-
-        function removeToast(toastId) {
-            const toast = document.getElementById(toastId);
-            if (toast) {
-                toast.classList.add('fade');
-                setTimeout(() => toast.remove(), 150);
-            }
-        }
-
-        function getOrCreateToastContainer() {
-            let container = document.getElementById('toast-container');
-            if (!container) {
-                container = document.createElement('div');
-                container.id = 'toast-container';
-                container.className = 'toast-container position-fixed top-0 end-0 p-3';
-                container.style.zIndex = '9999';
-                document.body.appendChild(container);
-            }
-            return container;
         }
 
         function editUser(userId) {
