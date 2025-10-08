@@ -171,24 +171,30 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <h6 class="text-muted mb-2 fs-12">Scope</h6>
-                                                <div class="btn-group btn-group-sm w-100" role="group">
-                                                    <input type="radio" class="btn-check scope-radio" 
-                                                           name="scope-{{ $pageEnum->value }}" 
-                                                           id="scope-self-{{ $pageEnum->value }}" 
-                                                           value="self" 
-                                                           data-page="{{ $pageEnum->value }}" checked>
-                                                    <label class="btn btn-outline-secondary" for="scope-self-{{ $pageEnum->value }}">
-                                                        <i class="ti ti-user fs-12"></i> Self
-                                                    </label>
-
-                                                    <input type="radio" class="btn-check scope-radio" 
-                                                           name="scope-{{ $pageEnum->value }}" 
-                                                           id="scope-all-{{ $pageEnum->value }}" 
-                                                           value="all" 
-                                                           data-page="{{ $pageEnum->value }}">
-                                                    <label class="btn btn-outline-warning" for="scope-all-{{ $pageEnum->value }}">
-                                                        <i class="ti ti-users fs-12"></i> All
-                                                    </label>
+                                                <div class="d-flex gap-2">
+                                                    <div class="form-check form-check-md flex-fill">
+                                                        <input class="form-check-input scope-radio" 
+                                                               type="radio" 
+                                                               name="scope-{{ $pageEnum->value }}" 
+                                                               id="scope-self-{{ $pageEnum->value }}" 
+                                                               value="self" 
+                                                               data-page="{{ $pageEnum->value }}" 
+                                                               checked>
+                                                        <label class="form-check-label" for="scope-self-{{ $pageEnum->value }}">
+                                                            <i class="ti ti-user me-1"></i>Self
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check form-check-md flex-fill">
+                                                        <input class="form-check-input scope-radio" 
+                                                               type="radio" 
+                                                               name="scope-{{ $pageEnum->value }}" 
+                                                               id="scope-all-{{ $pageEnum->value }}" 
+                                                               value="all" 
+                                                               data-page="{{ $pageEnum->value }}">
+                                                        <label class="form-check-label" for="scope-all-{{ $pageEnum->value }}">
+                                                            <i class="ti ti-users me-1"></i>All
+                                                        </label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
