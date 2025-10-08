@@ -125,6 +125,31 @@
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <span class="avatar avatar-xl bg-transparent-danger text-danger mb-3" id="confirmModalIcon">
+                        <i class="ti ti-trash-x fs-36"></i>
+                    </span>
+                    <h4 class="mb-1" id="confirmModalTitle">Confirm Delete</h4>
+                    <p class="mb-3" id="deleteModalMessage">Are you sure you want to delete this user? This action cannot be
+                        undone.</p>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-light me-3" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                            <i class="ti ti-trash me-1"></i>Yes, Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Edit User Modal -->
+    @include('admin.users.modals.editUserModal')
+
     </div>
     </div>
 @endsection
@@ -163,16 +188,16 @@
                         data: 'name',
                         name: 'name',
                         render: function (data, type, row) {
+                            // Generate random color based on name
+
                             return `
-                            <div class="d-flex align-items-center">
-                                <div class="avatar avatar-sm me-2">
-                                    <span class="avatar-title rounded-circle bg-primary-transparent text-primary">
-                                        ${data.charAt(0).toUpperCase()}
-                                    </span>
-                                </div>
-                                <span class="fw-medium">${data}</span>
-                            </div>
-                        `;
+                                    <div class="d-flex align-items-center">
+
+                                        <div>
+                                            <h6 class="mb-0 fw-medium">${data}</h6>
+                                        </div>
+                                    </div>
+                                `;
                         }
                     },
                     { data: 'email', name: 'email' },
@@ -246,13 +271,13 @@
             const content = document.getElementById('userDetailsContent');
 
             content.innerHTML = `
-            <div class="text-center py-5">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <p class="mt-3 text-muted">Loading user details...</p>
-            </div>
-        `;
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-3 text-muted">Loading user details...</p>
+                        </div>
+                    `;
 
             modal.show();
 
@@ -281,96 +306,130 @@
             const content = document.getElementById('userDetailsContent');
 
             content.innerHTML = `
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <div class="card border">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0"><i class="ti ti-user me-2"></i>Personal Information</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label text-muted fs-12 mb-1">Full Name</label>
-                                <h6 class="mb-0">${user.name}</h6>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label text-muted fs-12 mb-1">Email Address</label>
-                                <p class="mb-0">${user.email}</p>
-                            </div>
-                            ${user.phone ? `
-                            <div class="mb-3">
-                                <label class="form-label text-muted fs-12 mb-1">Phone Number</label>
-                                <p class="mb-0">${user.phone}</p>
-                            </div>
-                            ` : ''}
-                            <div class="mb-0">
-                                <label class="form-label text-muted fs-12 mb-1">Account Status</label>
-                                <div>
-                                    ${user.is_active
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="card border">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0"><i class="ti ti-user me-2"></i>Personal Information</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted fs-12 mb-1">Full Name</label>
+                                            <h6 class="mb-0">${user.name}</h6>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted fs-12 mb-1">Email Address</label>
+                                            <p class="mb-0">${user.email}</p>
+                                        </div>
+                                        ${user.phone ? `
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted fs-12 mb-1">Phone Number</label>
+                                            <p class="mb-0">${user.phone}</p>
+                                        </div>
+                                        ` : ''}
+                                        <div class="mb-0">
+                                            <label class="form-label text-muted fs-12 mb-1">Account Status</label>
+                                            <div>
+                                                ${user.is_active
                     ? '<span class="badge bg-success"><i class="ti ti-check me-1"></i>Active</span>'
                     : '<span class="badge bg-danger"><i class="ti ti-x me-1"></i>Inactive</span>'}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="card border">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0"><i class="ti ti-shield me-2"></i>Role & Permissions</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted fs-12 mb-1">Role</label>
+                                            <div>
+                                                <span class="badge bg-primary">${user.role ? user.role.name : 'No Role'}</span>
+                                            </div>
+                                        </div>
+                                        ${user.role && user.role.description ? `
+                                        <div class="mb-0">
+                                            <label class="form-label text-muted fs-12 mb-1">Role Description</label>
+                                            <p class="mb-0">${user.role.description}</p>
+                                        </div>
+                                        ` : ''}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="col-md-6 mb-3">
-                    <div class="card border">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0"><i class="ti ti-shield me-2"></i>Role & Permissions</h6>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                            <a href="{{ url('/portal/users') }}/${user.id}/edit" class="btn btn-primary">
+                                <i class="ti ti-edit me-1"></i>Edit User
+                            </a>
                         </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label text-muted fs-12 mb-1">Role</label>
-                                <div>
-                                    <span class="badge bg-primary">${user.role ? user.role.name : 'No Role'}</span>
-                                </div>
-                            </div>
-                            ${user.role && user.role.description ? `
-                            <div class="mb-0">
-                                <label class="form-label text-muted fs-12 mb-1">Role Description</label>
-                                <p class="mb-0">${user.role.description}</p>
-                            </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-flex justify-content-end gap-2">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                <a href="{{ url('/portal/users') }}/${user.id}/edit" class="btn btn-primary">
-                    <i class="ti ti-edit me-1"></i>Edit User
-                </a>
-            </div>
-        `;
+                    `;
         }
 
         function showError(message) {
             const content = document.getElementById('userDetailsContent');
             content.innerHTML = `
-            <div class="alert alert-danger">
-                <i class="ti ti-alert-circle me-2"></i>${message}
-            </div>
-        `;
+                        <div class="alert alert-danger">
+                            <i class="ti ti-alert-circle me-2"></i>${message}
+                        </div>
+                    `;
         }
 
         function toggleUserStatus(userId, newStatus) {
             const statusText = newStatus ? 'activate' : 'deactivate';
-
-            if (!confirm(`Are you sure you want to ${statusText} this user?`)) {
-                return;
+            const statusTextCap = newStatus ? 'Activate' : 'Deactivate';
+            
+            // Show the modal
+            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            const iconElement = document.getElementById('confirmModalIcon');
+            const titleElement = document.getElementById('confirmModalTitle');
+            const messageElement = document.getElementById('deleteModalMessage');
+            const confirmBtn = document.getElementById('confirmDeleteBtn');
+            
+            // Update modal appearance based on action
+            if (newStatus) {
+                iconElement.className = 'avatar avatar-xl bg-transparent-success text-success mb-3';
+                iconElement.querySelector('i').className = 'ti ti-user-check fs-36';
+                confirmBtn.className = 'btn btn-success';
+                confirmBtn.innerHTML = '<i class="ti ti-check me-1"></i>Yes, Activate';
+                titleElement.textContent = 'Confirm Activate';
+            } else {
+                iconElement.className = 'avatar avatar-xl bg-transparent-warning text-warning mb-3';
+                iconElement.querySelector('i').className = 'ti ti-user-off fs-36';
+                confirmBtn.className = 'btn btn-warning';
+                confirmBtn.innerHTML = '<i class="ti ti-x me-1"></i>Yes, Deactivate';
+                titleElement.textContent = 'Confirm Deactivate';
             }
-
-            fetch(`{{ url('/portal/users') }}/${userId}/toggle-status`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                }
-            })
+            
+            messageElement.innerHTML = `Are you sure you want to <strong>${statusText}</strong> this user?`;
+            
+            // Remove any existing click handlers
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            
+            // Add click handler for this specific status toggle
+            document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+                // Hide the modal
+                modal.hide();
+                
+                // Show loading state
+                showToast('info', `${statusTextCap}ing user...`);
+                
+                // Perform the status toggle
+                fetch(`{{ url('/portal/users') }}/${userId}/toggle-status`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -384,35 +443,68 @@
                     console.error('Error:', error);
                     showToast('error', 'An error occurred while updating user status');
                 });
+            });
+            
+            // Show the modal
+            modal.show();
         }
-
         function deleteUser(userId, userName) {
-            if (!confirm(`Are you sure you want to delete "${userName}"? This action cannot be undone.`)) {
-                return;
-            }
+            // Show the modal
+            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            const iconElement = document.getElementById('confirmModalIcon');
+            const titleElement = document.getElementById('confirmModalTitle');
+            const messageElement = document.getElementById('deleteModalMessage');
+            const confirmBtn = document.getElementById('confirmDeleteBtn');
 
-            fetch(`{{ url('/portal/users') }}/${userId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showToast('success', data.message);
-                        refreshTable();
-                    } else {
-                        showToast('error', data.message || 'Failed to delete user');
+            // Reset modal to delete style
+            iconElement.className = 'avatar avatar-xl bg-transparent-danger text-danger mb-3';
+            iconElement.querySelector('i').className = 'ti ti-trash-x fs-36';
+            titleElement.textContent = 'Confirm Delete';
+            confirmBtn.className = 'btn btn-danger';
+            confirmBtn.innerHTML = '<i class="ti ti-trash me-1"></i>Yes, Delete';
+
+            // Update modal message with user name
+            messageElement.innerHTML = `Are you sure you want to delete <strong>"${userName}"</strong>? This action cannot be undone.`;
+
+            // Remove any existing click handlers
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+
+            // Add click handler for this specific deletion
+            document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+                // Hide the modal
+                modal.hide();
+
+                // Show loading state
+                showToast('info', 'Deleting user...');
+
+                // Perform the delete
+                fetch(`{{ url('/portal/users') }}/${userId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
                     }
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showToast('error', 'An error occurred while deleting the user');
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            showToast('success', data.message);
+                            refreshTable();
+                        } else {
+                            showToast('error', data.message || 'Failed to delete user');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showToast('error', 'An error occurred while deleting the user');
+                    });
+            });
+
+            // Show the modal
+            modal.show();
         }
 
         function showToast(type, message) {
@@ -421,17 +513,33 @@
             const toastId = 'toast-' + Date.now();
             const toast = document.createElement('div');
             toast.id = toastId;
-            toast.className = `toast align-items-center text-bg-${type === 'success' ? 'success' : 'danger'} border-0 show`;
+
+            // Map type to Bootstrap classes
+            let bgClass = 'success';
+            let icon = 'check-circle';
+
+            if (type === 'error' || type === 'danger') {
+                bgClass = 'danger';
+                icon = 'alert-circle';
+            } else if (type === 'info') {
+                bgClass = 'info';
+                icon = 'info-circle';
+            } else if (type === 'warning') {
+                bgClass = 'warning';
+                icon = 'alert-triangle';
+            }
+
+            toast.className = `toast align-items-center text-bg-${bgClass} border-0 show`;
             toast.setAttribute('role', 'alert');
             toast.innerHTML = `
-            <div class="d-flex">
-                <div class="toast-body">
-                    <i class="ti ti-${type === 'success' ? 'check-circle' : 'alert-circle'} me-2"></i>
-                    ${message}
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" onclick="removeToast('${toastId}')"></button>
-            </div>
-        `;
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                <i class="ti ti-${icon} me-2"></i>
+                                ${message}
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" onclick="removeToast('${toastId}')"></button>
+                        </div>
+                    `;
 
             toastContainer.appendChild(toast);
 
@@ -457,5 +565,204 @@
             }
             return container;
         }
+
+        function editUser(userId) {
+            const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+            const loadingDiv = document.getElementById('editUserLoading');
+            const formContent = document.getElementById('editUserFormContent');
+            
+            // Show loading, hide form
+            loadingDiv.style.display = 'block';
+            formContent.style.display = 'none';
+            
+            // Clear previous errors
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            document.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
+            
+            // Reset password toggle
+            document.getElementById('change_password_toggle').checked = false;
+            document.getElementById('passwordChangeFields').style.display = 'none';
+            document.getElementById('edit_password').value = '';
+            document.getElementById('edit_password_confirmation').value = '';
+            
+            modal.show();
+            
+            // Fetch user data
+            fetch(`{{ url('/portal/users') }}/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const user = data.user;
+                    
+                    // Populate form fields
+                    document.getElementById('edit_user_id').value = user.id;
+                    document.getElementById('edit_name').value = user.name || '';
+                    document.getElementById('edit_email').value = user.email || '';
+                    document.getElementById('edit_phone').value = user.phone || '';
+                    document.getElementById('edit_role_id').value = user.role_id || '';
+                    document.getElementById('edit_aadhaar').value = user.aadhaar || '';
+                    document.getElementById('edit_pancard').value = user.pancard || '';
+                    document.getElementById('edit_is_active').checked = user.is_active;
+                    
+                    // Populate user details if exists
+                    if (user.user_detail) {
+                        document.getElementById('edit_company_name').value = user.user_detail.company_name || '';
+                        document.getElementById('edit_district').value = user.user_detail.district || '';
+                        document.getElementById('edit_state').value = user.user_detail.state || '';
+                        document.getElementById('edit_pincode').value = user.user_detail.pincode || '';
+                    } else {
+                        document.getElementById('edit_company_name').value = '';
+                        document.getElementById('edit_district').value = '';
+                        document.getElementById('edit_state').value = '';
+                        document.getElementById('edit_pincode').value = '';
+                    }
+                    
+                    // Show form, hide loading
+                    loadingDiv.style.display = 'none';
+                    formContent.style.display = 'block';
+                } else {
+                    modal.hide();
+                    showToast('error', 'Failed to load user details');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                modal.hide();
+                showToast('error', 'An error occurred while loading user details');
+            });
+        }
+
+        // Password change toggle
+        document.getElementById('change_password_toggle').addEventListener('change', function() {
+            const passwordFields = document.getElementById('passwordChangeFields');
+            const passwordInput = document.getElementById('edit_password');
+            const confirmInput = document.getElementById('edit_password_confirmation');
+            
+            if (this.checked) {
+                passwordFields.style.display = 'block';
+                passwordInput.required = true;
+                confirmInput.required = true;
+            } else {
+                passwordFields.style.display = 'none';
+                passwordInput.required = false;
+                confirmInput.required = false;
+                passwordInput.value = '';
+                confirmInput.value = '';
+            }
+        });
+
+        // Toggle password visibility
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(inputId + '_icon');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('ti-eye');
+                icon.classList.add('ti-eye-off');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('ti-eye-off');
+                icon.classList.add('ti-eye');
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('editUserForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userId = document.getElementById('edit_user_id').value;
+            const formData = new FormData(this);
+            const updateBtn = document.getElementById('updateUserBtn');
+            
+            // Clear previous errors
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            document.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
+            
+            // Validate password confirmation if changing password
+            const changePassword = document.getElementById('change_password_toggle').checked;
+            if (changePassword) {
+                const password = document.getElementById('edit_password').value;
+                const confirmation = document.getElementById('edit_password_confirmation').value;
+                
+                if (password !== confirmation) {
+                    document.getElementById('edit_password_confirmation').classList.add('is-invalid');
+                    document.getElementById('error_edit_password_confirmation').textContent = 'Password confirmation does not match';
+                    return;
+                }
+            }
+            
+            // Disable submit button
+            updateBtn.disabled = true;
+            updateBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Updating...';
+            
+            // Convert FormData to JSON
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            
+            // Handle checkbox for is_active
+            data.is_active = document.getElementById('edit_is_active').checked ? 1 : 0;
+            
+            // Remove password fields if not changing password
+            if (!changePassword) {
+                delete data.password;
+                delete data.password_confirmation;
+            }
+            
+            fetch(`{{ url('/portal/users') }}/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Hide modal
+                    bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
+                    
+                    // Show success message
+                    showToast('success', data.message || 'User updated successfully');
+                    
+                    // Refresh table
+                    usersTable.ajax.reload();
+                } else {
+                    // Handle validation errors
+                    if (data.errors) {
+                        Object.keys(data.errors).forEach(field => {
+                            const input = document.getElementById('edit_' + field);
+                            const error = document.getElementById('error_edit_' + field);
+                            
+                            if (input && error) {
+                                input.classList.add('is-invalid');
+                                error.textContent = data.errors[field][0];
+                            }
+                        });
+                    }
+                    
+                    showToast('error', data.message || 'Failed to update user');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('error', 'An error occurred while updating user');
+            })
+            .finally(() => {
+                // Re-enable submit button
+                updateBtn.disabled = false;
+                updateBtn.innerHTML = '<i class="ti ti-device-floppy me-1"></i>Update User';
+            });
+        });
     </script>
 @endpush

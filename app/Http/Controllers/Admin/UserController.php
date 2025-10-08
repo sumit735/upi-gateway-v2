@@ -112,9 +112,9 @@ class UserController extends Controller
                     </button>';
         
         // Edit button
-        $buttons .= '<a href="' . route('admin.users.edit', $user->id) . '" class="btn btn-sm btn-icon btn-primary" title="Edit User">
+        $buttons .= '<button type="button" class="btn btn-sm btn-icon btn-primary" onclick="editUser(' . $user->id . ')" title="Edit User">
                         <i class="ti ti-edit"></i>
-                    </a>';
+                    </button>';
         
         // Toggle status button
         if ($user->is_active) {
@@ -183,9 +183,65 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
-        //
+        // Validation rules
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone' => 'required|string|max:15|unique:users,phone,' . $user->id,
+            'role_id' => 'required|exists:roles,id',
+            'aadhaar' => 'nullable|string|size:12|unique:users,aadhaar,' . $user->id,
+            'pancard' => 'nullable|string|size:10|unique:users,pancard,' . $user->id,
+            'is_active' => 'boolean',
+            'company_name' => 'nullable|string|max:255',
+            'district' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'pincode' => 'nullable|string|size:6',
+        ];
+        
+        // Add password validation if password is being changed
+        if ($request->filled('password')) {
+            $rules['password'] = 'required|string|min:8|confirmed';
+        }
+        
+        // Validate request
+        $validated = $request->validate($rules);
+        
+        // Update user basic details
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+        $user->phone = $validated['phone'];
+        $user->role_id = $validated['role_id'];
+        $user->aadhaar = $validated['aadhaar'] ?? null;
+        $user->pancard = $validated['pancard'] ?? null;
+        $user->is_active = $request->has('is_active') ? (bool)$validated['is_active'] : false;
+        
+        // Update password if provided
+        if ($request->filled('password')) {
+            $user->password = bcrypt($validated['password']);
+        }
+        
+        $user->save();
+        
+        // Update or create user details
+        if ($request->hasAny(['company_name', 'district', 'state', 'pincode'])) {
+            $user->userDetail()->updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'company_name' => $validated['company_name'] ?? null,
+                    'district' => $validated['district'] ?? null,
+                    'state' => $validated['state'] ?? null,
+                    'pincode' => $validated['pincode'] ?? null,
+                ]
+            );
+        }
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'User updated successfully.',
+            'user' => $user->load(['role', 'userDetail'])
+        ]);
     }
 
     /**
