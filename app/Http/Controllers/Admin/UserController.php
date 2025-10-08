@@ -73,7 +73,6 @@ class UserController extends Controller
                       ->skip($start)
                       ->take($length)
                       ->get();
-        
         // Format data for DataTable
         $data = $users->map(function ($user) {
             return [
@@ -81,7 +80,7 @@ class UserController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'phone' => $user->phone ?? 'N/A',
-                'role_badge' => $user->role ? '<span class="badge bg-primary">' . $user->role . '</span>' : '<span class="badge bg-secondary">No Role</span>',
+                'role_badge' => $user->role->name ? '<span class="badge bg-primary">' . $user->role->name . '</span>' : '<span class="badge bg-secondary">No Role</span>',
                 'is_active' => $user->is_active,
                 'status_badge' => $user->is_active 
                     ? '<span class="badge bg-success"><i class="ti ti-check me-1"></i>Active</span>' 
