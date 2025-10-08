@@ -152,7 +152,52 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validation rules
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|string|max:15|unique:users,phone',
+            'role_id' => 'required|exists:roles,id',
+            'password' => 'required|string|min:8|confirmed',
+            'aadhaar' => 'nullable|string|size:12|unique:users,aadhaar',
+            'pancard' => 'nullable|string|size:10|unique:users,pancard',
+            'is_active' => 'boolean',
+            'company_name' => 'nullable|string|max:255',
+            'district' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'pincode' => 'nullable|string|size:6',
+        ];
+        
+        // Validate request
+        $validated = $request->validate($rules);
+        
+        // Create user
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'role_id' => $validated['role_id'],
+            'password' => bcrypt($validated['password']),
+            'aadhaar' => $validated['aadhaar'] ?? null,
+            'pancard' => $validated['pancard'] ?? null,
+            'is_active' => $request->has('is_active') ? (bool)$validated['is_active'] : true,
+        ]);
+        
+        // Create user details if provided
+        if ($request->hasAny(['company_name', 'district', 'state', 'pincode'])) {
+            $user->userDetail()->create([
+                'company_name' => $validated['company_name'] ?? null,
+                'district' => $validated['district'] ?? null,
+                'state' => $validated['state'] ?? null,
+                'pincode' => $validated['pincode'] ?? null,
+            ]);
+        }
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'User created successfully.',
+            'user' => $user->load(['role', 'userDetail'])
+        ]);
     }
 
     /**

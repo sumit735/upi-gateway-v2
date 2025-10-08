@@ -27,9 +27,9 @@
                     <button type="button" class="btn btn-light me-2" onclick="refreshTable()">
                         <i class="ti ti-refresh me-2"></i>Refresh
                     </button>
-                    <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
+                    <button type="button" class="btn btn-primary" onclick="createUser()">
                         <i class="ti ti-plus me-2"></i>Add User
-                    </a>
+                    </button>
                 </div>
             </div>
             <!-- /Breadcrumb -->
@@ -447,10 +447,60 @@
             });
         }
 
+        function createUser() {
+            const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+            const loadingDiv = document.getElementById('editUserLoading');
+            const formContent = document.getElementById('editUserFormContent');
+            
+            // Update modal title and icon
+            document.getElementById('userModalIcon').className = 'ti ti-user-plus me-2';
+            document.getElementById('userModalTitleText').textContent = 'Add New User';
+            
+            // Update submit button
+            document.getElementById('submitBtnIcon').className = 'ti ti-plus me-1';
+            document.getElementById('submitBtnText').textContent = 'Create User';
+            
+            // Set form for creation
+            document.getElementById('edit_user_id').value = '';
+            document.getElementById('form_method').value = 'POST';
+            
+            // Hide loading, show form
+            loadingDiv.style.display = 'none';
+            formContent.style.display = 'block';
+            
+            // Clear all form fields
+            document.getElementById('editUserForm').reset();
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            document.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
+            
+            // Password section for create mode
+            document.getElementById('passwordSectionTitle').textContent = 'Set Password';
+            document.getElementById('passwordToggleSection').style.display = 'none';
+            document.getElementById('passwordChangeFields').style.display = 'block';
+            document.getElementById('edit_password').required = true;
+            document.getElementById('edit_password_confirmation').required = true;
+            
+            // Set default active status
+            document.getElementById('edit_is_active').checked = true;
+            
+            modal.show();
+        }
+
         function editUser(userId) {
             const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
             const loadingDiv = document.getElementById('editUserLoading');
             const formContent = document.getElementById('editUserFormContent');
+            
+            // Update modal title and icon
+            document.getElementById('userModalIcon').className = 'ti ti-user-edit me-2';
+            document.getElementById('userModalTitleText').textContent = 'Edit User';
+            
+            // Update submit button
+            document.getElementById('submitBtnIcon').className = 'ti ti-device-floppy me-1';
+            document.getElementById('submitBtnText').textContent = 'Update User';
+            
+            // Set form for editing
+            document.getElementById('form_method').value = 'PUT';
             
             // Show loading, hide form
             loadingDiv.style.display = 'block';
@@ -460,11 +510,15 @@
             document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
             document.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
             
-            // Reset password toggle
+            // Password section for edit mode
+            document.getElementById('passwordSectionTitle').textContent = 'Change Password';
+            document.getElementById('passwordToggleSection').style.display = 'block';
             document.getElementById('change_password_toggle').checked = false;
             document.getElementById('passwordChangeFields').style.display = 'none';
             document.getElementById('edit_password').value = '';
             document.getElementById('edit_password_confirmation').value = '';
+            document.getElementById('edit_password').required = false;
+            document.getElementById('edit_password_confirmation').required = false;
             
             modal.show();
             
@@ -559,6 +613,8 @@
             e.preventDefault();
             
             const userId = document.getElementById('edit_user_id').value;
+            const formMethod = document.getElementById('form_method').value;
+            const isCreating = !userId || formMethod === 'POST';
             const formData = new FormData(this);
             const updateBtn = document.getElementById('updateUserBtn');
             
@@ -566,11 +622,19 @@
             document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
             document.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
             
-            // Validate password confirmation if changing password
+            // Validate password confirmation
             const changePassword = document.getElementById('change_password_toggle').checked;
-            if (changePassword) {
+            const passwordRequired = isCreating || changePassword;
+            
+            if (passwordRequired) {
                 const password = document.getElementById('edit_password').value;
                 const confirmation = document.getElementById('edit_password_confirmation').value;
+                
+                if (!password) {
+                    document.getElementById('edit_password').classList.add('is-invalid');
+                    document.getElementById('error_edit_password').textContent = 'Password is required';
+                    return;
+                }
                 
                 if (password !== confirmation) {
                     document.getElementById('edit_password_confirmation').classList.add('is-invalid');
@@ -581,24 +645,31 @@
             
             // Disable submit button
             updateBtn.disabled = true;
-            updateBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Updating...';
+            updateBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span>${isCreating ? 'Creating...' : 'Updating...'}`;
             
             // Convert FormData to JSON
             const data = {};
             formData.forEach((value, key) => {
-                data[key] = value;
+                if (key !== '_method' && key !== 'user_id') {
+                    data[key] = value;
+                }
             });
             
             // Handle checkbox for is_active
             data.is_active = document.getElementById('edit_is_active').checked ? 1 : 0;
             
-            // Remove password fields if not changing password
-            if (!changePassword) {
+            // Remove password fields if not changing password (edit mode only)
+            if (!isCreating && !changePassword) {
                 delete data.password;
                 delete data.password_confirmation;
             }
             
-            fetch(`{{ url('/portal/users') }}/${userId}`, {
+            // Determine URL and method
+            const url = isCreating 
+                ? '{{ url("/portal/users") }}' 
+                : `{{ url('/portal/users') }}/${userId}`;
+            
+            fetch(url, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -614,7 +685,7 @@
                     bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
                     
                     // Show success message
-                    showToast('success', data.message || 'User updated successfully');
+                    showToast('success', data.message || (isCreating ? 'User created successfully' : 'User updated successfully'));
                     
                     // Refresh table
                     usersTable.ajax.reload();
@@ -632,17 +703,19 @@
                         });
                     }
                     
-                    showToast('error', data.message || 'Failed to update user');
+                    showToast('error', data.message || (isCreating ? 'Failed to create user' : 'Failed to update user'));
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                showToast('error', 'An error occurred while updating user');
+                showToast('error', `An error occurred while ${isCreating ? 'creating' : 'updating'} user`);
             })
             .finally(() => {
                 // Re-enable submit button
                 updateBtn.disabled = false;
-                updateBtn.innerHTML = '<i class="ti ti-device-floppy me-1"></i>Update User';
+                const btnIcon = isCreating ? 'ti-plus' : 'ti-device-floppy';
+                const btnText = isCreating ? 'Create User' : 'Update User';
+                updateBtn.innerHTML = `<i class="ti ${btnIcon} me-1"></i>${btnText}`;
             });
         });
     </script>

@@ -1,30 +1,30 @@
-<!-- Edit User Modal -->
+
 <div class="modal fade" id="editUserModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form id="editUserForm">
                 @csrf
-                @method('PUT')
                 <input type="hidden" id="edit_user_id" name="user_id">
+                <input type="hidden" id="form_method" name="_method" value="PUT">
                 
                 <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="ti ti-user-edit me-2"></i>Edit User
+                    <h5 class="modal-title" id="userModalTitle">
+                        <i class="ti ti-user-edit me-2" id="userModalIcon"></i><span id="userModalTitleText">Edit User</span>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 
                 <div class="modal-body">
                     <!-- Loading State -->
-                    <div id="editUserLoading" class="text-center py-5">
+                    <div id="editUserLoading" class="text-center py-5" style="display: none;">
                         <div class="spinner-border text-primary" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
                         <p class="mt-3 text-muted">Loading user details...</p>
                     </div>
                     
-                    <!-- Form Content (hidden initially) -->
-                    <div id="editUserFormContent" style="display: none;">
+                    <!-- Form Content -->
+                    <div id="editUserFormContent">
                         <!-- User Details Section -->
                         <div class="mb-4">
                             <h6 class="border-bottom pb-2 mb-3">
@@ -143,20 +143,20 @@
                             </div>
                         </div>
                         
-                        <!-- Password Change Section -->
-                        <div class="mb-3">
+                        <!-- Password Section -->
+                        <div class="mb-3" id="passwordSection">
                             <h6 class="border-bottom pb-2 mb-3">
-                                <i class="ti ti-lock me-2"></i>Change Password
+                                <i class="ti ti-lock me-2"></i><span id="passwordSectionTitle">Change Password</span>
                             </h6>
                             
-                            <div class="form-check form-switch mb-3">
+                            <div class="form-check form-switch mb-3" id="passwordToggleSection">
                                 <input class="form-check-input" type="checkbox" id="change_password_toggle">
                                 <label class="form-check-label" for="change_password_toggle">
                                     <i class="ti ti-key me-1"></i>Update Password
                                 </label>
                             </div>
                             
-                            <div id="passwordChangeFields" style="display: none;">
+                            <div id="passwordChangeFields">
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label">New Password</label>
@@ -193,7 +193,7 @@
                         <i class="ti ti-x me-1"></i>Cancel
                     </button>
                     <button type="submit" class="btn btn-primary" id="updateUserBtn">
-                        <i class="ti ti-device-floppy me-1"></i>Update User
+                        <i class="ti ti-device-floppy me-1" id="submitBtnIcon"></i><span id="submitBtnText">Update User</span>
                     </button>
                 </div>
             </form>
