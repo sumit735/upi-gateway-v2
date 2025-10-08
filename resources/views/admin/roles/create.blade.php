@@ -112,7 +112,7 @@
                                                 <div class="form-check me-3">
                                                     <input class="form-check-input page-toggle" 
                                                            type="checkbox" 
-                                                           id="page-{{ $pageEnum->value }}"
+                                                           id="page-{{ str_replace(['*', '.'], ['', '-'], $pageEnum->value) }}"
                                                            data-page="{{ $pageEnum->value }}">
                                                 </div>
                                                 <div>
@@ -322,11 +322,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const page = this.dataset.page;
             const scope = this.value;
             
+            // Update ALL checkboxes for this page (not just checked ones)
             document.querySelectorAll(`input[data-page="${page}"].permission-input`).forEach(checkbox => {
-                if (checkbox.checked) {
-                    const action = checkbox.dataset.action;
-                    checkbox.value = `${page},${action},${scope}`;
-                }
+                const action = checkbox.dataset.action;
+                checkbox.value = `${page},${action},${scope}`;
             });
             updateSelectedCount();
         });
@@ -364,7 +363,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function updatePageToggle(page) {
         const checkboxes = document.querySelectorAll(`input[data-page="${page}"].permission-input`);
         const checkedBoxes = document.querySelectorAll(`input[data-page="${page}"].permission-input:checked`);
-        const pageToggle = document.querySelector(`#page-${page}`);
+        const pageId = page.replace(/[\*\.]/g, '-');
+        const pageToggle = document.querySelector(`#page-${pageId}`);
         
         if (pageToggle) {
             pageToggle.checked = checkedBoxes.length > 0;

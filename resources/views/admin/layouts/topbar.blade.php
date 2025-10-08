@@ -1247,8 +1247,8 @@
                     <ul>
                         <!-- Dashboard -->
                         @if(can_page(\App\Enums\PageEnum::DASHBOARD, \App\Enums\ActionEnum::VIEW))
-                        <li>
-                            <a href="{{ route('dashboard') }}">
+                        <li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                            <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
                                 <i class="ti ti-smart-home"></i>
                                 <span>Dashboard</span>
                             </a>
@@ -1258,22 +1258,26 @@
                         <!-- User Management -->
                         @if(can_page(\App\Enums\PageEnum::USER_MANAGEMENT, \App\Enums\ActionEnum::VIEW))
                         <li class="submenu">
-                            <a href="javascript:void(0);">
+                            <a href="javascript:void(0);" class="{{ request()->routeIs('admin.users.*', 'admin.roles.*') ? 'active subdrop' : '' }}">
                                 <i class="ti ti-users"></i>
                                 <span>User Management</span>
                                 <span class="menu-arrow"></span>
                             </a>
-                            <ul>
-                                <li><a href="{{ route('admin.users.index') }}">Users</a></li>
-                                <li><a href="{{ route('admin.roles.index') }}">Roles & Permissions</a></li>
+                            <ul style="{{ request()->routeIs('admin.users.*', 'admin.roles.*') ? 'display: block;' : '' }}">
+                                <li class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">Users</a>
+                                </li>
+                                <li class="{{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.roles.index') }}" class="{{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">Roles & Permissions</a>
+                                </li>
                             </ul>
                         </li>
                         @endif
                         
                         <!-- Profile -->
                         @if(can_page(\App\Enums\PageEnum::PROFILE, \App\Enums\ActionEnum::VIEW))
-                        <li>
-                            <a href="{{ route('profile.show') }}">
+                        <li class="{{ request()->routeIs('profile.*') ? 'active' : '' }}">
+                            <a href="{{ route('profile.show') }}" class="{{ request()->routeIs('profile.*') ? 'active' : '' }}">
                                 <i class="ti ti-user-circle"></i>
                                 <span>My Profile</span>
                             </a>
