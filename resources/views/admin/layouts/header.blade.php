@@ -62,6 +62,9 @@
 	<!-- Main CSS -->
 	<link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}">
 
+	<!-- DataTables CSS (Optional - Include in specific pages) -->
+	@stack('styles')
+
 </head>
 
 <body>

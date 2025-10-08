@@ -79,6 +79,10 @@ class AuthenticateController extends Controller
                 Auth::logout();
                 return back()->withErrors(['email' => 'Your account has been blocked. Contact administrator.']);
             }
+            if (!$user->is_active) {
+                Auth::logout();
+                return back()->withErrors(['email' => 'Your account is inactive. Contact administrator.']);
+            }
 
             // Reset invalid attempts on successful login
             $user->update(['invalid_attempts' => 0]);

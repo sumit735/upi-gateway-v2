@@ -28,6 +28,7 @@ class User extends Authenticatable
         'role_id',
         'invalid_attempts',
         'is_blocked',
+        'is_active',
     ];
 
     /**
@@ -50,6 +51,24 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
+            'is_blocked' => 'boolean',
         ];
+    }
+
+    /**
+     * Get the role that the user belongs to.
+     */
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * Get the user details associated with the user.
+     */
+    public function userDetail()
+    {
+        return $this->hasOne(UserDetail::class);
     }
 }

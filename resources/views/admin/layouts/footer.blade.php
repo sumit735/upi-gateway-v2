@@ -46,6 +46,9 @@
 	<script src="{{ asset('admin/assets/js/theme-colorpicker.js') }}"></script>
 	<script src="{{ asset('admin/assets/js/script.js') }}"></script>
 
+	<!-- DataTables JS (Optional - Include in specific pages) -->
+	@stack('scripts')
+
 </body>
 
 </html>

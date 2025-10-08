@@ -57,30 +57,40 @@ Route::middleware(['auth'])->group(function () {
     // ================================
 
     // View all users
-    Route::get('/admin/users', [UserController::class, 'index'])
+    Route::get('/users', [UserController::class, 'index'])
         ->name('admin.users.index')
         ->middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::VIEW, ScopeEnum::ALL));
 
+    // Get users list for DataTable (API) - Using POST to avoid long URLs
+    Route::post('/users/list/data', [UserController::class, 'list'])
+        ->name('admin.users.list')
+        ->middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::VIEW, ScopeEnum::ALL));
+
     // Create new user
-    Route::get('/admin/users/create', [UserController::class, 'create'])
+    Route::get('/users/create', [UserController::class, 'create'])
         ->name('admin.users.create')
         ->middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::CREATE, ScopeEnum::ALL));
 
-    Route::post('/admin/users', [UserController::class, 'store'])
+    Route::post('/users', [UserController::class, 'store'])
         ->name('admin.users.store')
         ->middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::CREATE, ScopeEnum::ALL));
 
     // Edit user
-    Route::get('/admin/users/{user}/edit', [UserController::class, 'edit'])
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])
         ->name('admin.users.edit')
         ->middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::EDIT, ScopeEnum::ALL));
 
-    Route::put('/admin/users/{user}', [UserController::class, 'update'])
+    Route::put('/users/{user}', [UserController::class, 'update'])
         ->name('admin.users.update')
         ->middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::EDIT, ScopeEnum::ALL));
 
+    // Toggle user status
+    Route::post('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])
+        ->name('admin.users.toggleStatus')
+        ->middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::EDIT, ScopeEnum::ALL));
+
     // Delete user
-    Route::delete('/admin/users/{user}', [UserController::class, 'destroy'])
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])
         ->name('admin.users.destroy')
         ->middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::DELETE, ScopeEnum::ALL));
 
@@ -107,7 +117,7 @@ Route::middleware(['auth'])->group(function () {
     // ================================
 
     Route::middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::VIEW, ScopeEnum::ALL))->group(function () {
-        Route::get('/admin/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
-        Route::get('/admin/users/{user}/details', [UserController::class, 'details'])->name('admin.users.details');
+        Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
+        Route::get('/users/{user}/details', [UserController::class, 'details'])->name('admin.users.details');
     });
 });
