@@ -153,14 +153,21 @@
 
 <!-- Role Details Modal -->
 <div class="modal fade" id="roleDetailsModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Role Details</h5>
+                <h5 class="modal-title">
+                    <i class="ti ti-shield me-2"></i>Role Details
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body" id="roleDetailsContent">
-                <!-- Content will be loaded here -->
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Loading role details...</p>
+                </div>
             </div>
         </div>
     </div>
@@ -168,23 +175,217 @@
 
 <script>
 function viewRoleDetails(roleId) {
-    // Show modal
     const modal = new bootstrap.Modal(document.getElementById('roleDetailsModal'));
     const content = document.getElementById('roleDetailsContent');
     
-    content.innerHTML = '<div class="text-center py-3"><i class="ti ti-loader spinner-border"></i> Loading...</div>';
+    // Show loading state
+    content.innerHTML = `
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3 text-muted">Loading role details...</p>
+        </div>
+    `;
+    
     modal.show();
     
-    // In a real implementation, you'd fetch role details via AJAX
-    // For now, we'll just show a placeholder
-    setTimeout(() => {
-        content.innerHTML = `
-            <div class="alert alert-info">
-                <i class="ti ti-info-circle me-2"></i>
-                Role details functionality can be implemented with an AJAX call to fetch full role permissions and user assignments.
+    // Fetch role details via AJAX
+    fetch(`{{ url('/portal/roles') }}/${roleId}`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            displayRoleDetails(data.role);
+        } else {
+            showError('Failed to load role details');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showError('An error occurred while loading role details');
+    });
+}
+
+function displayRoleDetails(role) {
+    const content = document.getElementById('roleDetailsContent');
+    
+    // Group permissions by page
+    const permissionsByPage = {};
+    role.permissions.forEach(perm => {
+        const pageName = perm.page?.name || 'Unknown Page';
+        if (!permissionsByPage[pageName]) {
+            permissionsByPage[pageName] = [];
+        }
+        permissionsByPage[pageName].push(perm);
+    });
+    
+    // Generate users list HTML
+    let usersHtml = '';
+    if (role.users && role.users.length > 0) {
+        usersHtml = role.users.slice(0, 5).map(user => `
+            <div class="d-flex align-items-center mb-2">
+                <div class="avatar avatar-sm me-2">
+                    <span class="avatar-title rounded-circle bg-primary-transparent text-primary">
+                        ${user.name.charAt(0).toUpperCase()}
+                    </span>
+                </div>
+                <div>
+                    <h6 class="mb-0 fs-14">${user.name}</h6>
+                    <p class="mb-0 fs-12 text-muted">${user.email}</p>
+                </div>
             </div>
-        `;
-    }, 500);
+        `).join('');
+        
+        if (role.users.length > 5) {
+            usersHtml += `<p class="text-muted fs-12 mb-0">+${role.users.length - 5} more users</p>`;
+        }
+    } else {
+        usersHtml = '<p class="text-muted mb-0">No users assigned to this role yet.</p>';
+    }
+    
+    // Generate permissions HTML
+    let permissionsHtml = '';
+    if (Object.keys(permissionsByPage).length > 0) {
+        permissionsHtml = Object.entries(permissionsByPage).map(([pageName, perms]) => `
+            <div class="card border mb-3">
+                <div class="card-header bg-light py-2">
+                    <h6 class="mb-0 fs-14">
+                        <i class="ti ti-file-text me-2 text-primary"></i>${pageName}
+                    </h6>
+                </div>
+                <div class="card-body py-2">
+                    <div class="d-flex flex-wrap gap-2">
+                        ${perms.map(perm => {
+                            const actionName = perm.action?.name || 'Unknown';
+                            const scope = perm.scope || 'self';
+                            const badgeColor = actionName === 'View' ? 'info' : 
+                                              actionName === 'Create' ? 'success' : 
+                                              actionName === 'Edit' ? 'warning' : 'danger';
+                            const scopeIcon = scope === 'all' ? 'ti-users' : 'ti-user';
+                            
+                            return `
+                                <span class="badge bg-${badgeColor}">
+                                    <i class="ti ${getActionIcon(actionName)} me-1"></i>${actionName}
+                                    <i class="ti ${scopeIcon} ms-1"></i>
+                                </span>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    } else {
+        permissionsHtml = '<p class="text-muted mb-0">No permissions assigned to this role yet.</p>';
+    }
+    
+    content.innerHTML = `
+        <div class="row">
+            <!-- Role Information -->
+            <div class="col-md-6 mb-3">
+                <div class="card border">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0">
+                            <i class="ti ti-info-circle me-2"></i>Role Information
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label text-muted fs-12 mb-1">Role Name</label>
+                            <h5 class="mb-0">${role.name}</h5>
+                        </div>
+                        
+                        ${role.description ? `
+                        <div class="mb-3">
+                            <label class="form-label text-muted fs-12 mb-1">Description</label>
+                            <p class="mb-0">${role.description}</p>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-muted fs-12 mb-1">Status</label>
+                            <div>
+                                ${role.is_default ? '<span class="badge bg-success">Default Role</span>' : '<span class="badge bg-secondary">Custom Role</span>'}
+                            </div>
+                        </div>
+                        
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="border-end">
+                                    <h4 class="mb-1 text-primary">${role.users ? role.users.length : 0}</h4>
+                                    <p class="mb-0 fs-12 text-muted">Users Assigned</p>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <h4 class="mb-1 text-success">${role.permissions ? role.permissions.length : 0}</h4>
+                                <p class="mb-0 fs-12 text-muted">Permissions</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Assigned Users -->
+            <div class="col-md-6 mb-3">
+                <div class="card border">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0">
+                            <i class="ti ti-users me-2"></i>Assigned Users
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        ${usersHtml}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Permissions -->
+        <div class="card border mb-0">
+            <div class="card-header bg-light">
+                <h6 class="mb-0">
+                    <i class="ti ti-lock me-2"></i>Permissions
+                </h6>
+            </div>
+            <div class="card-body">
+                ${permissionsHtml}
+            </div>
+        </div>
+        
+        <!-- Actions -->
+        <div class="d-flex justify-content-end gap-2 mt-3">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+            <a href="{{ url('/portal/roles') }}/${role.id}/edit" class="btn btn-primary">
+                <i class="ti ti-edit me-1"></i>Edit Role
+            </a>
+        </div>
+    `;
+}
+
+function getActionIcon(actionName) {
+    const icons = {
+        'View': 'ti-eye',
+        'Create': 'ti-plus',
+        'Edit': 'ti-edit',
+        'Delete': 'ti-trash',
+        'Approve': 'ti-check',
+        'Reject': 'ti-x'
+    };
+    return icons[actionName] || 'ti-point';
+}
+
+function showError(message) {
+    const content = document.getElementById('roleDetailsContent');
+    content.innerHTML = `
+        <div class="alert alert-danger">
+            <i class="ti ti-alert-circle me-2"></i>${message}
+        </div>
+    `;
 }
 
 function deleteRole(roleId, roleName) {
@@ -266,24 +467,4 @@ function getOrCreateToastContainer() {
     return container;
 }
 </script>
-
-<style>
-.role-card {
-    transition: all 0.3s ease;
-    border: 1px solid #e9ecef;
-}
-
-.role-card:hover {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
-}
-
-.avatar.bg-primary-transparent {
-    background-color: rgba(107, 70, 193, 0.1) !important;
-}
-
-.permission-preview .badge {
-    font-size: 10px;
-}
-</style>
 @endsection

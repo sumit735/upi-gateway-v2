@@ -23,6 +23,19 @@ class RoleController extends Controller
         $roles = Role::withCount('users')->get();
         return view('admin.roles.index', compact('roles'));
     }
+    public function show(Role $role)
+    {
+        $role->load(['permissions.page', 'permissions.action', 'users']);
+        
+        if (request()->ajax() || request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'role' => $role
+            ]);
+        }
+        
+        return redirect()->route('admin.roles.index');
+    }
 
     /**
      * Show the form for creating a new role.
@@ -100,15 +113,6 @@ class RoleController extends Controller
 
         return redirect()->route('admin.roles.index')
             ->with('success', 'Role created successfully.');
-    }
-
-    /**
-     * Display the specified role.
-     */
-    public function show(Role $role)
-    {
-        $role->load(['permissions.page', 'permissions.action']);
-        return view('admin.roles.show', compact('role'));
     }
 
     /**

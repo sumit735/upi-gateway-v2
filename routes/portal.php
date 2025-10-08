@@ -41,6 +41,10 @@ Route::middleware(['auth'])->group(function () {
         ->name('admin.roles.edit')
         ->middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::EDIT, ScopeEnum::ALL));
 
+    Route::get('/roles/{role}', [RoleController::class, 'show'])
+        ->name('admin.roles.show')
+        ->middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::VIEW, ScopeEnum::ALL));
+
     Route::put('/roles/{role}', [RoleController::class, 'update'])
         ->name('admin.roles.update')
         ->middleware(permission(PageEnum::USER_MANAGEMENT, ActionEnum::EDIT, ScopeEnum::ALL));
