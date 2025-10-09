@@ -177,7 +177,8 @@ class RoleController extends Controller
                 }
             }
         });
-
+        // invalidte the session cache
+        session()->forget('user_permissions');
         if ($request->expectsJson() || $request->ajax()) {
             return response()->json([
                 'success' => true,
