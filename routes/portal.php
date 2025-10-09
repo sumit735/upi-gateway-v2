@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\PortalController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\SettingsController;
 
 use App\Enums\PageEnum;
 use App\Enums\ActionEnum;
@@ -120,4 +121,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
         Route::get('/users/{user}/details', [UserController::class, 'details'])->name('admin.users.details');
     });
+
+    // settings routes
+    // Route::middleware(permission(PageEnum::SETTINGS, ActionEnum::VIEW, ScopeEnum::ALL))->group(function () {
+        Route::get('/settings', [SettingsController::class, 'index'])->name('admin.settings.index');
+        Route::post('/settings/update', [SettingsController::class, 'update'])->name('admin.settings.update');
+    // });
 });

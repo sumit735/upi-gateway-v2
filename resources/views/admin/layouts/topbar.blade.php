@@ -1273,6 +1273,25 @@
                             </ul>
                         </li>
                         @endif
+
+                        <!-- Portal Management -->
+                        @if(can_page(\App\Enums\PageEnum::SETTINGS, \App\Enums\ActionEnum::VIEW))
+                        <li class="submenu">
+                            <a href="javascript:void(0);" class="{{ request()->routeIs('admin.settings.*') ? 'active subdrop' : '' }}">
+                                <i class="ti ti-users"></i>
+                                <span>Portal Management</span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <ul style="{{ request()->routeIs('admin.settings.*') ? 'display: block;' : '' }}">
+                                <li class="{{ request()->routeIs('admin.settings.index') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.settings.index') }}" class="{{ request()->routeIs('admin.settings.index') ? 'active' : '' }}">Settings</a>
+                                </li>
+                                {{-- <li class="{{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.roles.index') }}" class="{{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">Roles & Permissions</a>
+                                </li> --}}
+                            </ul>
+                        </li>
+                        @endif
                         
                         <!-- Profile -->
                         @if(can_page(\App\Enums\PageEnum::PROFILE, \App\Enums\ActionEnum::VIEW))
