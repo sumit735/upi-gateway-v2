@@ -103,7 +103,7 @@
                         </div>
                         <div class="card-body">
                             
-                            @foreach($pageEnums as $pageEnum)
+                            @foreach($pages as $page)
                             <div class="permission-group mb-4">
                                 <div class="card border">
                                     <div class="card-header bg-light py-2">
@@ -112,25 +112,15 @@
                                                 <div class="form-check me-3">
                                                     <input class="form-check-input page-toggle" 
                                                            type="checkbox" 
-                                                           id="page-{{ str_replace(['*', '.'], ['', '-'], $pageEnum->value) }}"
-                                                           data-page="{{ $pageEnum->value }}">
+                                                           id="page-{{ $page->id }}"
+                                                           data-page="{{ $page->route_pattern }}">
                                                 </div>
                                                 <div>
                                                     <h6 class="mb-0">
-                                                        @switch($pageEnum->value)
-                                                            @case('dashboard')
-                                                                <i class="ti ti-dashboard me-2 text-primary"></i>
-                                                                @break
-                                                            @case('admin.users.*')
-                                                                <i class="ti ti-users me-2 text-success"></i>
-                                                                @break
-                                                            @case('profile.*')
-                                                                <i class="ti ti-user me-2 text-info"></i>
-                                                                @break
-                                                        @endswitch
-                                                        {{ $pageEnum->label() }}
+                                                        <i class="ti ti-folder me-2 text-primary"></i>
+                                                        {{ $page->name }}
                                                     </h6>
-                                                    <small class="text-muted">{{ $pageEnum->description() }}</small>
+                                                    <small class="text-muted">{{ $page->description }}</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -140,16 +130,16 @@
                                             <div class="col-md-8">
                                                 <h6 class="text-muted mb-2 fs-12">Actions</h6>
                                                 <div class="d-flex flex-wrap gap-2">
-                                                    @foreach($actionEnums as $actionEnum)
+                                                    @foreach($page->actions as $action)
                                                     <label class="permission-checkbox">
                                                         <input type="checkbox" 
                                                                name="permissions[]" 
-                                                               value="{{ $pageEnum->value }},{{ $actionEnum->value }},self"
+                                                               value="{{ $page->route_pattern }},{{ $action->slug }},self"
                                                                class="permission-input me-2"
-                                                               data-page="{{ $pageEnum->value }}"
-                                                               data-action="{{ $actionEnum->value }}">
-                                                        <span class="badge badge-outline-{{ $actionEnum->value === 'view' ? 'info' : ($actionEnum->value === 'create' ? 'success' : ($actionEnum->value === 'edit' ? 'warning' : 'danger')) }}">
-                                                            @switch($actionEnum->value)
+                                                               data-page="{{ $page->route_pattern }}"
+                                                               data-action="{{ $action->slug }}">
+                                                        <span class="badge badge-outline-{{ $action->slug === 'view' ? 'info' : ($action->slug === 'create' ? 'success' : ($action->slug === 'edit' ? 'warning' : 'danger')) }}">
+                                                            @switch($action->slug)
                                                                 @case('view')
                                                                     <i class="ti ti-eye me-1"></i>
                                                                     @break
@@ -162,8 +152,13 @@
                                                                 @case('delete')
                                                                     <i class="ti ti-trash me-1"></i>
                                                                     @break
+                                                                @case('export')
+                                                                    <i class="ti ti-download me-1"></i>
+                                                                    @break
+                                                                @default
+                                                                    <i class="ti ti-check me-1"></i>
                                                             @endswitch
-                                                            {{ $actionEnum->label() }}
+                                                            {{ $action->name }}
                                                         </span>
                                                     </label>
                                                     @endforeach
@@ -175,23 +170,23 @@
                                                     <div class="form-check form-check-md flex-fill">
                                                         <input class="form-check-input scope-radio" 
                                                                type="radio" 
-                                                               name="scope-{{ $pageEnum->value }}" 
-                                                               id="scope-self-{{ $pageEnum->value }}" 
+                                                               name="scope-{{ $page->id }}" 
+                                                               id="scope-self-{{ $page->id }}" 
                                                                value="self" 
-                                                               data-page="{{ $pageEnum->value }}" 
+                                                               data-page="{{ $page->route_pattern }}" 
                                                                checked>
-                                                        <label class="form-check-label" for="scope-self-{{ $pageEnum->value }}">
+                                                        <label class="form-check-label" for="scope-self-{{ $page->id }}">
                                                             <i class="ti ti-user me-1"></i>Self
                                                         </label>
                                                     </div>
                                                     <div class="form-check form-check-md flex-fill">
                                                         <input class="form-check-input scope-radio" 
                                                                type="radio" 
-                                                               name="scope-{{ $pageEnum->value }}" 
-                                                               id="scope-all-{{ $pageEnum->value }}" 
+                                                               name="scope-{{ $page->id }}" 
+                                                               id="scope-all-{{ $page->id }}" 
                                                                value="all" 
-                                                               data-page="{{ $pageEnum->value }}">
-                                                        <label class="form-check-label" for="scope-all-{{ $pageEnum->value }}">
+                                                               data-page="{{ $page->route_pattern }}">
+                                                        <label class="form-check-label" for="scope-all-{{ $page->id }}">
                                                             <i class="ti ti-users me-1"></i>All
                                                         </label>
                                                     </div>
@@ -363,8 +358,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function updatePageToggle(page) {
         const checkboxes = document.querySelectorAll(`input[data-page="${page}"].permission-input`);
         const checkedBoxes = document.querySelectorAll(`input[data-page="${page}"].permission-input:checked`);
-        const pageId = page.replace(/[\*\.]/g, '-');
-        const pageToggle = document.querySelector(`#page-${pageId}`);
+        
+        // Find the page toggle by searching for data-page attribute
+        const pageToggle = document.querySelector(`.page-toggle[data-page="${page}"]`);
         
         if (pageToggle) {
             pageToggle.checked = checkedBoxes.length > 0;

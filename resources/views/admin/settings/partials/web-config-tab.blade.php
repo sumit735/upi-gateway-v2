@@ -44,7 +44,7 @@
             <div class="col-md-6">
                 <div class="d-flex align-items-center flex-wrap row-gap-3 bg-light w-100 rounded p-3 mb-4">                                                
                     <div class="d-flex align-items-center justify-content-center avatar avatar-xxl bg-white rounded border border-dashed me-2 flex-shrink-0 text-dark frames px-2">
-                        <img src="{{ asset('public/admin/assets/img/' . ($logo->value ?: 'logo.svg')) }}" 
+                        <img src="{{ asset('admin/assets/img/' . ($logo->value ?: 'logo.svg')) }}" 
                              class="img-fluid" 
                              alt="logo"
                              data-setting="logo"
@@ -64,12 +64,12 @@
                                        accept="image/*"
                                        onchange="previewImage(this, document.getElementById('logoPreview'))">
                             </div>
-                            <button type="button" class="btn btn-light btn-sm" onclick="document.querySelector('input[name=logo_file]').value = ''; document.getElementById('logoPreview').src = '{{ asset('public/admin/assets/img/logo.svg') }}';">Cancel</button>
+                            <button type="button" class="btn btn-light btn-sm" onclick="document.querySelector('input[name=logo_file]').value = ''; document.getElementById('logoPreview').src = '{{ asset('admin/assets/img/logo.svg') }}';">Cancel</button>
                         </div>
                     </div>
                 </div>
-                <input type="hidden" name="settings[{{ $logo->id }}][id]" value="{{ $logo->id }}">
-                <input type="hidden" name="settings[{{ $logo->id }}][value]" value="{{ $logo->value }}">
+                {{-- <input type="hidden" name="settings[{{ $logo->id }}][id]" value="{{ $logo->id }}">
+                <input type="hidden" name="settings[{{ $logo->id }}][value]" value="{{ $logo->value }}"> --}}
             </div>
         @endif
 
@@ -78,7 +78,7 @@
             <div class="col-md-6">
                 <div class="d-flex align-items-center flex-wrap row-gap-3 bg-light w-100 rounded p-3 mb-4">                                                
                     <div class="d-flex align-items-center justify-content-center avatar avatar-xxl bg-white rounded border border-dashed me-2 flex-shrink-0 text-dark frames px-2">
-                        <img src="{{ asset('public/admin/assets/img/' . ($favicon->value ?: 'favicon.ico')) }}" 
+                        <img src="{{ asset('admin/assets/img/' . ($favicon->value ?: 'favicon.ico')) }}" 
                              class="img-fluid" 
                              alt="favicon"
                              data-setting="favicon"
@@ -99,12 +99,12 @@
                                        accept="image/*,.ico"
                                        onchange="previewImage(this, document.getElementById('faviconPreview'))">
                             </div>
-                            <button type="button" class="btn btn-light btn-sm" onclick="document.querySelector('input[name=favicon_file]').value = ''; document.getElementById('faviconPreview').src = '{{ asset('public/admin/assets/img/favicon.ico') }}';">Cancel</button>
+                            <button type="button" class="btn btn-light btn-sm" onclick="document.querySelector('input[name=favicon_file]').value = ''; document.getElementById('faviconPreview').src = '{{ asset('admin/assets/img/favicon.ico') }}';">Cancel</button>
                         </div>
                     </div>
                 </div>
-                <input type="hidden" name="settings[{{ $favicon->id }}][id]" value="{{ $favicon->id }}">
-                <input type="hidden" name="settings[{{ $favicon->id }}][value]" value="{{ $favicon->value }}">
+                {{-- <input type="hidden" name="settings[{{ $favicon->id }}][id]" value="{{ $favicon->id }}">
+                <input type="hidden" name="settings[{{ $favicon->id }}][value]" value="{{ $favicon->value }}"> --}}
             </div>
         @endif
     </div>

@@ -16,6 +16,11 @@ class Page extends Model
     ];
 
     // Relationships
+    public function actions()
+    {
+        return $this->hasMany(Action::class);
+    }
+
     public function permissions()
     {
         return $this->hasMany(RolePermission::class);

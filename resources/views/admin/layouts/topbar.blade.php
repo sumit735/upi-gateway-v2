@@ -1278,7 +1278,7 @@
                         @if(can_page(\App\Enums\PageEnum::SETTINGS, \App\Enums\ActionEnum::VIEW))
                         <li class="submenu">
                             <a href="javascript:void(0);" class="{{ request()->routeIs('admin.settings.*') ? 'active subdrop' : '' }}">
-                                <i class="ti ti-users"></i>
+                                <i class="ti ti-settings"></i>
                                 <span>Portal Management</span>
                                 <span class="menu-arrow"></span>
                             </a>
@@ -1302,6 +1302,18 @@
                             </a>
                         </li>
                         @endif
+                        {{-- logout --}}
+
+                        <li>
+                            <a href="javascript:void(0);"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="ti ti-login"></i>
+                                <span>Logout</span>
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="GET" class="d-none">
+                                @csrf
+                            </form>
+                        </li>
                     </ul>
                 </li>
             </ul>

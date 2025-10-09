@@ -42,13 +42,10 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $pages = Page::all();
-        $actions = Action::all();
-        $pageEnums = PageEnum::cases();
-        $actionEnums = ActionEnum::cases();
+        $pages = Page::with('actions')->get();
         $scopeEnums = ScopeEnum::cases();
         
-        return view('admin.roles.create', compact('pages', 'actions', 'pageEnums', 'actionEnums', 'scopeEnums'));
+        return view('admin.roles.create', compact('pages', 'scopeEnums'));
     }
 
     /**
@@ -120,15 +117,12 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $pages = Page::all();
-        $actions = Action::all();
-        $pageEnums = PageEnum::cases();
-        $actionEnums = ActionEnum::cases();
+        $pages = Page::with('actions')->get();
         $scopeEnums = ScopeEnum::cases();
         
         $role->load(['permissions.page', 'permissions.action']);
         
-        return view('admin.roles.edit', compact('role', 'pages', 'actions', 'pageEnums', 'actionEnums', 'scopeEnums'));
+        return view('admin.roles.edit', compact('role', 'pages', 'scopeEnums'));
     }
 
     /**

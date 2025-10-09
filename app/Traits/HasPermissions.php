@@ -22,7 +22,6 @@ trait HasPermissions
         if (!$permissions) {
             return false;
         }
-
         // Check if route pattern exists in permissions
         if (!isset($permissions[$routePattern])) {
             // Try wildcard matching (e.g., admin.users.* matches admin.users.index)

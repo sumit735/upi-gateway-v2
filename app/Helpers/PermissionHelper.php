@@ -63,18 +63,13 @@ if (!function_exists('is_role')) {
 
 if (!function_exists('hasPermission')) {
     function hasPermission(User $user, PageEnum $page, ActionEnum $action, ScopeEnum $scope = ScopeEnum::SELF): bool
-    {
-        // First check if the action is available for this page
-        if (!$page->hasAction($action)) {
+    {  
+        $userSession = session('user_permissions', []);
+        $pagePermissions = $userSession[$page->value] ?? null;
+        if (!$pagePermissions) {
             return false;
         }
-
-        // Check if user's role has this specific permission
-        return $user->role->permissions()
-            ->whereHas('page', fn($q) => $q->where('route_pattern', $page->value))
-            ->whereHas('action', fn($q) => $q->where('slug', $action->value))
-            ->where('scope', $scope->value)
-            ->exists();
+        return in_array($action->value, $pagePermissions);
     }
 }
 

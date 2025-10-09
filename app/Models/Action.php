@@ -12,9 +12,15 @@ class Action extends Model
     protected $fillable = [
         'name',
         'slug',
+        'page_id',
     ];
 
     // Relationships
+    public function page()
+    {
+        return $this->belongsTo(Page::class);
+    }
+
     public function permissions()
     {
         return $this->hasMany(RolePermission::class);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Settings;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
@@ -50,7 +51,7 @@ class SettingsController extends Controller
                 $logoSetting = Settings::where('key', 'logo')->first();
                 if ($logoSetting) {
                     $logoSetting->update(['value' => $logoName]);
-                    $uploads['logo'] = asset('public/admin/assets/img/' . $logoName);
+                    $uploads['logo'] = asset('admin/assets/img/' . $logoName);
                 }
             }
             
@@ -62,7 +63,7 @@ class SettingsController extends Controller
                 $faviconSetting = Settings::where('key', 'favicon')->first();
                 if ($faviconSetting) {
                     $faviconSetting->update(['value' => $faviconName]);
-                    $uploads['favicon'] = asset('public/admin/assets/img/' . $faviconName);
+                    $uploads['favicon'] = asset('admin/assets/img/' . $faviconName);
                 }
             }
 
