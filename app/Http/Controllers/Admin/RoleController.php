@@ -12,6 +12,7 @@ use App\Enums\PageEnum;
 use App\Enums\ActionEnum;
 use App\Enums\ScopeEnum;
 use Illuminate\Support\Facades\DB;
+use App\Models\UserSession;
 
 class RoleController extends Controller
 {
@@ -177,8 +178,30 @@ class RoleController extends Controller
                 }
             }
         });
-        // invalidte the session cache
-        session()->forget('user_permissions');
+        // invalidate the session cache for current user
+
+        // Immediate forced logout: delete sessions for users of this role
+        try {
+            $userIds = $role->users()->pluck('id')->toArray();
+            // exclude the current user (admin performing update)
+            $current = auth()->id();
+            $userIds = array_filter($userIds, fn($id) => $id !== $current);
+
+            if (count($userIds) > 0) {
+                // Get session ids from mapping
+                $sessionIds = UserSession::whereIn('user_id', $userIds)->pluck('session_id')->toArray();
+
+                if (!empty($sessionIds)) {
+                    // Delete actual session rows (works if using database session driver)
+                    DB::table('sessions')->whereIn('id', $sessionIds)->delete();
+
+                    // Remove mappings
+                    UserSession::whereIn('session_id', $sessionIds)->delete();
+                }
+            }
+        } catch (\Exception $e) {
+            // ignore failures to avoid blocking role update
+        }
         if ($request->expectsJson() || $request->ajax()) {
             return response()->json([
                 'success' => true,

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\UserDetail;
+use App\Models\UserSession;
 
 class AuthenticateController extends Controller
 {
@@ -90,6 +91,20 @@ class AuthenticateController extends Controller
             // Cache user permissions in session
             $this->cacheUserPermissions($user);
 
+            // Maintain user_sessions mapping for immediate invalidation
+            try {
+                UserSession::updateOrCreate([
+                    'session_id' => session()->getId(),
+                ], [
+                    'user_id' => $user->id,
+                    'ip' => $request->ip(),
+                    'user_agent' => substr($request->userAgent() ?? '', 0, 1000),
+                    'last_activity' => now(),
+                ]);
+            } catch (\Exception $e) {
+                // don't block login if mapping fails; log or ignore
+            }
+
             return redirect()->route('dashboard')->with('success', 'Login successful!');
         }
 
@@ -155,6 +170,13 @@ class AuthenticateController extends Controller
         
         // Clear permissions cache
         session()->forget('user_permissions');
+
+        // Remove user_sessions mapping
+        try {
+            UserSession::where('session_id', session()->getId())->delete();
+        } catch (\Exception $e) {
+            // ignore
+        }
 
         return redirect()->route('login')->with('success', 'Logged out successfully!');
     }

@@ -670,7 +670,7 @@
                 : `{{ url('/portal/users') }}/${userId}`;
             
             fetch(url, {
-                method: 'POST',
+                method: isCreating ? 'POST' : 'PUT',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
                     'Accept': 'application/json',
