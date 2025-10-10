@@ -11,6 +11,7 @@ enum PageEnum: string
     case PAYMENTS = 'admin.payments.*';
     case REPORTS = 'admin.reports.*';
     case SETTINGS = 'admin.settings.*';
+    case CHAT = 'admin.chat.*';
     
     /**
      * Get the display name for the page
@@ -25,6 +26,7 @@ enum PageEnum: string
             self::PAYMENTS => 'Payments',
             self::REPORTS => 'Reports',
             self::SETTINGS => 'Settings',
+            self::CHAT => 'Chat',
         };
     }
 

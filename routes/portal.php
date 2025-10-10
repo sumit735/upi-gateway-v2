@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\ChatController;
 
 use App\Enums\PageEnum;
 use App\Enums\ActionEnum;
@@ -127,4 +128,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/settings', [SettingsController::class, 'index'])->name('admin.settings.index');
         Route::post('/settings/update', [SettingsController::class, 'update'])->name('admin.settings.update');
     // });
+
+    // ================================
+    // Chat Routes (Users and Admins)
+    // ================================
+    Route::middleware(permission(PageEnum::CHAT, ActionEnum::VIEW))->group(function () {
+        Route::get('/chat', [ChatController::class, 'index'])->name('admin.chat.index');
+        Route::get('/chat/conversations', [ChatController::class, 'getConversations'])->name('admin.chat.conversations');
+        Route::get('/chat/{conversation}/messages', [ChatController::class, 'getMessages'])->name('admin.chat.messages');
+        Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('admin.chat.send');
+        Route::post('/chat/{message}/read', [ChatController::class, 'markAsRead'])->name('admin.chat.read');
+    });
 });

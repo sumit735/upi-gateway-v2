@@ -36,6 +36,15 @@
 					</a>
 				</li>
 				@endif
+				
+				<!-- Chat -->
+				@if(can_page(\App\Enums\PageEnum::CHAT, \App\Enums\ActionEnum::VIEW))
+				<li>
+					<a href="{{ route('admin.chat.index') }}">
+						<i class="ti ti-message"></i><span>Chat</span>
+					</a>
+				</li>
+				@endif
 			</ul>
 			<div class="d-xl-flex align-items-center d-none">
 				<a href="#" class="me-3 avatar avatar-sm">
