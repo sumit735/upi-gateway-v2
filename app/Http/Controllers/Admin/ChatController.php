@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\ChatConversation;
 use App\Models\ChatMessage;
 use App\Models\User;
+use App\Events\MessageSent;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -58,7 +59,7 @@ class ChatController extends Controller
                 
                 return [
                     'id' => $conversation->id,
-                    'user' => [
+                    'other_user' => [
                         'id' => $otherUser->id,
                         'name' => $otherUser->name,
                         'email' => $otherUser->email,
@@ -66,6 +67,7 @@ class ChatController extends Controller
                     'last_message' => $conversation->lastMessage ? [
                         'message' => $conversation->lastMessage->message,
                         'created_at' => $conversation->lastMessage->created_at->diffForHumans(),
+                        'is_mine' => $conversation->lastMessage->sender_id === $user->id,
                     ] : null,
                     'unread_count' => $conversation->unreadCount($user->id),
                 ];
@@ -74,6 +76,25 @@ class ChatController extends Controller
         return response()->json([
             'success' => true,
             'conversations' => $conversations,
+        ]);
+    }
+
+    /**
+     * Get users available for chat
+     */
+    public function getUsers(Request $request)
+    {
+        $user = Auth::user();
+        
+        $users = User::where('id', '!=', $user->id)
+            ->where('is_active', true)
+            ->select('id', 'name', 'email')
+            ->orderBy('name')
+            ->get();
+        
+        return response()->json([
+            'success' => true,
+            'users' => $users,
         ]);
     }
 
@@ -165,12 +186,13 @@ class ChatController extends Controller
         // Update conversation last_message_at
         $conversation->update(['last_message_at' => now()]);
         
-        // Broadcast message to other participant (will implement with Reverb)
-        // broadcast(new MessageSent($message))->toOthers();
+        // Broadcast message to other participant
+        broadcast(new MessageSent($message->load('sender')))->toOthers();
         
         return response()->json([
             'success' => true,
             'message' => 'Message sent successfully',
+            'conversation_id' => $conversation->id,
             'data' => [
                 'id' => $message->id,
                 'message' => $message->message,

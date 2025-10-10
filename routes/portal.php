@@ -135,8 +135,8 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(permission(PageEnum::CHAT, ActionEnum::VIEW))->group(function () {
         Route::get('/chat', [ChatController::class, 'index'])->name('admin.chat.index');
         Route::get('/chat/conversations', [ChatController::class, 'getConversations'])->name('admin.chat.conversations');
+        Route::get('/chat/users', [ChatController::class, 'getUsers'])->name('admin.chat.users');
         Route::get('/chat/{conversation}/messages', [ChatController::class, 'getMessages'])->name('admin.chat.messages');
         Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('admin.chat.send');
-        Route::post('/chat/{message}/read', [ChatController::class, 'markAsRead'])->name('admin.chat.read');
     });
 });
