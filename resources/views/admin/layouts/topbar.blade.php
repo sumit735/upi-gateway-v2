@@ -1273,7 +1273,6 @@
                             </ul>
                         </li>
                         @endif
-
                         <!-- Portal Management -->
                         @if(can_page(\App\Enums\PageEnum::SETTINGS, \App\Enums\ActionEnum::VIEW))
                         <li class="submenu">
@@ -1285,6 +1284,9 @@
                             <ul style="{{ request()->routeIs('admin.settings.*') ? 'display: block;' : '' }}">
                                 <li class="{{ request()->routeIs('admin.settings.index') ? 'active' : '' }}">
                                     <a href="{{ route('admin.settings.index') }}" class="{{ request()->routeIs('admin.settings.index') ? 'active' : '' }}">Settings</a>
+                                </li>
+                                <li class="{{ request()->routeIs('admin.settings.subscriptions.index') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.settings.subscriptions.index') }}" class="{{ request()->routeIs('admin.settings.subscription') ? 'active' : '' }}">Subscription</a>
                                 </li>
                                 {{-- <li class="{{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
                                     <a href="{{ route('admin.roles.index') }}" class="{{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">Roles & Permissions</a>

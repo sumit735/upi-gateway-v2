@@ -123,8 +123,46 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // settings routes
-    // Route::middleware(permission(PageEnum::SETTINGS, ActionEnum::VIEW, ScopeEnum::ALL))->group(function () {
+    Route::middleware(permission(PageEnum::SETTINGS, ActionEnum::VIEW, ScopeEnum::ALL))->group(function () {
         Route::get('/settings', [SettingsController::class, 'index'])->name('admin.settings.index');
         Route::post('/settings/update', [SettingsController::class, 'update'])->name('admin.settings.update');
-    // });
+    });
+
+    // ================================
+    // Subscription Management Routes
+    // ================================
+    Route::prefix('subscriptions')->name('admin.settings.subscriptions.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\SubscriptionController::class, 'index'])
+            ->name('index')
+            ->middleware(permission(PageEnum::SETTINGS, ActionEnum::VIEW, ScopeEnum::ALL));
+        
+        Route::post('/list/data', [\App\Http\Controllers\Admin\SubscriptionController::class, 'list'])
+            ->name('list')
+            ->middleware(permission(PageEnum::SETTINGS, ActionEnum::VIEW, ScopeEnum::ALL));
+        
+        Route::get('/{subscription}', [\App\Http\Controllers\Admin\SubscriptionController::class, 'show'])
+            ->name('show')
+            ->middleware(permission(PageEnum::SETTINGS, ActionEnum::VIEW, ScopeEnum::ALL));
+        
+        Route::post('/', [\App\Http\Controllers\Admin\SubscriptionController::class, 'store'])
+            ->name('store')
+            ->middleware(permission(PageEnum::SETTINGS, ActionEnum::CREATE, ScopeEnum::ALL));
+        
+        Route::put('/{subscription}', [\App\Http\Controllers\Admin\SubscriptionController::class, 'update'])
+            ->name('update')
+            ->middleware(permission(PageEnum::SETTINGS, ActionEnum::EDIT, ScopeEnum::ALL));
+        
+        Route::post('/{subscription}/toggle-status', [\App\Http\Controllers\Admin\SubscriptionController::class, 'toggleStatus'])
+            ->name('toggleStatus')
+            ->middleware(permission(PageEnum::SETTINGS, ActionEnum::EDIT, ScopeEnum::ALL));
+        
+        Route::post('/{subscription}/toggle-popular', [\App\Http\Controllers\Admin\SubscriptionController::class, 'togglePopular'])
+            ->name('togglePopular')
+            ->middleware(permission(PageEnum::SETTINGS, ActionEnum::EDIT, ScopeEnum::ALL));
+        
+        Route::delete('/{subscription}', [\App\Http\Controllers\Admin\SubscriptionController::class, 'destroy'])
+            ->name('destroy')
+            ->middleware(permission(PageEnum::SETTINGS, ActionEnum::DELETE, ScopeEnum::ALL));
+    });
+
 });
