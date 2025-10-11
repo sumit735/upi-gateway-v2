@@ -11,6 +11,8 @@ enum PageEnum: string
     case PAYMENTS = 'admin.payments.*';
     case REPORTS = 'admin.reports.*';
     case SETTINGS = 'admin.settings.*';
+    case DEV_TOOLS = 'portal.dev.*';
+    case SUBSCRIPTIONS = 'admin.settings.subscriptions.*';
     
     /**
      * Get the display name for the page
@@ -25,6 +27,8 @@ enum PageEnum: string
             self::PAYMENTS => 'Payments',
             self::REPORTS => 'Reports',
             self::SETTINGS => 'Settings',
+            self::DEV_TOOLS => 'Developer Tools',
+            self::SUBSCRIPTIONS => 'Subscriptions',
         };
     }
 
@@ -41,6 +45,8 @@ enum PageEnum: string
             self::PAYMENTS => 'Process and manage payments',
             self::REPORTS => 'Generate and view reports',
             self::SETTINGS => 'Application configuration',
+            self::DEV_TOOLS => 'Developer tools and utilities',
+            self::SUBSCRIPTIONS => 'Manage user subscriptions',
         };
     }
     
@@ -80,6 +86,12 @@ enum PageEnum: string
             ],
             self::SETTINGS => [
                 // Only global actions for settings
+            ],
+            self::DEV_TOOLS => [
+                // Only global actions for dev tools
+            ],
+            self::SUBSCRIPTIONS => [
+                // Only global actions for subscriptions
             ],
         };
         

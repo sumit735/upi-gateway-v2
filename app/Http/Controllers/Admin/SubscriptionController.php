@@ -15,21 +15,17 @@ class SubscriptionController extends Controller
      */
     public function index()
     {
-        return view('admin.subscriptions.index');
+        $subscriptions = Subscription::ordered()->get();
+        return view('admin.subscriptions.index', compact('subscriptions'));
     }
 
     /**
-     * Get subscriptions list for DataTables (AJAX)
+     * Get subscriptions list for DataTable (API)
      */
     public function list(Request $request)
     {
-        if ($request->ajax()) {
-            $subscriptions = Subscription::query()->ordered();
-
-            // Apply status filter if provided
-            if ($request->filled('status_filter')) {
-                $subscriptions->where('is_active', $request->status_filter);
-            }
+        try {
+            $subscriptions = Subscription::ordered()->get();
 
             return DataTables::of($subscriptions)
                 ->addColumn('duration', function ($subscription) {
@@ -37,13 +33,19 @@ class SubscriptionController extends Controller
                 })
                 ->addColumn('price_display', function ($subscription) {
                     $html = '<div>';
-                    $html .= '<span class="fw-bold">₹' . number_format($subscription->final_price, 2) . '</span>';
+                    $html .= '<span class="fw-bold text-primary">₹' . number_format($subscription->final_price, 2) . '</span>';
                     if ($subscription->discount_percentage > 0) {
                         $html .= '<br><small class="text-muted"><del>₹' . number_format($subscription->price, 2) . '</del></small>';
-                        $html .= ' <span class="badge bg-success-transparent">' . $subscription->discount_percentage . '% OFF</span>';
                     }
                     $html .= '</div>';
                     return $html;
+                })
+                ->addColumn('discount_display', function ($subscription) {
+                    if ($subscription->discount_percentage > 0) {
+                        return '<span class="badge bg-success-transparent text-success">' . 
+                               number_format($subscription->discount_percentage, 2) . '% OFF</span>';
+                    }
+                    return '<span class="text-muted">-</span>';
                 })
                 ->addColumn('status_badge', function ($subscription) {
                     if ($subscription->is_active) {
@@ -55,48 +57,28 @@ class SubscriptionController extends Controller
                     if ($subscription->is_popular) {
                         return '<span class="badge bg-warning"><i class="ti ti-star me-1"></i>Popular</span>';
                     }
-                    return '';
+                    return '<span class="text-muted">-</span>';
                 })
                 ->addColumn('actions', function ($subscription) {
-                    $actions = '
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                <i class="ti ti-dots-vertical"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <a class="dropdown-item" href="javascript:void(0);" onclick="viewSubscription(' . $subscription->id . ')">
-                                        <i class="ti ti-eye me-2"></i>View Details
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="javascript:void(0);" onclick="editSubscription(' . $subscription->id . ')">
-                                        <i class="ti ti-edit me-2"></i>Edit
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="javascript:void(0);" onclick="toggleStatus(' . $subscription->id . ', ' . ($subscription->is_active ? 0 : 1) . ')">
-                                        <i class="ti ti-toggle-' . ($subscription->is_active ? 'left' : 'right') . ' me-2"></i>' . ($subscription->is_active ? 'Deactivate' : 'Activate') . '
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="javascript:void(0);" onclick="togglePopular(' . $subscription->id . ', ' . ($subscription->is_popular ? 0 : 1) . ')">
-                                        <i class="ti ti-star me-2"></i>' . ($subscription->is_popular ? 'Remove Popular' : 'Mark as Popular') . '
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item text-danger" href="javascript:void(0);" onclick="deleteSubscription(' . $subscription->id . ', \'' . addslashes($subscription->name) . '\')">
-                                        <i class="ti ti-trash me-2"></i>Delete
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    ';
+                    $actions = '<div class="d-flex gap-2 justify-content-end">';
+                    $actions .= '<button type="button" class="btn btn-sm btn-icon btn-light" onclick="viewSubscription(' . $subscription->id . ')" title="View Details">';
+                    $actions .= '<i class="ti ti-eye"></i>';
+                    $actions .= '</button>';
+                    $actions .= '<button type="button" class="btn btn-sm btn-icon btn-primary" onclick="editSubscription(' . $subscription->id . ')" title="Edit">';
+                    $actions .= '<i class="ti ti-edit"></i>';
+                    $actions .= '</button>';
+                    $actions .= '<button type="button" class="btn btn-sm btn-icon btn-danger" onclick="deleteSubscription(' . $subscription->id . ', \'' . addslashes($subscription->name) . '\')" title="Delete">';
+                    $actions .= '<i class="ti ti-trash"></i>';
+                    $actions .= '</button>';
+                    $actions .= '</div>';
                     return $actions;
                 })
-                ->rawColumns(['duration', 'price_display', 'status_badge', 'popular_badge', 'actions'])
+                ->rawColumns(['duration', 'price_display', 'discount_display', 'status_badge', 'popular_badge', 'actions'])
                 ->make(true);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to load subscriptions: ' . $e->getMessage()
+            ], 500);
         }
     }
 

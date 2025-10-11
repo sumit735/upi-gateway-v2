@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\DevController;
 
 use App\Enums\PageEnum;
 use App\Enums\ActionEnum;
@@ -14,6 +15,19 @@ use App\Enums\ScopeEnum;
 
 // authenticated routes
 Route::middleware(['auth'])->group(function () {
+
+    // ================================
+    // Internal Developer Routes (Local/Dev Only)
+    // ================================
+    if (app()->environment(['local', 'development'])) {
+        Route::prefix('dev')->name('dev.')->group(function () {
+            Route::get('/', [DevController::class, 'index'])->name('index');
+            Route::post('/sync-pages', [DevController::class, 'syncPages'])->name('sync-pages');
+            Route::post('/sync-actions', [DevController::class, 'syncActions'])->name('sync-actions');
+            Route::post('/sync-all', [DevController::class, 'syncAll'])->name('sync-all');
+            Route::get('/state', [DevController::class, 'getState'])->name('state');
+        });
+    }
 
     // ================================
     // Dashboard Routes
@@ -134,35 +148,35 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('subscriptions')->name('admin.settings.subscriptions.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\SubscriptionController::class, 'index'])
             ->name('index')
-            ->middleware(permission(PageEnum::SETTINGS, ActionEnum::VIEW, ScopeEnum::ALL));
+            ->middleware(permission(PageEnum::SUBSCRIPTIONS, ActionEnum::VIEW, ScopeEnum::ALL));
         
         Route::post('/list/data', [\App\Http\Controllers\Admin\SubscriptionController::class, 'list'])
             ->name('list')
-            ->middleware(permission(PageEnum::SETTINGS, ActionEnum::VIEW, ScopeEnum::ALL));
+            ->middleware(permission(PageEnum::SUBSCRIPTIONS, ActionEnum::VIEW, ScopeEnum::ALL));
         
         Route::get('/{subscription}', [\App\Http\Controllers\Admin\SubscriptionController::class, 'show'])
             ->name('show')
-            ->middleware(permission(PageEnum::SETTINGS, ActionEnum::VIEW, ScopeEnum::ALL));
+            ->middleware(permission(PageEnum::SUBSCRIPTIONS, ActionEnum::VIEW, ScopeEnum::ALL));
         
         Route::post('/', [\App\Http\Controllers\Admin\SubscriptionController::class, 'store'])
             ->name('store')
-            ->middleware(permission(PageEnum::SETTINGS, ActionEnum::CREATE, ScopeEnum::ALL));
+            ->middleware(permission(PageEnum::SUBSCRIPTIONS, ActionEnum::CREATE, ScopeEnum::ALL));
         
         Route::put('/{subscription}', [\App\Http\Controllers\Admin\SubscriptionController::class, 'update'])
             ->name('update')
-            ->middleware(permission(PageEnum::SETTINGS, ActionEnum::EDIT, ScopeEnum::ALL));
+            ->middleware(permission(PageEnum::SUBSCRIPTIONS, ActionEnum::EDIT, ScopeEnum::ALL));
         
         Route::post('/{subscription}/toggle-status', [\App\Http\Controllers\Admin\SubscriptionController::class, 'toggleStatus'])
             ->name('toggleStatus')
-            ->middleware(permission(PageEnum::SETTINGS, ActionEnum::EDIT, ScopeEnum::ALL));
+            ->middleware(permission(PageEnum::SUBSCRIPTIONS, ActionEnum::EDIT, ScopeEnum::ALL));
         
         Route::post('/{subscription}/toggle-popular', [\App\Http\Controllers\Admin\SubscriptionController::class, 'togglePopular'])
             ->name('togglePopular')
-            ->middleware(permission(PageEnum::SETTINGS, ActionEnum::EDIT, ScopeEnum::ALL));
+            ->middleware(permission(PageEnum::SUBSCRIPTIONS, ActionEnum::EDIT, ScopeEnum::ALL));
         
         Route::delete('/{subscription}', [\App\Http\Controllers\Admin\SubscriptionController::class, 'destroy'])
             ->name('destroy')
-            ->middleware(permission(PageEnum::SETTINGS, ActionEnum::DELETE, ScopeEnum::ALL));
+            ->middleware(permission(PageEnum::SUBSCRIPTIONS, ActionEnum::DELETE, ScopeEnum::ALL));
     });
 
 });
