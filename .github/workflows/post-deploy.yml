@@ -27,6 +27,14 @@ on:
         options:
           - "yes"
           - "no"
+      composer-install:
+        description: "Run Composer Install?"
+        required: true
+        default: "no"
+        type: choice
+        options:
+          - "yes"
+          - "no"
 
 jobs:
   post-deploy:
@@ -42,6 +50,14 @@ jobs:
       - name: Test SSH Connection
         run: |
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no tryapi@tryapi.site "echo '✅ SSH connected for post-deploy'"
+      
+      - name: Composer Install (if selected)
+        if: ${{ github.event.inputs.composer-install == 'yes' }}
+        run: |
+          echo "📦 Running Composer Install..."
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no tryapi@tryapi.site "cd /home1/tryapi/public_html && composer install --no-dev --optimize-autoloader"
+          echo "✅ Composer install completed"
+      
       - name: Composer Autoload Dump (if selected)
         if: ${{ github.event.inputs.autoload-dump == 'yes' }}
         run: |
@@ -67,6 +83,18 @@ jobs:
         run: |
           # Determine what was run
           ACTIONS_RUN=""
+          if [ "${{ github.event.inputs.composer-install }}" == "yes" ]; then
+            ACTIONS_RUN="${ACTIONS_RUN}✅ Composer install run\n"
+          else
+            ACTIONS_RUN="${ACTIONS_RUN}⏭️ Composer install skipped\n"
+          fi
+          
+          if [ "${{ github.event.inputs.autoload-dump }}" == "yes" ]; then
+            ACTIONS_RUN="${ACTIONS_RUN}✅ Autoload dump run\n"
+          else
+            ACTIONS_RUN="${ACTIONS_RUN}⏭️ Autoload dump skipped\n"
+          fi
+          
           if [ "${{ github.event.inputs.run_migrations }}" == "yes" ]; then
             ACTIONS_RUN="${ACTIONS_RUN}✅ Migrations run\n"
           else
