@@ -58,7 +58,6 @@ class AuthenticateController extends Controller
             'state'        => $request->state,
             'pincode'      => $request->pincode,
         ]);
-//dd($userDetail);
         Auth::login($user); // auto login after registration
 
         return redirect()->route('dashboard')->with('success', 'Registration successful!');
@@ -179,5 +178,32 @@ class AuthenticateController extends Controller
         }
 
         return redirect()->route('login')->with('success', 'Logged out successfully!');
+    }
+
+    /**
+     * Extend user session (for activity tracking)
+     */
+    public function extendSession(Request $request)
+    {
+        if (Auth::check()) {
+            // Update last activity
+            try {
+                UserSession::where('session_id', session()->getId())
+                    ->update(['last_activity' => now()]);
+            } catch (\Exception $e) {
+                // ignore
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Session extended',
+                'expires_in' => config('session.lifetime') * 60 // in seconds
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Not authenticated'
+        ], 401);
     }
 }

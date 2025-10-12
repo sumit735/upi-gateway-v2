@@ -18,6 +18,11 @@ Route::post('/register', [AuthenticateController::class, 'register'])->name('reg
 
 Route::get('/logout', [AuthenticateController::class, 'logout'])->name('logout');
 
+// Session management
+Route::post('/session/extend', [AuthenticateController::class, 'extendSession'])
+    ->middleware('auth')
+    ->name('session.extend');
+
 Route::get('/template', function () {
     return file_get_contents(public_path('template/index.html'));
 });
