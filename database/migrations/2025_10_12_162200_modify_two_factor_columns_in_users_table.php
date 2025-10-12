@@ -16,7 +16,7 @@ return new class extends Migration
             $table->text('two_factor_secret')->nullable()->change();
             
             // Drop two_factor_recovery_codes column as we're using separate table now
-            $table->dropColumn('two_factor_recovery_codes');
+            // $table->dropColumn('two_factor_recovery_codes');
         });
     }
 
