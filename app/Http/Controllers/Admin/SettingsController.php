@@ -18,7 +18,6 @@ class SettingsController extends Controller
         $ratesSettings = Settings::where('category', 'rates')->get();
         $pgConfigSettings = Settings::where('category', 'pg_config')->get();
         $apiConfigSettings = Settings::where('category', 'api_config')->get();
-        
         return view('admin.settings.index', compact(
             'webConfigSettings',
             'ratesSettings',

@@ -44,10 +44,10 @@
 	<!-- Custom JS -->
 	<script src="{{ asset('admin/assets/js/todo.js') }}"></script>
 	<script src="{{ asset('admin/assets/js/theme-colorpicker.js') }}"></script>
-	<script src="{{ asset('admin/assets/js/script.js') }}"></script>
-
+	
 	<!-- DataTables JS (Optional - Include in specific pages) -->
 	@stack('scripts')
+	<script src="{{ asset('admin/assets/js/script.js') }}"></script>
 
 </body>
 

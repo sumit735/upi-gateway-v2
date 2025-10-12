@@ -36,10 +36,11 @@
             </div>
         </div>
     </div>
+    
+    @include('admin.partials.toastAndModal')
 @endsection
 
 @push('scripts')
-    @include('admin.partials.toastAndModal')
 
     <script src="{{asset('admin/assets/plugins/theia-sticky-sidebar/ResizeSensor.js')}}"></script>
     <script src="{{asset('admin/assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js')}}"></script>
