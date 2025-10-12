@@ -16,6 +16,11 @@ Route::get('/register', [AuthenticateController::class, 'index'])->name('registe
 Route::post('/login', [AuthenticateController::class, 'login'])->name('login.submit');
 Route::post('/register', [AuthenticateController::class, 'register'])->name('register.submit');
 
+// Two-Factor Authentication
+Route::get('/two-factor-challenge', [AuthenticateController::class, 'showTwoFactorChallenge'])->name('two-factor.challenge');
+Route::post('/two-factor-verify', [AuthenticateController::class, 'verifyTwoFactor'])->name('two-factor.verify');
+Route::post('/two-factor-verify-recovery', [AuthenticateController::class, 'verifyTwoFactorRecovery'])->name('two-factor.verify.recovery');
+
 Route::get('/logout', [AuthenticateController::class, 'logout'])->name('logout');
 
 // Session management

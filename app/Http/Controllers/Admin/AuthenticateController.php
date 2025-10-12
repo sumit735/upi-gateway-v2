@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\UserDetail;
 use App\Models\UserSession;
+use PragmaRX\Google2FA\Google2FA;
 
 class AuthenticateController extends Controller
 {
@@ -62,7 +63,6 @@ class AuthenticateController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Registration successful!');
     }
-
     // Handle login
     public function login(Request $request)
     {
@@ -71,55 +71,68 @@ class AuthenticateController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'), $request->remember)) {
-            $user = Auth::user();
-
-            // Check if user is blocked
-            if ($user->is_blocked) {
-                Auth::logout();
-                return back()->withErrors(['email' => 'Your account has been blocked. Contact administrator.']);
-            }
-            if (!$user->is_active) {
-                Auth::logout();
-                return back()->withErrors(['email' => 'Your account is inactive. Contact administrator.']);
-            }
-
-            // Reset invalid attempts on successful login
-            $user->update(['invalid_attempts' => 0]);
-
-            // Cache user permissions in session
-            $this->cacheUserPermissions($user);
-
-            // Maintain user_sessions mapping for immediate invalidation
-            try {
-                UserSession::updateOrCreate([
-                    'session_id' => session()->getId(),
-                ], [
-                    'user_id' => $user->id,
-                    'ip' => $request->ip(),
-                    'user_agent' => substr($request->userAgent() ?? '', 0, 1000),
-                    'last_activity' => now(),
-                ]);
-            } catch (\Exception $e) {
-                // don't block login if mapping fails; log or ignore
-            }
-
-            return redirect()->route('dashboard')->with('success', 'Login successful!');
-        }
-
-        // Increment invalid login attempts
+        // Find user first
         $user = User::where('email', $request->email)->first();
-        if ($user) {
-            $user->increment('invalid_attempts');
-            
-            // Block user after 5 failed attempts
-            if ($user->invalid_attempts >= 5) {
-                $user->update(['is_blocked' => true]);
-                return back()->withErrors(['email' => 'Too many failed attempts. Your account has been blocked.']);
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            // Increment invalid login attempts
+            if ($user) {
+                $user->increment('invalid_attempts');
+                
+                // Block user after 5 failed attempts
+                if ($user->invalid_attempts >= 5) {
+                    $user->update(['is_blocked' => true]);
+                    return back()->withErrors(['email' => 'Too many failed attempts. Your account has been blocked.']);
+                }
             }
+            
+            return back()->withErrors(['email' => 'Invalid credentials'])->withInput();
         }
 
-        return back()->withErrors(['email' => 'Invalid credentials'])->withInput();
+        // Check if user is blocked
+        if ($user->is_blocked) {
+            return back()->withErrors(['email' => 'Your account has been blocked. Contact administrator.']);
+        }
+
+        if (!$user->is_active) {
+            return back()->withErrors(['email' => 'Your account is inactive. Contact administrator.']);
+        }
+
+        // Reset invalid attempts on successful login
+        $user->update(['invalid_attempts' => 0]);
+
+        // Check if user has 2FA enabled
+        if ($user->two_factor_enabled && $user->two_factor_secret) {
+            // Store user ID in session temporarily for 2FA verification
+            session([
+                'two_factor_auth_id' => $user->id,
+                'two_factor_remember' => $request->remember ? true : false,
+            ]);
+
+            return redirect()->route('two-factor.challenge');
+        }
+
+        // Login user directly if no 2FA
+        Auth::login($user, $request->remember);
+
+        // Cache user permissions in session
+        $this->cacheUserPermissions($user);
+
+        // Maintain user_sessions mapping for immediate invalidation
+        try {
+            UserSession::updateOrCreate([
+                'session_id' => session()->getId(),
+            ], [
+                'user_id' => $user->id,
+                'ip' => $request->ip(),
+                'user_agent' => substr($request->userAgent() ?? '', 0, 1000),
+                'last_activity' => now(),
+            ]);
+        } catch (\Exception $e) {
+            // don't block login if mapping fails; log or ignore
+        }
+
+        return redirect()->route('dashboard')->with('success', 'Login successful!');
     }
 
     /**
@@ -205,5 +218,127 @@ class AuthenticateController extends Controller
             'success' => false,
             'message' => 'Not authenticated'
         ], 401);
+    }
+
+    /**
+     * Show two-factor challenge page
+     */
+    public function showTwoFactorChallenge()
+    {
+        if (!session()->has('two_factor_auth_id')) {
+            return redirect()->route('login');
+        }
+
+        return view('admin.two-factor-challenge');
+    }
+
+    /**
+     * Verify two-factor authentication code
+     */
+    public function verifyTwoFactor(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string|size:6',
+        ]);
+
+        $userId = session('two_factor_auth_id');
+        if (!$userId) {
+            return redirect()->route('login')->withErrors(['email' => 'Session expired. Please login again.']);
+        }
+
+        $user = User::find($userId);
+        if (!$user || !$user->two_factor_enabled || !$user->two_factor_secret) {
+            session()->forget('two_factor_auth_id');
+            return redirect()->route('login')->withErrors(['email' => 'Two-factor authentication is not properly configured.']);
+        }
+
+        $google2fa = new Google2FA();
+        $secret = decrypt($user->two_factor_secret);
+        $valid = $google2fa->verifyKey($secret, $request->code);
+
+        if (!$valid) {
+            return back()->withErrors(['code' => 'Invalid verification code. Please try again.']);
+        }
+
+        // Login successful
+        $this->completeLogin($user, $request);
+
+        return redirect()->route('dashboard')->with('success', 'Login successful!');
+    }
+
+    /**
+     * Verify two-factor authentication using recovery code
+     */
+    public function verifyTwoFactorRecovery(Request $request)
+    {
+        $request->validate([
+            'recovery_code' => 'required|string',
+        ]);
+
+        $userId = session('two_factor_auth_id');
+        if (!$userId) {
+            return redirect()->route('login')->withErrors(['email' => 'Session expired. Please login again.']);
+        }
+
+        $user = User::find($userId);
+        if (!$user || !$user->two_factor_enabled) {
+            session()->forget('two_factor_auth_id');
+            return redirect()->route('login')->withErrors(['email' => 'Two-factor authentication is not properly configured.']);
+        }
+
+        // Find unused recovery code
+        $recoveryCode = $user->twoFactorRecoveryCodes()
+            ->where('used_at', null)
+            ->get()
+            ->first(function ($code) use ($request) {
+                return decrypt($code->code) === strtoupper($request->recovery_code);
+            });
+
+        if (!$recoveryCode) {
+            return back()->withErrors(['recovery_code' => 'Invalid or already used recovery code.']);
+        }
+
+        // Mark recovery code as used
+        $recoveryCode->update([
+            'used' => true,
+            'used_at' => now(),
+        ]);
+
+        // Login successful
+        $this->completeLogin($user, $request);
+
+        return redirect()->route('dashboard')
+            ->with('warning', 'Login successful! You used a recovery code. Please generate new recovery codes from your profile.');
+    }
+
+    /**
+     * Complete the login process
+     */
+    protected function completeLogin(User $user, Request $request)
+    {
+        $remember = session('two_factor_remember', false);
+        
+        // Clear 2FA session data
+        session()->forget(['two_factor_auth_id', 'two_factor_remember']);
+
+        // Login user
+        Auth::login($user, $remember);
+
+        // Cache user permissions in session
+        $this->cacheUserPermissions($user);
+
+        // Maintain user_sessions mapping for immediate invalidation
+        try {
+            UserSession::updateOrCreate([
+                'session_id' => session()->getId(),
+            ], [
+                'user_id' => $user->id,
+                'ip' => $request->ip(),
+                'user_agent' => substr($request->userAgent() ?? '', 0, 1000),
+                'last_activity' => now(),
+            ]);
+        } catch (\Exception $e) {
+            // don't block login if mapping fails; log or ignore
+        }
     }
 }

@@ -25,10 +25,14 @@ class User extends Authenticatable
         'aadhaar',
         'pancard',
         'password',
+        'profile_photo',
         'role_id',
         'invalid_attempts',
         'is_blocked',
         'is_active',
+        'two_factor_enabled',
+        'two_factor_secret',
+        'two_factor_confirmed_at',
     ];
 
     /**
@@ -53,6 +57,8 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_active' => 'boolean',
             'is_blocked' => 'boolean',
+            'two_factor_enabled' => 'boolean',
+            'two_factor_confirmed_at' => 'datetime',
         ];
     }
 
@@ -63,12 +69,27 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
-
     /**
      * Get the user details associated with the user.
      */
     public function userDetail()
     {
         return $this->hasOne(UserDetail::class);
+    }
+
+    /**
+     * Get the passkeys associated with the user.
+     */
+    public function passkeys()
+    {
+        return $this->hasMany(Passkey::class);
+    }
+
+    /**
+     * Get the two-factor recovery codes for the user.
+     */
+    public function twoFactorRecoveryCodes()
+    {
+        return $this->hasMany(TwoFactorRecoveryCode::class);
     }
 }

@@ -118,12 +118,51 @@ Route::middleware(['auth'])->group(function () {
         ->name('profile.show')
         ->middleware(permission(PageEnum::PROFILE, ActionEnum::VIEW, ScopeEnum::SELF));
 
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])
-        ->name('profile.edit')
+    // Profile management
+    Route::post('/profile/update', [ProfileController::class, 'updateProfile'])
+        ->name('profile.updateProfile')
         ->middleware(permission(PageEnum::PROFILE, ActionEnum::EDIT, ScopeEnum::SELF));
 
-    Route::put('/profile', [ProfileController::class, 'update'])
-        ->name('profile.update')
+    Route::post('/profile/photo', [ProfileController::class, 'uploadPhoto'])
+        ->name('profile.uploadPhoto')
+        ->middleware(permission(PageEnum::PROFILE, ActionEnum::EDIT, ScopeEnum::SELF));
+
+    Route::delete('/profile/photo', [ProfileController::class, 'deletePhoto'])
+        ->name('profile.deletePhoto')
+        ->middleware(permission(PageEnum::PROFILE, ActionEnum::EDIT, ScopeEnum::SELF));
+
+    Route::post('/profile/password', [ProfileController::class, 'updatePassword'])
+        ->name('profile.updatePassword')
+        ->middleware(permission(PageEnum::PROFILE, ActionEnum::EDIT, ScopeEnum::SELF));
+
+    // Two-factor authentication
+    Route::post('/profile/two-factor/enable', [ProfileController::class, 'enableTwoFactor'])
+        ->name('profile.enableTwoFactor')
+        ->middleware(permission(PageEnum::PROFILE, ActionEnum::EDIT, ScopeEnum::SELF));
+
+    Route::post('/profile/two-factor/confirm', [ProfileController::class, 'confirmTwoFactor'])
+        ->name('profile.confirmTwoFactor')
+        ->middleware(permission(PageEnum::PROFILE, ActionEnum::EDIT, ScopeEnum::SELF));
+
+    Route::post('/profile/two-factor/disable', [ProfileController::class, 'disableTwoFactor'])
+        ->name('profile.disableTwoFactor')
+        ->middleware(permission(PageEnum::PROFILE, ActionEnum::EDIT, ScopeEnum::SELF));
+
+    Route::get('/profile/two-factor/recovery-codes', [ProfileController::class, 'getRecoveryCodes'])
+        ->name('profile.getRecoveryCodes')
+        ->middleware(permission(PageEnum::PROFILE, ActionEnum::VIEW, ScopeEnum::SELF));
+
+    Route::post('/profile/two-factor/recovery-codes', [ProfileController::class, 'regenerateRecoveryCodes'])
+        ->name('profile.regenerateRecoveryCodes')
+        ->middleware(permission(PageEnum::PROFILE, ActionEnum::EDIT, ScopeEnum::SELF));
+
+    // Passkeys
+    Route::post('/profile/passkeys', [ProfileController::class, 'registerPasskey'])
+        ->name('profile.registerPasskey')
+        ->middleware(permission(PageEnum::PROFILE, ActionEnum::EDIT, ScopeEnum::SELF));
+
+    Route::delete('/profile/passkeys/{id}', [ProfileController::class, 'deletePasskey'])
+        ->name('profile.deletePasskey')
         ->middleware(permission(PageEnum::PROFILE, ActionEnum::EDIT, ScopeEnum::SELF));
 
 
