@@ -6,7 +6,7 @@ on:
       run_migrations:
         description: "Run database migrations?"
         required: true
-        default: "no"
+        default: "yes"
         type: choice
         options:
           - "yes"
@@ -14,7 +14,7 @@ on:
       optimize:
         description: "Optimize Laravel config?"
         required: true
-        default: "no"
+        default: "yes"
         type: choice
         options:
           - "yes"
