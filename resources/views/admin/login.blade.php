@@ -70,6 +70,22 @@
                                     <p class="uk-text-lead uk-margin-small-top uk-margin-medium-bottom">
                                         Log into your account
                                     </p>
+
+                                    <!-- Discoverable Passkey Login (No Email Required) -->
+                                    <div class="uk-margin-medium-bottom" id="discoverablePasskeySection">
+                                        <button type="button"
+                                            class="uk-button uk-width-1-1 uk-button-primary uk-border-rounded"
+                                            onclick="loginWithDiscoverablePasskey()"
+                                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white">
+                                            <i class="fas fa-fingerprint uk-margin-small-right"></i>Sign in with Passkey
+                                        </button>
+                                        <p class="uk-text-small uk-text-muted uk-margin-small-top uk-text-center">
+                                            Use Face ID, Touch ID, or your device's security key
+                                        </p>
+                                    </div>
+
+                                    <p class="uk-heading-line"><span>Or use password</span></p>
+
                                     <!-- login form begin -->
                                     <form method="POST" action="{{ route('login') }}" class="uk-grid uk-form">
                                         @csrf
@@ -104,15 +120,6 @@
                                         </div>
                                     </form>
                                     <!-- login form end -->
-
-                                    <!-- Passkey Login Option -->
-                                    <div class="uk-margin-small" id="passkeyLoginBtn" style="display: none;">
-                                        <button type="button"
-                                            class="uk-button uk-width-1-1 uk-button-default uk-border-rounded"
-                                            onclick="loginWithPasskey(document.getElementById('email').value)">
-                                            <i class="fas fa-fingerprint uk-margin-small-right"></i>Sign in with Passkey
-                                        </button>
-                                    </div>
 
                                     <p class="uk-heading-line uk-margin-medium-top"><span>Or sign in with</span></p>
                                     <div class="uk-margin-medium-bottom">

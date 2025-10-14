@@ -23,6 +23,7 @@ Route::post('/two-factor-verify-recovery', [AuthenticateController::class, 'veri
 
 // Passkey Authentication
 Route::post('/passkey/auth-options', [\App\Http\Controllers\Admin\ProfileController::class, 'getPasskeyAuthenticationOptions'])->name('passkey.auth.options');
+Route::get('/passkey/discoverable-options', [\App\Http\Controllers\Admin\ProfileController::class, 'getDiscoverablePasskeyOptions'])->name('passkey.discoverable.options');
 Route::post('/passkey/verify', [\App\Http\Controllers\Admin\ProfileController::class, 'verifyPasskeyAuthentication'])->name('passkey.verify');
 
 Route::get('/logout', [AuthenticateController::class, 'logout'])->name('logout');

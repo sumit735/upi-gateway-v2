@@ -1,9 +1,104 @@
 /**
  * Passkey Authentication for Login
  * WebAuthn implementation for passwordless authentication
+ * Supports both discoverable (no email) and non-discoverable (with email) credentials
  */
 
-// Check if passkey login is available for the email
+// Login with discoverable passkey (no email required - like GitHub)
+async function loginWithDiscoverablePasskey() {
+    if (!window.PublicKeyCredential) {
+        showNotification('Passkeys are not supported on this device/browser', 'danger');
+        return false;
+    }
+
+    try {
+        // Step 1: Get authentication options from server (no email needed)
+        const optionsResponse = await fetch('/passkey/discoverable-options', {
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
+                'Accept': 'application/json',
+            },
+        });
+
+        if (!optionsResponse.ok) {
+            throw new Error('Failed to get authentication options');
+        }
+
+        const options = await optionsResponse.json();
+
+        if (!options.success) {
+            throw new Error(options.message || 'Failed to get authentication options');
+        }
+
+        // Step 2: Prepare WebAuthn options for discoverable credential
+        const publicKeyCredentialRequestOptions = {
+            challenge: base64ToArrayBuffer(options.challenge),
+            timeout: options.timeout,
+            rpId: options.rpId,
+            userVerification: options.userVerification,
+            // No allowCredentials - authenticator will show all passkeys for this domain
+        };
+
+        // Step 3: Get credential from authenticator
+        showNotification('Please use your passkey to sign in...', 'primary');
+        
+        const credential = await navigator.credentials.get({
+            publicKey: publicKeyCredentialRequestOptions
+        });
+
+        if (!credential) {
+            throw new Error('Authentication failed');
+        }
+
+        // Step 4: Prepare credential data for server verification
+        const credentialData = {
+            credential_id: arrayBufferToBase64(credential.rawId),
+            authenticator_data: arrayBufferToBase64(credential.response.authenticatorData),
+            client_data_json: arrayBufferToBase64(credential.response.clientDataJSON),
+            signature: arrayBufferToBase64(credential.response.signature),
+            user_handle: credential.response.userHandle ? arrayBufferToBase64(credential.response.userHandle) : null,
+        };
+
+        // Step 5: Verify with server
+        const verifyResponse = await fetch('/passkey/verify', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(credentialData),
+        });
+
+        const result = await verifyResponse.json();
+
+        if (result.success) {
+            showNotification(`Welcome back, ${result.user.name}!`, 'success');
+            setTimeout(() => {
+                window.location.href = result.redirect;
+            }, 500);
+            return true;
+        } else {
+            throw new Error(result.message || 'Authentication failed');
+        }
+
+    } catch (error) {
+        console.error('Passkey authentication error:', error);
+        
+        if (error.name === 'NotAllowedError') {
+            showNotification('Authentication cancelled or not allowed', 'danger');
+        } else if (error.name === 'InvalidStateError') {
+            showNotification('No passkeys found for this site', 'danger');
+        } else if (error.name === 'NotSupportedError') {
+            showNotification('Passkeys not supported on this device', 'danger');
+        } else {
+            showNotification(error.message || 'Failed to authenticate with passkey', 'danger');
+        }
+        
+        return false;
+    }
+}
 async function checkPasskeyAvailability(email) {
     if (!email || !window.PublicKeyCredential) {
         return false;
@@ -158,22 +253,14 @@ function showNotification(message, status = 'primary') {
     }
 }
 
-// Auto-check passkey availability when email is entered
+// Check WebAuthn support on page load
 document.addEventListener('DOMContentLoaded', function() {
-    const emailInput = document.querySelector('input[name="email"]');
-    const passkeyButton = document.getElementById('passkeyLoginBtn');
+    const discoverableSection = document.getElementById('discoverablePasskeySection');
     
-    if (emailInput && passkeyButton) {
-        // Hide passkey button initially
-        passkeyButton.style.display = 'none';
-        
-        // Check passkey availability on email blur
-        emailInput.addEventListener('blur', async function() {
-            const email = this.value.trim();
-            if (email && email.includes('@')) {
-                const hasPasskey = await checkPasskeyAvailability(email);
-                passkeyButton.style.display = hasPasskey ? 'block' : 'none';
-            }
-        });
+    if (discoverableSection) {
+        // Hide passkey button if WebAuthn is not supported
+        if (!window.PublicKeyCredential) {
+            discoverableSection.style.display = 'none';
+        }
     }
 });

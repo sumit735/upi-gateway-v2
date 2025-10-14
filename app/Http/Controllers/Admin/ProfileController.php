@@ -369,8 +369,8 @@ class ProfileController extends Controller
             'excludeCredentials' => $excludeCredentials,
             'authenticatorSelection' => [
                 'authenticatorAttachment' => 'platform',
-                'requireResidentKey' => false,
-                'residentKey' => 'preferred',
+                'requireResidentKey' => true,  // Make it discoverable
+                'residentKey' => 'required',   // Required for discoverable credentials
                 'userVerification' => 'preferred',
             ],
         ]);
@@ -484,6 +484,26 @@ class ProfileController extends Controller
     }
 
     /**
+     * Get challenge for discoverable passkey authentication (no email required).
+     * This uses resident keys where the credential itself contains user information.
+     */
+    public function getDiscoverablePasskeyOptions(Request $request)
+    {
+        // Generate challenge
+        $challenge = random_bytes(32);
+        $request->session()->put('passkey_auth_challenge', base64_encode($challenge));
+
+        return response()->json([
+            'success' => true,
+            'challenge' => base64_encode($challenge),
+            'timeout' => 60000,
+            'rpId' => parse_url(config('app.url'), PHP_URL_HOST) ?? request()->getHost(),
+            'userVerification' => 'required',
+            // No allowCredentials - let the authenticator provide any passkey for this domain
+        ]);
+    }
+
+    /**
      * Verify passkey and login user.
      */
     public function verifyPasskeyAuthentication(Request $request)
@@ -493,29 +513,38 @@ class ProfileController extends Controller
             'authenticator_data' => ['required', 'string'],
             'client_data_json' => ['required', 'string'],
             'signature' => ['required', 'string'],
+            'user_handle' => ['nullable', 'string'], // For discoverable credentials
         ]);
 
         // Verify challenge
         $storedChallenge = $request->session()->get('passkey_auth_challenge');
-        $userId = $request->session()->get('passkey_auth_user_id');
         
-        if (!$storedChallenge || !$userId) {
+        if (!$storedChallenge) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid or expired challenge.'
             ], 400);
         }
 
-        // Find passkey
-        $passkey = Passkey::where('credential_id', $validated['credential_id'])
-            ->where('user_id', $userId)
-            ->first();
+        // Find passkey by credential_id (works for both discoverable and non-discoverable)
+        $passkey = Passkey::where('credential_id', $validated['credential_id'])->first();
 
         if (!$passkey) {
             return response()->json([
                 'success' => false,
-                'message' => 'Passkey not found.'
+                'message' => 'Passkey not found. This device is not registered with any account.'
             ], 404);
+        }
+
+        // Optional: Verify user_handle matches (for discoverable credentials)
+        if (isset($validated['user_handle'])) {
+            $userIdFromHandle = base64_decode($validated['user_handle']);
+            if ($userIdFromHandle != $passkey->user_id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User handle mismatch.'
+                ], 400);
+            }
         }
 
         // In production, you should verify the signature here
@@ -540,6 +569,10 @@ class ProfileController extends Controller
             'success' => true,
             'message' => 'Authentication successful!',
             'redirect' => route('dashboard'),
+            'user' => [
+                'name' => $passkey->user->name,
+                'email' => $passkey->user->email,
+            ]
         ]);
     }
 
