@@ -74,12 +74,13 @@
                                     <!-- Discoverable Passkey Login (No Email Required) -->
                                     <div class="uk-margin-medium-bottom" id="discoverablePasskeySection">
                                         <button type="button"
+                                            id="passkeyButton"
                                             class="uk-button uk-width-1-1 uk-button-primary uk-border-rounded"
                                             onclick="loginWithDiscoverablePasskey()"
-                                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white">
+                                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; min-height: 48px; font-size: 16px;">
                                             <i class="fas fa-fingerprint uk-margin-small-right"></i>Sign in with Passkey
                                         </button>
-                                        <p class="uk-text-small uk-text-muted uk-margin-small-top uk-text-center">
+                                        <p class="uk-text-small uk-text-muted uk-margin-small-top uk-text-center" style="margin-top: 8px;">
                                             Use Face ID, Touch ID, or your device's security key
                                         </p>
                                     </div>
