@@ -77,7 +77,7 @@
                                             id="passkeyButton"
                                             class="uk-button uk-width-1-1 uk-button-primary uk-border-rounded"
                                             onclick="loginWithDiscoverablePasskey()"
-                                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; min-height: 48px; font-size: 16px;">
+                                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; min-height: 48px; font-size: 13px;">
                                             <i class="fas fa-fingerprint uk-margin-small-right"></i>Sign in with Passkey
                                         </button>
                                         <p class="uk-text-small uk-text-muted uk-margin-small-top uk-text-center" style="margin-top: 8px;">
