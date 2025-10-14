@@ -303,7 +303,7 @@ function registerNewPasskey() {
     modal.show();
 }
 
-function initiatePasskeyRegistration() {
+async function initiatePasskeyRegistration() {
     const name = $('#registerPasskeyForm input[name="name"]').val();
     
     if (!name) {
@@ -316,20 +316,96 @@ function initiatePasskeyRegistration() {
         showToast('error', 'Passkeys are not supported on this device/browser');
         return;
     }
-    
-    showToast('info', 'Passkey registration is in development. This feature will be available soon.');
-    
-    // TODO: Implement WebAuthn registration flow
-    // This is a placeholder - full WebAuthn implementation requires:
-    // 1. Server-side challenge generation
-    // 2. Client-side credential creation
-    // 3. Server-side credential verification
-    
-    bootstrap.Modal.getInstance(document.getElementById('registerPasskeyModal')).hide();
+
+    try {
+        // Step 1: Get registration options from server
+        const optionsResponse = await fetch('/portal/profile/passkeys/register-options', {
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Accept': 'application/json',
+            }
+        });
+
+        if (!optionsResponse.ok) {
+            throw new Error('Failed to get registration options');
+        }
+
+        const options = await optionsResponse.json();
+
+        // Step 2: Prepare WebAuthn options
+        const publicKeyCredentialCreationOptions = {
+            challenge: base64ToArrayBuffer(options.challenge),
+            rp: options.rp,
+            user: {
+                id: base64ToArrayBuffer(options.user.id),
+                name: options.user.name,
+                displayName: options.user.displayName,
+            },
+            pubKeyCredParams: options.pubKeyCredParams,
+            timeout: options.timeout,
+            attestation: options.attestation,
+            excludeCredentials: options.excludeCredentials.map(cred => ({
+                ...cred,
+                id: base64ToArrayBuffer(cred.id),
+            })),
+            authenticatorSelection: options.authenticatorSelection,
+        };
+
+        // Step 3: Create credential
+        showToast('info', 'Please use your device\'s biometric authentication...');
+        const credential = await navigator.credentials.create({
+            publicKey: publicKeyCredentialCreationOptions
+        });
+
+        if (!credential) {
+            throw new Error('Credential creation failed');
+        }
+
+        // Step 4: Prepare credential data for server
+        const credentialData = {
+            name: name,
+            credential_id: arrayBufferToBase64(credential.rawId),
+            public_key: arrayBufferToBase64(credential.response.getPublicKey()),
+            aaguid: credential.id,
+            transports: credential.response.getTransports ? credential.response.getTransports() : [],
+        };
+
+        // Step 5: Send to server for verification and storage
+        const registerResponse = await fetch('/portal/profile/passkeys', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(credentialData),
+        });
+
+        const result = await registerResponse.json();
+
+        if (result.success) {
+            showToast('success', result.message);
+            bootstrap.Modal.getInstance(document.getElementById('registerPasskeyModal')).hide();
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            throw new Error(result.message || 'Registration failed');
+        }
+
+    } catch (error) {
+        console.error('Passkey registration error:', error);
+        if (error.name === 'NotAllowedError') {
+            showToast('error', 'Registration cancelled or not allowed');
+        } else if (error.name === 'InvalidStateError') {
+            showToast('error', 'This authenticator is already registered');
+        } else {
+            showToast('error', error.message || 'Failed to register passkey');
+        }
+    }
 }
 
 function deletePasskey(id, name) {
-    if (!confirm(`Are you sure you want to delete the passkey "${name}"?`)) return;
+    if (!confirm(`Are you sure you want to delete the passkey "${name}"?\n\nYou won't be able to use it to sign in anymore.`)) return;
     
     $.ajax({
         url: `/portal/profile/passkeys/${id}`,
@@ -347,6 +423,25 @@ function deletePasskey(id, name) {
             showToast('error', xhr.responseJSON?.message || 'Failed to delete passkey');
         }
     });
+}
+
+// WebAuthn Helper Functions
+function base64ToArrayBuffer(base64) {
+    const binaryString = atob(base64.replace(/-/g, '+').replace(/_/g, '/'));
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
+}
+
+function arrayBufferToBase64(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }
 
 // Utility Functions

@@ -21,6 +21,10 @@ Route::get('/two-factor-challenge', [AuthenticateController::class, 'showTwoFact
 Route::post('/two-factor-verify', [AuthenticateController::class, 'verifyTwoFactor'])->name('two-factor.verify');
 Route::post('/two-factor-verify-recovery', [AuthenticateController::class, 'verifyTwoFactorRecovery'])->name('two-factor.verify.recovery');
 
+// Passkey Authentication
+Route::post('/passkey/auth-options', [\App\Http\Controllers\Admin\ProfileController::class, 'getPasskeyAuthenticationOptions'])->name('passkey.auth.options');
+Route::post('/passkey/verify', [\App\Http\Controllers\Admin\ProfileController::class, 'verifyPasskeyAuthentication'])->name('passkey.verify');
+
 Route::get('/logout', [AuthenticateController::class, 'logout'])->name('logout');
 
 // Session management

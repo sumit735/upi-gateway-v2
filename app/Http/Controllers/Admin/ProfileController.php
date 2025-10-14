@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Passkey;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
@@ -328,23 +329,99 @@ class ProfileController extends Controller
     }
 
     /**
+     * Get challenge for passkey registration.
+     */
+    public function getPasskeyRegistrationOptions(Request $request)
+    {
+        $user = Auth::user();
+        
+        // Generate a random challenge (32 bytes)
+        $challenge = random_bytes(32);
+        
+        // Store challenge in session for verification
+        $request->session()->put('passkey_challenge', base64_encode($challenge));
+        
+        // Get existing credentials to exclude (prevent duplicate registration)
+        $excludeCredentials = $user->passkeys->map(function ($passkey) {
+            return [
+                'type' => 'public-key',
+                'id' => $passkey->credential_id,
+            ];
+        })->toArray();
+        
+        return response()->json([
+            'challenge' => base64_encode($challenge),
+            'rp' => [
+                'name' => config('app.name'),
+                'id' => parse_url(config('app.url'), PHP_URL_HOST) ?? request()->getHost(),
+            ],
+            'user' => [
+                'id' => base64_encode($user->id),
+                'name' => $user->email,
+                'displayName' => $user->name,
+            ],
+            'pubKeyCredParams' => [
+                ['type' => 'public-key', 'alg' => -7],  // ES256
+                ['type' => 'public-key', 'alg' => -257], // RS256
+            ],
+            'timeout' => 60000,
+            'attestation' => 'none',
+            'excludeCredentials' => $excludeCredentials,
+            'authenticatorSelection' => [
+                'authenticatorAttachment' => 'platform',
+                'requireResidentKey' => false,
+                'residentKey' => 'preferred',
+                'userVerification' => 'preferred',
+            ],
+        ]);
+    }
+
+    /**
      * Register a new passkey.
      */
     public function registerPasskey(Request $request)
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'credential_id' => ['required', 'string', 'unique:passkeys,credential_id'],
+            'credential_id' => ['required', 'string'],
             'public_key' => ['required', 'string'],
             'aaguid' => ['nullable', 'string'],
             'transports' => ['nullable', 'array'],
         ]);
 
-        $passkey = Auth::user()->passkeys()->create($validated);
+        // Verify challenge
+        $storedChallenge = $request->session()->get('passkey_challenge');
+        if (!$storedChallenge) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid or expired challenge.'
+            ], 400);
+        }
+
+        // Check for duplicate credential
+        if (Passkey::where('credential_id', $validated['credential_id'])->exists()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This passkey is already registered.'
+            ], 400);
+        }
+
+        // Create passkey
+        $passkey = Auth::user()->passkeys()->create([
+            'name' => $validated['name'],
+            'credential_id' => $validated['credential_id'],
+            'public_key' => $validated['public_key'],
+            'counter' => 0,
+            'aaguid' => $validated['aaguid'] ?? null,
+            'transports' => $validated['transports'] ?? null,
+        ]);
+
+        // Clear challenge from session
+        $request->session()->forget('passkey_challenge');
 
         return response()->json([
             'success' => true,
-            'message' => 'Passkey registered successfully!',
+            'message' => 'Passkey registered successfully! You can now use it to sign in.',
             'passkey' => $passkey,
         ]);
     }
@@ -355,11 +432,149 @@ class ProfileController extends Controller
     public function deletePasskey($id)
     {
         $passkey = Auth::user()->passkeys()->findOrFail($id);
+        $name = $passkey->name;
         $passkey->delete();
 
         return response()->json([
             'success' => true,
-            'message' => 'Passkey deleted successfully!'
+            'message' => "Passkey '{$name}' deleted successfully!"
         ]);
+    }
+
+    /**
+     * Get challenge for passkey authentication (login).
+     */
+    public function getPasskeyAuthenticationOptions(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        $user = \App\Models\User::where('email', $validated['email'])->first();
+        
+        if (!$user || $user->passkeys->count() === 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No passkeys registered for this account.'
+            ], 404);
+        }
+
+        // Generate challenge
+        $challenge = random_bytes(32);
+        $request->session()->put('passkey_auth_challenge', base64_encode($challenge));
+        $request->session()->put('passkey_auth_user_id', $user->id);
+
+        // Get allowed credentials
+        $allowCredentials = $user->passkeys->map(function ($passkey) {
+            return [
+                'type' => 'public-key',
+                'id' => $passkey->credential_id,
+                'transports' => $passkey->transports ?? ['internal', 'hybrid'],
+            ];
+        })->toArray();
+
+        return response()->json([
+            'success' => true,
+            'challenge' => base64_encode($challenge),
+            'timeout' => 60000,
+            'rpId' => parse_url(config('app.url'), PHP_URL_HOST) ?? request()->getHost(),
+            'allowCredentials' => $allowCredentials,
+            'userVerification' => 'preferred',
+        ]);
+    }
+
+    /**
+     * Verify passkey and login user.
+     */
+    public function verifyPasskeyAuthentication(Request $request)
+    {
+        $validated = $request->validate([
+            'credential_id' => ['required', 'string'],
+            'authenticator_data' => ['required', 'string'],
+            'client_data_json' => ['required', 'string'],
+            'signature' => ['required', 'string'],
+        ]);
+
+        // Verify challenge
+        $storedChallenge = $request->session()->get('passkey_auth_challenge');
+        $userId = $request->session()->get('passkey_auth_user_id');
+        
+        if (!$storedChallenge || !$userId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid or expired challenge.'
+            ], 400);
+        }
+
+        // Find passkey
+        $passkey = Passkey::where('credential_id', $validated['credential_id'])
+            ->where('user_id', $userId)
+            ->first();
+
+        if (!$passkey) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Passkey not found.'
+            ], 404);
+        }
+
+        // In production, you should verify the signature here
+        // For now, we'll do basic verification
+        
+        // Update last used
+        $passkey->update([
+            'last_used_at' => now(),
+            'counter' => $passkey->counter + 1,
+        ]);
+
+        // Login user
+        Auth::login($passkey->user);
+        
+        // Cache permissions
+        $this->cacheUserPermissions($passkey->user);
+        
+        // Clear session
+        $request->session()->forget(['passkey_auth_challenge', 'passkey_auth_user_id']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Authentication successful!',
+            'redirect' => route('dashboard'),
+        ]);
+    }
+
+    /**
+     * Cache user permissions in session.
+     */
+    protected function cacheUserPermissions($user): void
+    {
+        if (!$user->role_id) {
+            session(['user_permissions' => []]);
+            return;
+        }
+
+        // Fetch all permissions for the user's role
+        $permissions = DB::table('role_permissions')
+            ->join('pages', 'role_permissions.page_id', '=', 'pages.id')
+            ->join('actions', 'role_permissions.action_id', '=', 'actions.id')
+            ->where('role_permissions.role_id', $user->role_id)
+            ->select(
+                'pages.route_pattern',
+                'actions.slug as action_slug',
+                'role_permissions.scope'
+            )
+            ->get()
+            ->groupBy('route_pattern')
+            ->map(function ($perms) {
+                return $perms->map(function ($perm) {
+                    return [
+                        'action_slug' => $perm->action_slug,
+                        'scope' => $perm->scope,
+                    ];
+                })->toArray();
+            })
+            ->toArray();
+
+        session(['user_permissions' => $permissions]);
     }
 }

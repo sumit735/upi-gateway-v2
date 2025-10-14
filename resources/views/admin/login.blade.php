@@ -33,6 +33,8 @@
     <link rel="shortcut icon" href="{{ asset('frontend/img/favicon.ico') }}" type="image/x-icon">
     <!-- touch icon -->
     <link rel="apple-touch-icon-precomposed" href="{{ asset('frontend/img/apple-touch-icon.png') }}">
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Login - Liquid HTML5 Template</title>
 </head>
 
@@ -103,7 +105,16 @@
                                     </form>
                                     <!-- login form end -->
 
-                                    <p class="uk-heading-line"><span>Or sign in with</span></p>
+                                    <!-- Passkey Login Option -->
+                                    <div class="uk-margin-small" id="passkeyLoginBtn" style="display: none;">
+                                        <button type="button"
+                                            class="uk-button uk-width-1-1 uk-button-default uk-border-rounded"
+                                            onclick="loginWithPasskey(document.getElementById('email').value)">
+                                            <i class="fas fa-fingerprint uk-margin-small-right"></i>Sign in with Passkey
+                                        </button>
+                                    </div>
+
+                                    <p class="uk-heading-line uk-margin-medium-top"><span>Or sign in with</span></p>
                                     <div class="uk-margin-medium-bottom">
                                         <a class="uk-button uk-button-small uk-border-rounded color-google" href="#">
                                             <i class="fab fa-google uk-margin-small-right"></i>Google
@@ -130,6 +141,7 @@
     <!-- javascript -->
     <script src="{{ asset('frontend/js/utilities.min.js') }}"></script>
     <script src="{{ asset('frontend/js/config-theme.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/passkey-auth.js') }}"></script>
     @if ($errors->any())
         <script>
             UIkit.notification({

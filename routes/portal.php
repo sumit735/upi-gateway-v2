@@ -157,6 +157,10 @@ Route::middleware(['auth'])->group(function () {
         ->middleware(permission(PageEnum::PROFILE, ActionEnum::EDIT, ScopeEnum::SELF));
 
     // Passkeys
+    Route::get('/profile/passkeys/register-options', [ProfileController::class, 'getPasskeyRegistrationOptions'])
+        ->name('profile.passkey.registerOptions')
+        ->middleware(permission(PageEnum::PROFILE, ActionEnum::EDIT, ScopeEnum::SELF));
+
     Route::post('/profile/passkeys', [ProfileController::class, 'registerPasskey'])
         ->name('profile.registerPasskey')
         ->middleware(permission(PageEnum::PROFILE, ActionEnum::EDIT, ScopeEnum::SELF));
