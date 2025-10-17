@@ -192,31 +192,31 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\SubscriptionController::class, 'index'])
             ->name('index')
             ->middleware(permission(PageEnum::SUBSCRIPTIONS, ActionEnum::VIEW, ScopeEnum::ALL));
-        
+
         Route::post('/list/data', [\App\Http\Controllers\Admin\SubscriptionController::class, 'list'])
             ->name('list')
             ->middleware(permission(PageEnum::SUBSCRIPTIONS, ActionEnum::VIEW, ScopeEnum::ALL));
-        
+
         Route::get('/{subscription}', [\App\Http\Controllers\Admin\SubscriptionController::class, 'show'])
             ->name('show')
             ->middleware(permission(PageEnum::SUBSCRIPTIONS, ActionEnum::VIEW, ScopeEnum::ALL));
-        
+
         Route::post('/', [\App\Http\Controllers\Admin\SubscriptionController::class, 'store'])
             ->name('store')
             ->middleware(permission(PageEnum::SUBSCRIPTIONS, ActionEnum::CREATE, ScopeEnum::ALL));
-        
+
         Route::put('/{subscription}', [\App\Http\Controllers\Admin\SubscriptionController::class, 'update'])
             ->name('update')
             ->middleware(permission(PageEnum::SUBSCRIPTIONS, ActionEnum::EDIT, ScopeEnum::ALL));
-        
+
         Route::post('/{subscription}/toggle-status', [\App\Http\Controllers\Admin\SubscriptionController::class, 'toggleStatus'])
             ->name('toggleStatus')
             ->middleware(permission(PageEnum::SUBSCRIPTIONS, ActionEnum::EDIT, ScopeEnum::ALL));
-        
+
         Route::post('/{subscription}/toggle-popular', [\App\Http\Controllers\Admin\SubscriptionController::class, 'togglePopular'])
             ->name('togglePopular')
             ->middleware(permission(PageEnum::SUBSCRIPTIONS, ActionEnum::EDIT, ScopeEnum::ALL));
-        
+
         Route::delete('/{subscription}', [\App\Http\Controllers\Admin\SubscriptionController::class, 'destroy'])
             ->name('destroy')
             ->middleware(permission(PageEnum::SUBSCRIPTIONS, ActionEnum::DELETE, ScopeEnum::ALL));
@@ -230,58 +230,57 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/categories', [\App\Http\Controllers\Admin\TicketCategoryController::class, 'index'])
             ->name('categories.index')
             ->middleware(permission(PageEnum::SETTINGS, ActionEnum::VIEW, ScopeEnum::ALL));
-        
+
         Route::post('/categories', [\App\Http\Controllers\Admin\TicketCategoryController::class, 'store'])
             ->name('categories.store')
             ->middleware(permission(PageEnum::SETTINGS, ActionEnum::CREATE, ScopeEnum::ALL));
-        
+
         Route::put('/categories/{ticketCategory}', [\App\Http\Controllers\Admin\TicketCategoryController::class, 'update'])
             ->name('categories.update')
             ->middleware(permission(PageEnum::SETTINGS, ActionEnum::EDIT, ScopeEnum::ALL));
-        
+
         Route::delete('/categories/{ticketCategory}', [\App\Http\Controllers\Admin\TicketCategoryController::class, 'destroy'])
             ->name('categories.destroy')
             ->middleware(permission(PageEnum::SETTINGS, ActionEnum::DELETE, ScopeEnum::ALL));
 
         // Ticket Management
+        
         Route::get('/', [\App\Http\Controllers\Admin\TicketManagementController::class, 'index'])
-            ->name('index')
-            ->middleware(permission(PageEnum::DASHBOARD, ActionEnum::VIEW));
+        ->name('index')
+        ->middleware(permission(PageEnum::TICKETS, ActionEnum::VIEW, ScopeEnum::ALL));
+        
+        Route::get('/create', [\App\Http\Controllers\Admin\TicketManagementController::class, 'createIndex'])
+            ->name('create')
+            ->middleware(permission(PageEnum::TICKETS, ActionEnum::CREATE, ScopeEnum::SELF));
+
+        Route::post('/create', [\App\Http\Controllers\Admin\TicketManagementController::class, 'store'])
+            ->name('store')
+            ->middleware(permission(PageEnum::TICKETS, ActionEnum::CREATE, ScopeEnum::SELF));
         
         Route::get('/{ticket}', [\App\Http\Controllers\Admin\TicketManagementController::class, 'show'])
             ->name('show')
-            ->middleware(permission(PageEnum::DASHBOARD, ActionEnum::VIEW));
-        
+            ->middleware(permission(PageEnum::TICKETS, ActionEnum::VIEW, ScopeEnum::ALL));
+
         Route::post('/{ticket}/status', [\App\Http\Controllers\Admin\TicketManagementController::class, 'updateStatus'])
             ->name('status')
-            ->middleware(permission(PageEnum::DASHBOARD, ActionEnum::EDIT));
-        
+            ->middleware(permission(PageEnum::TICKETS, ActionEnum::CHANGE_STATUS, ScopeEnum::ALL));
+
         Route::post('/{ticket}/assign', [\App\Http\Controllers\Admin\TicketManagementController::class, 'assign'])
             ->name('assign')
-            ->middleware(permission(PageEnum::DASHBOARD, ActionEnum::EDIT));
-        
+            ->middleware(permission(PageEnum::TICKETS, ActionEnum::ASSIGN, ScopeEnum::ALL));
+
         Route::post('/{ticket}/reply', [\App\Http\Controllers\Admin\TicketManagementController::class, 'reply'])
             ->name('reply')
-            ->middleware(permission(PageEnum::DASHBOARD, ActionEnum::CREATE));
-        
+            ->middleware(permission(PageEnum::TICKETS, ActionEnum::REPLY, ScopeEnum::ALL));
+
         Route::post('/{ticket}/priority', [\App\Http\Controllers\Admin\TicketManagementController::class, 'updatePriority'])
             ->name('priority')
-            ->middleware(permission(PageEnum::DASHBOARD, ActionEnum::EDIT));
-        
+            ->middleware(permission(PageEnum::TICKETS, ActionEnum::CHANGE_PRIORITY, ScopeEnum::ALL));
+
         Route::get('/stats/dashboard', [\App\Http\Controllers\Admin\TicketManagementController::class, 'statistics'])
             ->name('statistics')
-            ->middleware(permission(PageEnum::DASHBOARD, ActionEnum::VIEW));
-    });
+            ->middleware(permission(PageEnum::TICKETS, ActionEnum::VIEW, ScopeEnum::ALL));
 
-    // ================================
-    // User Ticket Routes (My Tickets)
-    // ================================
-    Route::prefix('my-tickets')->name('tickets.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\TicketController::class, 'index'])->name('index');
-        Route::get('/create', [\App\Http\Controllers\TicketController::class, 'create'])->name('create');
-        Route::post('/', [\App\Http\Controllers\TicketController::class, 'store'])->name('store');
-        Route::get('/{ticket}', [\App\Http\Controllers\TicketController::class, 'show'])->name('show');
-        Route::post('/{ticket}/reply', [\App\Http\Controllers\TicketController::class, 'reply'])->name('reply');
     });
 
 });

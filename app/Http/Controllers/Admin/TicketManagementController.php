@@ -7,6 +7,9 @@ use App\Models\Ticket;
 use App\Models\TicketCategory;
 use App\Models\TicketReply;
 use App\Models\User;
+use App\Enums\PageEnum;
+use App\Enums\ActionEnum;
+use App\Enums\ScopeEnum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -50,6 +53,11 @@ class TicketManagementController extends Controller
         $categories = TicketCategory::active()->get();
         
         return view('admin.tickets.index', compact('tickets', 'categories'));
+    }
+
+    public function createIndex(Request $request) {
+        $categories = TicketCategory::active()->get();
+        return view('admin.tickets.create', compact('categories'));
     }
 
     /**
@@ -215,5 +223,47 @@ class TicketManagementController extends Controller
         ];
 
         return response()->json($stats);
+    }
+
+    public function create(Request $request)
+    {
+        $validated = $request->validate([
+            'category_id' => 'required|exists:ticket_categories,id',
+            'subject' => 'required|string|max:255',
+            'description' => 'required|string',
+            'priority' => 'required|in:low,medium,high,urgent',
+            'attachments.*' => 'nullable|file|max:20480|mimes:jpg,jpeg,png,gif,mp4,mov,avi,pdf,doc,docx',
+        ]);
+
+        // Create ticket
+        $ticket = Ticket::create([
+            'user_id' => Auth::id(),
+            'category_id' => $validated['category_id'],
+            'subject' => $validated['subject'],
+            'description' => $validated['description'],
+            'priority' => $validated['priority'],
+            'status' => 'open',
+        ]);
+
+        // Handle file uploads
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $this->uploadAttachment($ticket, null, $file);
+            }
+        }
+
+        // Return JSON response for AJAX requests
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Ticket created successfully! Your ticket number is: ' . $ticket->ticket_number,
+                'ticket_id' => $ticket->id,
+                'ticket_number' => $ticket->ticket_number,
+                'redirect' => route('admin.tickets.show', $ticket)
+            ]);
+        }
+
+        return redirect()->route('tickets.show', $ticket)
+            ->with('success', 'Ticket created successfully! Your ticket number is: ' . $ticket->ticket_number);
     }
 }

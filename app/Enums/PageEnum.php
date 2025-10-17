@@ -13,6 +13,7 @@ enum PageEnum: string
     case SETTINGS = 'admin.settings.*';
     case DEV_TOOLS = 'portal.dev.*';
     case SUBSCRIPTIONS = 'admin.settings.subscriptions.*';
+    case TICKETS = 'portal.tickets.*';
     
     /**
      * Get the display name for the page
@@ -29,6 +30,8 @@ enum PageEnum: string
             self::SETTINGS => 'Settings',
             self::DEV_TOOLS => 'Developer Tools',
             self::SUBSCRIPTIONS => 'Subscriptions',
+            self::TICKETS => 'All Tickets',
+            self::MY_TICKETS => 'My Tickets',
         };
     }
 
@@ -47,6 +50,7 @@ enum PageEnum: string
             self::SETTINGS => 'Application configuration',
             self::DEV_TOOLS => 'Developer tools and utilities',
             self::SUBSCRIPTIONS => 'Manage user subscriptions',
+            self::TICKETS => 'Manage all support tickets (Admin)',
         };
     }
     
@@ -92,6 +96,12 @@ enum PageEnum: string
             ],
             self::SUBSCRIPTIONS => [
                 // Only global actions for subscriptions
+            ],
+            self::TICKETS => [
+                ActionEnum::ASSIGN,
+                ActionEnum::CHANGE_STATUS,
+                ActionEnum::CHANGE_PRIORITY,
+                ActionEnum::REPLY,
             ],
         };
         

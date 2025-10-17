@@ -1314,6 +1314,34 @@
                             </li>
                         @endif
 
+                        <!-- Support Tickets -->
+                        <li class="submenu">
+                            <a href="javascript:void(0);"
+                                class="{{ request()->routeIs('tickets.*') || request()->routeIs('admin.tickets.*') ? 'active subdrop' : '' }}">
+                                <i class="ti ti-ticket"></i>
+                                <span>Support Tickets</span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <ul style="{{ request()->routeIs('tickets.*') || request()->routeIs('admin.tickets.*') ? 'display: block;' : '' }}">
+                                <!-- My Tickets - Available to all authenticated users -->
+                                
+                                @if(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::CREATE))
+                                    <li class="{{ request()->routeIs('admin.tickets.create') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.tickets.create') }}"
+                                            class="{{ request()->routeIs('admin.tickets.create') ? 'active' : '' }}">Create Ticket</a>
+                                    </li>
+                                @endif
+                                
+                                <!-- All Tickets - Admin only -->
+                                @if(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::VIEW))
+                                    <li class="{{ request()->routeIs('admin.tickets.index') || request()->routeIs('admin.tickets.show') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.tickets.index') }}"
+                                            class="{{ request()->routeIs('admin.tickets.index') || request()->routeIs('admin.tickets.show') ? 'active' : '' }}">All Tickets</a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </li>
+
                         <!-- Profile -->
                         @if(can_page(\App\Enums\PageEnum::PROFILE, \App\Enums\ActionEnum::VIEW))
                             <li class="{{ request()->routeIs('profile.*') ? 'active' : '' }}">

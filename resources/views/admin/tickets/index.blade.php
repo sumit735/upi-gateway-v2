@@ -22,7 +22,7 @@
             </div>
             <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
                 <div class="mb-2">
-                    <a href="{{ route('tickets.create') }}" class="btn btn-primary d-flex align-items-center">
+                    <a href="{{ route('admin.tickets.create') }}" class="btn btn-primary d-flex align-items-center">
                         <i class="ti ti-circle-plus me-2"></i>Create Ticket
                     </a>
                 </div>

@@ -20,6 +20,12 @@ enum ActionEnum: string
     case GENERATE_REPORT = 'generate_report';
     case SEND_NOTIFICATION = 'send_notification';
     
+    // Ticket-specific actions
+    case ASSIGN = 'assign';
+    case CHANGE_STATUS = 'change_status';
+    case CHANGE_PRIORITY = 'change_priority';
+    case REPLY = 'reply';
+    
     /**
      * Get the display name for the action
      */
@@ -38,6 +44,10 @@ enum ActionEnum: string
             self::RECONCILE => 'Reconcile',
             self::GENERATE_REPORT => 'Generate Report',
             self::SEND_NOTIFICATION => 'Send Notification',
+            self::ASSIGN => 'Assign',
+            self::CHANGE_STATUS => 'Change Status',
+            self::CHANGE_PRIORITY => 'Change Priority',
+            self::REPLY => 'Reply',
         };
     }
     
@@ -67,6 +77,7 @@ enum ActionEnum: string
             self::RECONCILE => 'Financial',
             self::GENERATE_REPORT => 'Reporting',
             self::SEND_NOTIFICATION => 'Communication',
+            self::ASSIGN, self::CHANGE_STATUS, self::CHANGE_PRIORITY, self::REPLY => 'Ticket Management',
         };
     }
 
