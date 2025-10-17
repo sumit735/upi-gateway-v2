@@ -224,8 +224,11 @@ class TicketManagementController extends Controller
 
         return response()->json($stats);
     }
-
-    public function create(Request $request)
+    
+    /**
+     * Store a newly created ticket
+     */
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'category_id' => 'required|exists:ticket_categories,id',

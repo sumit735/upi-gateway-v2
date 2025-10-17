@@ -184,6 +184,7 @@
 
     </div>
 </div>
+@include("admin.partials.toastAndModal")
 @endsection
 
 @push('scripts')
@@ -299,7 +300,7 @@ $(document).ready(function() {
         
         // Send AJAX request
         $.ajax({
-            url: '{{ route("admin.tickets.store") }}',
+            url: '{{ route("admin.tickets.create") }}',
             type: 'POST',
             data: formData,
             processData: false,
