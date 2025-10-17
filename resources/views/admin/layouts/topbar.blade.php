@@ -1076,7 +1076,8 @@
                                         <a href="activity.html">
                                             <div class="d-flex">
                                                 <span class="avatar avatar-lg me-2 flex-shrink-0">
-                                                    <img src="{{ asset('admin/assets/img/profiles/avatar-27.jpg') }}" alt="Profile">
+                                                    <img src="{{ asset('admin/assets/img/profiles/avatar-27.jpg') }}"
+                                                        alt="Profile">
                                                 </span>
                                                 <div class="flex-grow-1">
                                                     <p class="mb-1"><span class="text-dark fw-semibold">Shawn</span>
@@ -1090,7 +1091,8 @@
                                         <a href="activity.html" class="pb-0">
                                             <div class="d-flex">
                                                 <span class="avatar avatar-lg me-2 flex-shrink-0">
-                                                    <img src="{{ asset('admin/assets/img/profiles/avatar-23.jpg') }}" alt="Profile">
+                                                    <img src="{{ asset('admin/assets/img/profiles/avatar-23.jpg') }}"
+                                                        alt="Profile">
                                                 </span>
                                                 <div class="flex-grow-1">
                                                     <p class="mb-1"><span class="text-dark fw-semibold">Sylvia</span>
@@ -1109,12 +1111,14 @@
                                         <a href="activity.html">
                                             <div class="d-flex">
                                                 <span class="avatar avatar-lg me-2 flex-shrink-0">
-                                                    <img src="{{ asset('admin/assets/img/profiles/avatar-25.jpg') }}" alt="Profile">
+                                                    <img src="{{ asset('admin/assets/img/profiles/avatar-25.jpg') }}"
+                                                        alt="Profile">
                                                 </span>
                                                 <div class="flex-grow-1">
                                                     <p class="mb-1">New student record <span
                                                             class="text-dark fw-semibold"> George</span> is created by
-                                                        <span class="text-dark fw-semibold">Teressa</span></p>
+                                                        <span class="text-dark fw-semibold">Teressa</span>
+                                                    </p>
                                                     <span>2 hrs ago</span>
                                                 </div>
                                             </div>
@@ -1124,7 +1128,8 @@
                                         <a href="activity.html">
                                             <div class="d-flex">
                                                 <span class="avatar avatar-lg me-2 flex-shrink-0">
-                                                    <img src="{{ asset('admin/assets/img/profiles/avatar-01.jpg') }}" alt="Profile">
+                                                    <img src="{{ asset('admin/assets/img/profiles/avatar-01.jpg') }}"
+                                                        alt="Profile">
                                                 </span>
                                                 <div class="flex-grow-1">
                                                     <p class="mb-1">A new teacher record for <span
@@ -1146,7 +1151,8 @@
                         <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center"
                             data-bs-toggle="dropdown">
                             <span class="avatar avatar-sm online">
-                                <img src="{{ asset('admin/assets/img/profiles/avatar-12.jpg') }}" alt="Img" class="img-fluid rounded-circle">
+                                <img src="{{ asset('admin/assets/img/profiles/avatar-12.jpg') }}" alt="Img"
+                                    class="img-fluid rounded-circle">
                             </span>
                         </a>
                         <div class="dropdown-menu shadow-none">
@@ -1226,11 +1232,12 @@
         </a>
     </div>
     <!-- /Logo -->
-    
+
     <div class="sidebar-header p-3 pb-0 pt-2">
         <div class="text-center rounded bg-light p-2 mb-4 sidebar-profile d-flex align-items-center">
             <div class="avatar avatar-md online">
-                <img src="{{ asset('admin/assets/img/profiles/avatar-02.jpg') }}" alt="Img" class="img-fluid rounded-circle">
+                <img src="{{ asset('admin/assets/img/profiles/avatar-02.jpg') }}" alt="Img"
+                    class="img-fluid rounded-circle">
             </div>
             <div class="text-start sidebar-profile-info ms-2">
                 <h6 class="fs-12 fw-normal mb-1">{{ auth()->user()->name ?? 'User' }}</h6>
@@ -1238,7 +1245,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="sidebar-inner slimscroll">
         <div id="sidebar-menu" class="sidebar-menu">
             <ul>
@@ -1247,68 +1254,80 @@
                     <ul>
                         <!-- Dashboard -->
                         @if(can_page(\App\Enums\PageEnum::DASHBOARD, \App\Enums\ActionEnum::VIEW))
-                        <li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                            <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                                <i class="ti ti-smart-home"></i>
-                                <span>Dashboard</span>
-                            </a>
-                        </li>
+                            <li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                                <a href="{{ route('dashboard') }}"
+                                    class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                                    <i class="ti ti-smart-home"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
                         @endif
-                        
+
                         <!-- User Management -->
                         @if(can_page(\App\Enums\PageEnum::USER_MANAGEMENT, \App\Enums\ActionEnum::VIEW))
-                        <li class="submenu">
-                            <a href="javascript:void(0);" class="{{ request()->routeIs('admin.users.*', 'admin.roles.*') ? 'active subdrop' : '' }}">
-                                <i class="ti ti-users"></i>
-                                <span>User Management</span>
-                                <span class="menu-arrow"></span>
-                            </a>
-                            <ul style="{{ request()->routeIs('admin.users.*', 'admin.roles.*') ? 'display: block;' : '' }}">
-                                <li class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">Users</a>
-                                </li>
-                                <li class="{{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.roles.index') }}" class="{{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">Roles & Permissions</a>
-                                </li>
-                            </ul>
-                        </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);"
+                                    class="{{ request()->routeIs('admin.users.*', 'admin.roles.*') ? 'active subdrop' : '' }}">
+                                    <i class="ti ti-users"></i>
+                                    <span>User Management</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul
+                                    style="{{ request()->routeIs('admin.users.*', 'admin.roles.*') ? 'display: block;' : '' }}">
+                                    <li class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.users.index') }}"
+                                            class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">Users</a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.roles.index') }}"
+                                            class="{{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">Roles &
+                                            Permissions</a>
+                                    </li>
+                                </ul>
+                            </li>
                         @endif
                         <!-- Portal Management -->
                         @if(can_page(\App\Enums\PageEnum::SETTINGS, \App\Enums\ActionEnum::VIEW))
-                        <li class="submenu">
-                            <a href="javascript:void(0);" class="{{ request()->routeIs('admin.settings.*') ? 'active subdrop' : '' }}">
-                                <i class="ti ti-settings"></i>
-                                <span>Portal Management</span>
-                                <span class="menu-arrow"></span>
-                            </a>
-                            <ul style="{{ request()->routeIs('admin.settings.*') ? 'display: block;' : '' }}">
-                                <li class="{{ request()->routeIs('admin.settings.index') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.settings.index') }}" class="{{ request()->routeIs('admin.settings.index') ? 'active' : '' }}">Settings</a>
-                                </li>
-                                <li class="{{ request()->routeIs('admin.settings.subscriptions.index') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.settings.subscriptions.index') }}" class="{{ request()->routeIs('admin.settings.subscription') ? 'active' : '' }}">Subscription</a>
-                                </li>
-                                {{-- <li class="{{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.roles.index') }}" class="{{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">Roles & Permissions</a>
-                                </li> --}}
-                            </ul>
-                        </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);"
+                                    class="{{ request()->routeIs('admin.settings.*') ? 'active subdrop' : '' }}">
+                                    <i class="ti ti-settings"></i>
+                                    <span>Portal Management</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul style="{{ request()->routeIs('admin.settings.*') ? 'display: block;' : '' }}">
+                                    <li class="{{ request()->routeIs('admin.settings.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.settings.index') }}"
+                                            class="{{ request()->routeIs('admin.settings.index') ? 'active' : '' }}">Settings</a>
+                                    </li>
+                                    <li
+                                        class="{{ request()->routeIs('admin.settings.subscriptions.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.settings.subscriptions.index') }}"
+                                            class="{{ request()->routeIs('admin.settings.subscription') ? 'active' : '' }}">Subscription</a>
+                                    </li>
+                                    {{-- <li class="{{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.roles.index') }}"
+                                            class="{{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">Roles &
+                                            Permissions</a>
+                                    </li> --}}
+                                </ul>
+                            </li>
                         @endif
-                        
+
                         <!-- Profile -->
                         @if(can_page(\App\Enums\PageEnum::PROFILE, \App\Enums\ActionEnum::VIEW))
-                        <li class="{{ request()->routeIs('profile.*') ? 'active' : '' }}">
-                            <a href="{{ route('profile.show') }}" class="{{ request()->routeIs('profile.*') ? 'active' : '' }}">
-                                <i class="ti ti-user-circle"></i>
-                                <span>My Profile</span>
-                            </a>
-                        </li>
+                            <li class="{{ request()->routeIs('profile.*') ? 'active' : '' }}">
+                                <a href="{{ route('profile.show') }}"
+                                    class="{{ request()->routeIs('profile.*') ? 'active' : '' }}">
+                                    <i class="ti ti-user-circle"></i>
+                                    <span>My Profile</span>
+                                </a>
+                            </li>
                         @endif
                         {{-- logout --}}
-
                         <li>
                             <a href="javascript:void(0);"
-                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <i class="ti ti-login"></i>
                                 <span>Logout</span>
                             </a>
