@@ -25,6 +25,10 @@ enum ActionEnum: string
     case CHANGE_STATUS = 'change_status';
     case CHANGE_PRIORITY = 'change_priority';
     case REPLY = 'reply';
+    case ADD_CATEGORIES = 'add_categories';
+    case EDIT_CATEGORIES = 'edit_categories';   
+    case DELETE_CATEGORIES = 'delete_categories';
+    case VIEW_CATEGORIES = 'view_categories';
     
     /**
      * Get the display name for the action
@@ -48,6 +52,10 @@ enum ActionEnum: string
             self::CHANGE_STATUS => 'Change Status',
             self::CHANGE_PRIORITY => 'Change Priority',
             self::REPLY => 'Reply',
+            self::ADD_CATEGORIES => 'Add Categories',
+            self::EDIT_CATEGORIES => 'Edit Categories',
+            self::DELETE_CATEGORIES => 'Delete Categories',
+            self::VIEW_CATEGORIES => 'View Categories',
         };
     }
     

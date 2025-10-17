@@ -102,6 +102,10 @@ enum PageEnum: string
                 ActionEnum::CHANGE_STATUS,
                 ActionEnum::CHANGE_PRIORITY,
                 ActionEnum::REPLY,
+                ActionEnum::ADD_CATEGORIES,
+                ActionEnum::EDIT_CATEGORIES,
+                ActionEnum::DELETE_CATEGORIES,
+                ActionEnum::VIEW_CATEGORIES,
             ],
         };
         

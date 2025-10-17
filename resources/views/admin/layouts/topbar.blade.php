@@ -1326,6 +1326,12 @@
                                 <!-- My Tickets - Available to all authenticated users -->
                                 
                                 @if(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::CREATE))
+                                    <li class="{{ request()->routeIs('admin.tickets.categories.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.tickets.categories.index') }}"
+                                            class="{{ request()->routeIs('admin.tickets.categories.index') ? 'active' : '' }}">Manage Categories</a>
+                                    </li>
+                                @endif
+                                @if(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::CREATE))
                                     <li class="{{ request()->routeIs('admin.tickets.create') ? 'active' : '' }}">
                                         <a href="{{ route('admin.tickets.create') }}"
                                             class="{{ request()->routeIs('admin.tickets.create') ? 'active' : '' }}">Create Ticket</a>

@@ -3,59 +3,48 @@
 @section('title', 'Ticket Categories')
 
 @section('content')
-<div class="uk-container uk-container-large uk-margin-large-top">
-    
-    <!-- Header -->
-    <div class="uk-flex uk-flex-between uk-flex-middle uk-margin-medium-bottom">
-        <div>
-            <h2 class="uk-margin-remove">Ticket Categories</h2>
-            <p class="uk-text-muted uk-margin-remove-top">Manage support ticket categories</p>
+<div class="page-wrapper">
+    <div class="content">
+        <div class="d-md-flex d-block align-items-center justify-content-between mb-4">
+            <div>
+                <h4 class="mb-1">Ticket Categories</h4>
+                <p class="mb-0 text-muted">Manage support ticket categories</p>
+            </div>
+            <div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                    <i class="ti ti-plus me-1"></i> Add Category
+                </button>
+            </div>
         </div>
-        <button class="uk-button uk-button-primary uk-border-rounded" uk-toggle="target: #addCategoryModal">
-            <i class="fas fa-plus"></i> Add Category
-        </button>
-    </div>
 
-    <!-- Categories Grid -->
-    @if($categories->count() > 0)
-        <div class="uk-grid-small uk-child-width-1-3@m uk-child-width-1-2@s" uk-grid>
-            @foreach($categories as $category)
-                <div>
-                    <div class="uk-card uk-card-default uk-card-hover uk-border-rounded">
-                        <div class="uk-card-header" style="background: {{ $category->color }}; color: white; border-radius: 8px 8px 0 0;">
-                            <div class="uk-flex uk-flex-between uk-flex-middle">
-                                <h4 class="uk-margin-remove">{{ $category->name }}</h4>
-                                <div>
-                                    @if($category->is_active)
-                                        <span class="uk-badge uk-border-rounded" style="background: rgba(255,255,255,0.3);">
-                                            <i class="fas fa-check"></i> Active
-                                        </span>
-                                    @else
-                                        <span class="uk-badge uk-border-rounded" style="background: rgba(0,0,0,0.3);">
-                                            <i class="fas fa-times"></i> Inactive
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
+        <div class="row">
+            @if($categories->count() > 0)
+                @foreach($categories as $category)
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header d-flex align-items-center justify-content-between" style="background: {{ $category->color }}; color: #fff;">
+                            <h5 class="mb-0">{{ $category->name }}</h5>
+                            @if($category->is_active)
+                                <span class="badge bg-light text-dark">Active</span>
+                            @else
+                                <span class="badge bg-secondary">Inactive</span>
+                            @endif
                         </div>
-                        <div class="uk-card-body">
-                            <p class="uk-text-muted uk-margin-small">
-                                {{ $category->description ?: 'No description provided' }}
-                            </p>
-                            <div class="uk-flex uk-flex-between uk-flex-middle">
+                        <div class="card-body">
+                            <p class="text-muted mb-3">{{ $category->description ?: 'No description provided' }}</p>
+                            <div class="d-flex align-items-center justify-content-between">
                                 <div>
-                                    <span class="uk-text-bold" style="color: {{ $category->color }};">{{ $category->tickets_count }}</span>
-                                    <span class="uk-text-small uk-text-muted">tickets</span>
+                                    <span class="fw-bold" style="color: {{ $category->color }}">{{ $category->tickets_count }}</span>
+                                    <small class="text-muted ms-1">tickets</small>
                                 </div>
                                 <div>
-                                    <button class="uk-button uk-button-small uk-button-default uk-border-rounded" 
-                                            onclick="editCategory({{ $category->id }}, '{{ $category->name }}', '{{ $category->description }}', '{{ $category->color }}', {{ $category->is_active ? 'true' : 'false' }})">
-                                        <i class="fas fa-edit"></i> Edit
+                                    <button class="btn btn-sm btn-outline-secondary me-2" 
+                                            onclick="openEditModal({{ $category->id }}, @json($category))">
+                                        <i class="ti ti-edit"></i>
                                     </button>
                                     @if($category->tickets_count == 0)
-                                        <button class="uk-button uk-button-small uk-button-danger uk-border-rounded" 
-                                                onclick="deleteCategory({{ $category->id }}, '{{ $category->name }}')">
-                                            <i class="fas fa-trash"></i>
+                                        <button class="btn btn-sm btn-danger" onclick="openDeleteModal({{ $category->id }}, '{{ addslashes($category->name) }}')">
+                                            <i class="ti ti-trash"></i>
                                         </button>
                                     @endif
                                 </div>
@@ -63,204 +52,127 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
+                @endforeach
+            @else
+                <div class="col-12">
+                    <div class="card text-center py-5">
+                        <div class="card-body">
+                            <i class="ti ti-folder-open" style="font-size: 48px; color: #e9ecef;"></i>
+                            <h5 class="mt-3">No Categories Yet</h5>
+                            <p class="text-muted">Create your first ticket category to get started.</p>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                                <i class="ti ti-plus me-1"></i> Create Category
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
-    @else
-        <!-- Empty State -->
-        <div class="uk-card uk-card-default uk-card-body uk-text-center uk-border-rounded" style="padding: 60px;">
-            <i class="fas fa-folder-open" style="font-size: 80px; color: #e5e5e5;"></i>
-            <h3 class="uk-margin-top">No Categories Yet</h3>
-            <p class="uk-text-muted">Create your first ticket category to get started.</p>
-            <button class="uk-button uk-button-primary uk-border-rounded uk-margin-top" uk-toggle="target: #addCategoryModal">
-                <i class="fas fa-plus"></i> Create Category
-            </button>
-        </div>
-    @endif
-
+    </div>
 </div>
 
 <!-- Add Category Modal -->
-<div id="addCategoryModal" uk-modal>
-    <div class="uk-modal-dialog uk-modal-body uk-border-rounded">
-        <button class="uk-modal-close-default" type="button" uk-close></button>
-        <h3><i class="fas fa-plus-circle"></i> Add New Category</h3>
-        <form action="{{ route('admin.tickets.categories.store') }}" method="POST">
-            @csrf
-            <div class="uk-margin">
-                <label class="uk-form-label">Category Name *</label>
-                <input type="text" 
-                       name="name" 
-                       class="uk-input uk-border-rounded" 
-                       placeholder="e.g., Technical Support" 
-                       required>
+<div class="modal fade" id="addCategoryModal" tabindex="-1">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="uk-margin">
-                <label class="uk-form-label">Description</label>
-                <textarea name="description" 
-                          class="uk-textarea uk-border-rounded" 
-                          rows="3" 
-                          placeholder="Brief description of this category"></textarea>
-            </div>
-            <div class="uk-margin">
-                <label class="uk-form-label">Color *</label>
-                <div class="uk-grid-small uk-child-width-auto" uk-grid>
-                    <div>
-                        <label>
-                            <input type="radio" name="color" value="#667eea" checked class="uk-radio">
-                            <span class="uk-badge uk-border-rounded" style="background: #667eea; color: white; padding: 8px 15px; cursor: pointer;">Purple</span>
-                        </label>
+            <form action="{{ route('admin.tickets.categories.store') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Category Name *</label>
+                        <input type="text" name="name" class="form-control" placeholder="e.g., Technical Support" required>
                     </div>
-                    <div>
-                        <label>
-                            <input type="radio" name="color" value="#f5222d" class="uk-radio">
-                            <span class="uk-badge uk-border-rounded" style="background: #f5222d; color: white; padding: 8px 15px; cursor: pointer;">Red</span>
-                        </label>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Brief description"></textarea>
                     </div>
-                    <div>
-                        <label>
-                            <input type="radio" name="color" value="#52c41a" class="uk-radio">
-                            <span class="uk-badge uk-border-rounded" style="background: #52c41a; color: white; padding: 8px 15px; cursor: pointer;">Green</span>
-                        </label>
+                    <div class="mb-3">
+                        <label class="form-label">Color *</label>
+                        <div class="d-flex gap-2 flex-wrap">
+                            @foreach(['#667eea',' #f5222d','#52c41a','#1890ff','#faad14','#722ed1'] as $color)
+                                <label class="btn btn-sm" style="background: {{ $color }}; color: #fff;">
+                                    <input type="radio" name="color" value="{{ $color }}" {{ $loop->first ? 'checked' : '' }} class="d-none">
+                                </label>
+                            @endforeach
+                        </div>
                     </div>
-                    <div>
-                        <label>
-                            <input type="radio" name="color" value="#1890ff" class="uk-radio">
-                            <span class="uk-badge uk-border-rounded" style="background: #1890ff; color: white; padding: 8px 15px; cursor: pointer;">Blue</span>
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <input type="radio" name="color" value="#faad14" class="uk-radio">
-                            <span class="uk-badge uk-border-rounded" style="background: #faad14; color: white; padding: 8px 15px; cursor: pointer;">Orange</span>
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <input type="radio" name="color" value="#722ed1" class="uk-radio">
-                            <span class="uk-badge uk-border-rounded" style="background: #722ed1; color: white; padding: 8px 15px; cursor: pointer;">Purple</span>
-                        </label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="is_active" id="add_is_active" checked>
+                        <label class="form-check-label" for="add_is_active">Active</label>
                     </div>
                 </div>
-            </div>
-            <div class="uk-margin">
-                <label>
-                    <input type="checkbox" name="is_active" value="1" checked class="uk-checkbox">
-                    Active
-                </label>
-            </div>
-            <div class="uk-margin-top">
-                <button type="submit" class="uk-button uk-button-primary uk-border-rounded">
-                    <i class="fas fa-save"></i> Create Category
-                </button>
-                <button type="button" class="uk-button uk-button-default uk-border-rounded uk-modal-close">
-                    Cancel
-                </button>
-            </div>
-        </form>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Create Category</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <!-- Edit Category Modal -->
-<div id="editCategoryModal" uk-modal>
-    <div class="uk-modal-dialog uk-modal-body uk-border-rounded">
-        <button class="uk-modal-close-default" type="button" uk-close></button>
-        <h3><i class="fas fa-edit"></i> Edit Category</h3>
-        <form id="editCategoryForm" method="POST">
-            @csrf
-            @method('PUT')
-            <div class="uk-margin">
-                <label class="uk-form-label">Category Name *</label>
-                <input type="text" 
-                       id="edit_name" 
-                       name="name" 
-                       class="uk-input uk-border-rounded" 
-                       required>
+<div class="modal fade" id="editCategoryModal" tabindex="-1">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="uk-margin">
-                <label class="uk-form-label">Description</label>
-                <textarea id="edit_description" 
-                          name="description" 
-                          class="uk-textarea uk-border-rounded" 
-                          rows="3"></textarea>
-            </div>
-            <div class="uk-margin">
-                <label class="uk-form-label">Color *</label>
-                <div class="uk-grid-small uk-child-width-auto" uk-grid>
-                    <div>
-                        <label>
-                            <input type="radio" name="color" value="#667eea" class="uk-radio edit-color">
-                            <span class="uk-badge uk-border-rounded" style="background: #667eea; color: white; padding: 8px 15px; cursor: pointer;">Purple</span>
-                        </label>
+            <form id="editCategoryForm" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Category Name *</label>
+                        <input type="text" id="edit_name" name="name" class="form-control" required>
                     </div>
-                    <div>
-                        <label>
-                            <input type="radio" name="color" value="#f5222d" class="uk-radio edit-color">
-                            <span class="uk-badge uk-border-rounded" style="background: #f5222d; color: white; padding: 8px 15px; cursor: pointer;">Red</span>
-                        </label>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea id="edit_description" name="description" class="form-control" rows="3"></textarea>
                     </div>
-                    <div>
-                        <label>
-                            <input type="radio" name="color" value="#52c41a" class="uk-radio edit-color">
-                            <span class="uk-badge uk-border-rounded" style="background: #52c41a; color: white; padding: 8px 15px; cursor: pointer;">Green</span>
-                        </label>
+                    <div class="mb-3">
+                        <label class="form-label">Color *</label>
+                        <div id="edit_color_options" class="d-flex gap-2 flex-wrap"></div>
                     </div>
-                    <div>
-                        <label>
-                            <input type="radio" name="color" value="#1890ff" class="uk-radio edit-color">
-                            <span class="uk-badge uk-border-rounded" style="background: #1890ff; color: white; padding: 8px 15px; cursor: pointer;">Blue</span>
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <input type="radio" name="color" value="#faad14" class="uk-radio edit-color">
-                            <span class="uk-badge uk-border-rounded" style="background: #faad14; color: white; padding: 8px 15px; cursor: pointer;">Orange</span>
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <input type="radio" name="color" value="#722ed1" class="uk-radio edit-color">
-                            <span class="uk-badge uk-border-rounded" style="background: #722ed1; color: white; padding: 8px 15px; cursor: pointer;">Purple</span>
-                        </label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="edit_is_active" name="is_active">
+                        <label class="form-check-label" for="edit_is_active">Active</label>
                     </div>
                 </div>
-            </div>
-            <div class="uk-margin">
-                <label>
-                    <input type="checkbox" id="edit_is_active" name="is_active" value="1" class="uk-checkbox">
-                    Active
-                </label>
-            </div>
-            <div class="uk-margin-top">
-                <button type="submit" class="uk-button uk-button-primary uk-border-rounded">
-                    <i class="fas fa-save"></i> Update Category
-                </button>
-                <button type="button" class="uk-button uk-button-default uk-border-rounded uk-modal-close">
-                    Cancel
-                </button>
-            </div>
-        </form>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update Category</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <!-- Delete Confirmation Modal -->
-<div id="deleteCategoryModal" uk-modal>
-    <div class="uk-modal-dialog uk-modal-body uk-border-rounded">
-        <button class="uk-modal-close-default" type="button" uk-close></button>
-        <h3><i class="fas fa-exclamation-triangle"></i> Confirm Delete</h3>
-        <p>Are you sure you want to delete the category "<strong id="delete_category_name"></strong>"?</p>
-        <p class="uk-text-danger uk-text-small">This action cannot be undone.</p>
-        <form id="deleteCategoryForm" method="POST">
-            @csrf
-            @method('DELETE')
-            <div class="uk-margin-top">
-                <button type="submit" class="uk-button uk-button-danger uk-border-rounded">
-                    <i class="fas fa-trash"></i> Delete Category
-                </button>
-                <button type="button" class="uk-button uk-button-default uk-border-rounded uk-modal-close">
-                    Cancel
-                </button>
+<div class="modal fade" id="deleteCategoryModal" tabindex="-1">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-        </form>
+            <form id="deleteCategoryForm" method="POST">
+                @csrf
+                @method('DELETE')
+                <div class="modal-body">
+                    <p>Are you sure you want to delete the category "<strong id="delete_category_name"></strong>"?</p>
+                    <p class="text-muted small">This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -268,24 +180,42 @@
 
 @section('scripts')
 <script>
-    function editCategory(id, name, description, color, isActive) {
-        document.getElementById('editCategoryForm').action = "{{ url('/portal/tickets/categories') }}/" + id;
-        document.getElementById('edit_name').value = name;
-        document.getElementById('edit_description').value = description;
-        document.getElementById('edit_is_active').checked = isActive;
-        
-        // Set the color radio button
-        document.querySelectorAll('.edit-color').forEach(radio => {
-            radio.checked = radio.value === color;
+    const colorPalette = ['#667eea','#f5222d','#52c41a','#1890ff','#faad14','#722ed1'];
+
+    function openEditModal(id, category) {
+        const form = document.getElementById('editCategoryForm');
+        form.action = `{{ url('/portal/tickets/categories') }}/${id}`;
+        document.getElementById('edit_name').value = category.name;
+        document.getElementById('edit_description').value = category.description || '';
+        document.getElementById('edit_is_active').checked = !!category.is_active;
+
+        // Build color options
+        const container = document.getElementById('edit_color_options');
+        container.innerHTML = '';
+        colorPalette.forEach(col => {
+            const label = document.createElement('label');
+            label.className = 'btn btn-sm';
+            label.style.background = col;
+            label.style.color = '#fff';
+            label.style.marginRight = '6px';
+            const input = document.createElement('input');
+            input.type = 'radio';
+            input.name = 'color';
+            input.value = col;
+            input.className = 'd-none';
+            if (col.toLowerCase() === (category.color || '').toLowerCase()) input.checked = true;
+            label.appendChild(input);
+            container.appendChild(label);
         });
-        
-        UIkit.modal('#editCategoryModal').show();
+
+        new bootstrap.Modal(document.getElementById('editCategoryModal')).show();
     }
 
-    function deleteCategory(id, name) {
-        document.getElementById('deleteCategoryForm').action = "{{ url('/portal/tickets/categories') }}/" + id;
+    function openDeleteModal(id, name) {
+        const form = document.getElementById('deleteCategoryForm');
+        form.action = `{{ url('/portal/tickets/categories') }}/${id}`;
         document.getElementById('delete_category_name').textContent = name;
-        UIkit.modal('#deleteCategoryModal').show();
+        new bootstrap.Modal(document.getElementById('deleteCategoryModal')).show();
     }
 </script>
 @endsection
