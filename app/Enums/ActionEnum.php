@@ -85,7 +85,12 @@ enum ActionEnum: string
             self::RECONCILE => 'Financial',
             self::GENERATE_REPORT => 'Reporting',
             self::SEND_NOTIFICATION => 'Communication',
+            // Ticket actions
             self::ASSIGN, self::CHANGE_STATUS, self::CHANGE_PRIORITY, self::REPLY => 'Ticket Management',
+            // Category-specific management actions
+            self::ADD_CATEGORIES, self::EDIT_CATEGORIES, self::DELETE_CATEGORIES, self::VIEW_CATEGORIES => 'Ticket Category Management',
+            // Fallback/default category
+            default => 'Other',
         };
     }
 
