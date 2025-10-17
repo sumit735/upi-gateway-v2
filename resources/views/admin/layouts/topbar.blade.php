@@ -1313,7 +1313,7 @@
                                 </ul>
                             </li>
                         @endif
-
+                        @if(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::VIEW))
                         <!-- Support Tickets -->
                         <li class="submenu">
                             <a href="javascript:void(0);"
@@ -1347,7 +1347,7 @@
                                 @endif
                             </ul>
                         </li>
-
+                        @endif
                         <!-- Profile -->
                         @if(can_page(\App\Enums\PageEnum::PROFILE, \App\Enums\ActionEnum::VIEW))
                             <li class="{{ request()->routeIs('profile.*') ? 'active' : '' }}">
