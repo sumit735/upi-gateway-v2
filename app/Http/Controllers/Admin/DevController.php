@@ -39,6 +39,9 @@ class DevController extends Controller
             $synced = [];
             $created = [];
             $updated = [];
+            $deleted = [];
+            
+            $enumRoutePatterns = collect(PageEnum::cases())->pluck('value')->toArray();
             
             foreach (PageEnum::cases() as $pageEnum) {
                 $page = Page::updateOrCreate(
@@ -63,6 +66,20 @@ class DevController extends Controller
                 ];
             }
             
+            // Delete pages that are no longer in PageEnum
+            $orphanedPages = Page::whereNotIn('route_pattern', $enumRoutePatterns)->get();
+            foreach ($orphanedPages as $orphanedPage) {
+                $deleted[] = $orphanedPage->name;
+                
+                // Delete related role permissions (cascade should handle this, but being explicit)
+                \App\Models\RolePermission::where('page_id', $orphanedPage->id)->delete();
+                
+                // Delete related actions (cascade should handle this, but being explicit)
+                \App\Models\Action::where('page_id', $orphanedPage->id)->delete();
+                
+                $orphanedPage->delete();
+            }
+            
             DB::commit();
             
             return response()->json([
@@ -72,6 +89,7 @@ class DevController extends Controller
                     'synced' => $synced,
                     'created' => $created,
                     'updated' => $updated,
+                    'deleted' => $deleted,
                     'total' => count($synced),
                 ]
             ]);
@@ -96,6 +114,7 @@ class DevController extends Controller
             $synced = [];
             $created = [];
             $updated = [];
+            $deleted = [];
             
             // Get all pages
             $pages = Page::all()->keyBy('route_pattern');
@@ -109,7 +128,9 @@ class DevController extends Controller
                 
                 // Get available actions for this page
                 $availableActions = $pageEnum->availableActions();
+                $availableActionSlugs = collect($availableActions)->pluck('value')->toArray();
                 
+                // Sync actions for this page
                 foreach ($availableActions as $actionEnum) {
                     $action = Action::updateOrCreate(
                         [
@@ -134,6 +155,20 @@ class DevController extends Controller
                         'slug' => $action->slug,
                     ];
                 }
+                
+                // Delete actions that are no longer available for this page
+                $orphanedActions = Action::where('page_id', $page->id)
+                    ->whereNotIn('slug', $availableActionSlugs)
+                    ->get();
+                
+                foreach ($orphanedActions as $orphanedAction) {
+                    $deleted[] = $page->name . ' - ' . $orphanedAction->name;
+                    
+                    // Delete related role permissions (cascade should handle this, but being explicit)
+                    \App\Models\RolePermission::where('action_id', $orphanedAction->id)->delete();
+                    
+                    $orphanedAction->delete();
+                }
             }
             
             DB::commit();
@@ -145,6 +180,7 @@ class DevController extends Controller
                     'synced' => $synced,
                     'created' => $created,
                     'updated' => $updated,
+                    'deleted' => $deleted,
                     'total' => count($synced),
                 ]
             ]);

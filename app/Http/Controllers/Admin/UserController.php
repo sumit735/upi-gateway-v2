@@ -253,6 +253,10 @@ class UserController extends Controller
         // Validate request
         $validated = $request->validate($rules);
         
+        // Check if role is being changed
+        $roleChanged = $user->role_id != $validated['role_id'];
+        $oldRoleId = $user->role_id;
+        
         // Update user basic details
         $user->name = $validated['name'];
         $user->email = $validated['email'];
@@ -280,6 +284,23 @@ class UserController extends Controller
                     'pincode' => $validated['pincode'] ?? null,
                 ]
             );
+        }
+        
+        // Refresh permissions if role changed
+        if ($roleChanged) {
+            if (auth()->check() && auth()->id() === $user->id) {
+                $user->refreshPermissions();
+            } else {
+                try {
+                    $sessionIds = \App\Models\UserSession::where('user_id', $user->id)->pluck('session_id')->toArray();
+                    if (!empty($sessionIds)) {
+                        \Illuminate\Support\Facades\DB::table('sessions')->whereIn('id', $sessionIds)->delete();
+                        \App\Models\UserSession::whereIn('session_id', $sessionIds)->delete();
+                    }
+                } catch (\Exception $e) {
+                    // ignore failures
+                }
+            }
         }
         
         return response()->json([

@@ -20,9 +20,16 @@ class TicketManagementController extends Controller
      */
     public function index(Request $request)
     {
+        $user = Auth::user();
         $query = Ticket::with(['category', 'user', 'assignedTo'])
             ->withCount('attachments')
             ->latest();
+
+        // Filter by scope: 'all' scope shows all tickets, 'self' scope shows only user's tickets
+        if (!$user->hasPermission(PageEnum::TICKETS->value, ActionEnum::VIEW->value, ScopeEnum::ALL->value)) {
+            // User only has 'self' scope - show only their tickets
+            $query->where('user_id', $user->id);
+        }
 
         // Filter by status
         if ($request->has('status') && $request->status != '') {

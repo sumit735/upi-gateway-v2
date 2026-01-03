@@ -63,13 +63,8 @@ if (!function_exists('is_role')) {
 
 if (!function_exists('hasPermission')) {
     function hasPermission(User $user, PageEnum $page, ActionEnum $action, ScopeEnum $scope = ScopeEnum::SELF): bool
-    {  
-        $userSession = session('user_permissions', []);
-        $pagePermissions = $userSession[$page->value] ?? null;
-        if (!$pagePermissions) {
-            return false;
-        }
-        return in_array($action->value, $pagePermissions);
+    {
+        return $user->hasPermission($page->value, $action->value, $scope->value);
     }
 }
 

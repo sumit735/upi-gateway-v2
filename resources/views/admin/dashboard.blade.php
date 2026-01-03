@@ -2715,6 +2715,89 @@
 
 				</div>
 
+				<!-- My Role Permissions -->
+				@if(auth()->user()->role)
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
+								<div>
+									<h5 class="mb-2">My Role Permissions</h5>
+									<p class="fs-13 text-muted mb-0">Role: <span class="fw-semibold">{{ auth()->user()->role->name }}</span>
+										@if(auth()->user()->role->description)
+											<span class="ms-2">- {{ auth()->user()->role->description }}</span>
+										@endif
+									</p>
+								</div>
+								<div class="d-flex align-items-center">
+									<span class="badge bg-primary-light text-primary me-2">{{ $permissionSummary['total_permissions'] ?? 0 }} Total Permissions</span>
+									<span class="badge bg-success-light text-success">{{ $permissionSummary['pages_accessible'] ?? 0 }} Pages</span>
+								</div>
+							</div>
+							<div class="card-body">
+								@if(isset($permissions) && count($permissions) > 0)
+									<div class="row">
+										@foreach($permissions as $routePattern => $pageData)
+											@php
+												$page = $pageData['page'] ?? null;
+												$permissionList = $pageData['permissions'] ?? collect();
+											@endphp
+											@if($page && $permissionList->count() > 0)
+												<div class="col-md-6 col-lg-4 mb-4">
+													<div class="card border h-100">
+														<div class="card-body">
+															<div class="d-flex align-items-center mb-3">
+																<span class="avatar rounded-circle bg-primary-light text-primary me-2">
+																	<i class="ti ti-lock fs-16"></i>
+																</span>
+																<div class="flex-fill">
+																	<h6 class="mb-1 fw-semibold">{{ $page->label() }}</h6>
+																	<p class="fs-12 text-muted mb-0">{{ $page->description() }}</p>
+																</div>
+															</div>
+															<div class="border-top pt-3">
+																<p class="fs-12 fw-medium text-muted mb-2">Available Actions:</p>
+																<div class="d-flex flex-wrap gap-1">
+																	@foreach($permissionList as $permission)
+																		@php
+																			$action = $permission->action ?? null;
+																			$scope = $permission->scope ?? 'self';
+																		@endphp
+																		@if($action)
+																			<span class="badge bg-light text-dark border" data-bs-toggle="tooltip" data-bs-placement="top" title="Scope: {{ ucfirst($scope) }}">
+																				{{ $action->name }}
+																				@if($scope === 'all')
+																					<i class="ti ti-world fs-10 ms-1"></i>
+																				@else
+																					<i class="ti ti-user fs-10 ms-1"></i>
+																				@endif
+																			</span>
+																		@endif
+																	@endforeach
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											@endif
+										@endforeach
+									</div>
+								@else
+									<div class="text-center py-5">
+										<div class="avatar avatar-xl bg-light text-muted mx-auto mb-3">
+											<i class="ti ti-lock-off fs-24"></i>
+										</div>
+										<h6 class="mb-2">No Permissions Assigned</h6>
+										<p class="fs-13 text-muted mb-0">You don't have any permissions assigned to your role.</p>
+									</div>
+								@endif
+							</div>
+						</div>
+					</div>
+				</div>
+				@endif
+				<!-- /My Role Permissions -->
+
 				<div class="row">
 
 					<!-- Schedules -->

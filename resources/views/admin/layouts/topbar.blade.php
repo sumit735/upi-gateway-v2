@@ -1323,9 +1323,15 @@
                                 <span class="menu-arrow"></span>
                             </a>
                             <ul style="{{ request()->routeIs('tickets.*') || request()->routeIs('admin.tickets.*') ? 'display: block;' : '' }}">
-                                <!-- My Tickets - Available to all authenticated users -->
+                                <!-- My Tickets - Available to users with TICKETS permission (any scope) -->
+                                @if(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::VIEW, \App\Enums\ScopeEnum::SELF))
+                                    <li class="{{ request()->routeIs('admin.tickets.index') || request()->routeIs('admin.tickets.show') || request()->routeIs('admin.tickets.create') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.tickets.index') }}"
+                                            class="{{ request()->routeIs('admin.tickets.index') || request()->routeIs('admin.tickets.show') || request()->routeIs('admin.tickets.create') ? 'active' : '' }}">My Tickets</a>
+                                    </li>
+                                @endif
                                 
-                                @if(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::CREATE))
+                                @if(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::VIEW_CATEGORIES))
                                     <li class="{{ request()->routeIs('admin.tickets.categories.index') ? 'active' : '' }}">
                                         <a href="{{ route('admin.tickets.categories.index') }}"
                                             class="{{ request()->routeIs('admin.tickets.categories.index') ? 'active' : '' }}">Manage Categories</a>
@@ -1339,7 +1345,7 @@
                                 @endif
                                 
                                 <!-- All Tickets - Admin only -->
-                                @if(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::VIEW))
+                                @if(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::VIEW, \App\Enums\ScopeEnum::ALL))
                                     <li class="{{ request()->routeIs('admin.tickets.index') || request()->routeIs('admin.tickets.show') ? 'active' : '' }}">
                                         <a href="{{ route('admin.tickets.index') }}"
                                             class="{{ request()->routeIs('admin.tickets.index') || request()->routeIs('admin.tickets.show') ? 'active' : '' }}">All Tickets</a>

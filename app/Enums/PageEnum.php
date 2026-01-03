@@ -30,8 +30,7 @@ enum PageEnum: string
             self::SETTINGS => 'Settings',
             self::DEV_TOOLS => 'Developer Tools',
             self::SUBSCRIPTIONS => 'Subscriptions',
-            self::TICKETS => 'All Tickets',
-            self::MY_TICKETS => 'My Tickets',
+            self::TICKETS => 'Tickets',
         };
     }
 
@@ -50,7 +49,7 @@ enum PageEnum: string
             self::SETTINGS => 'Application configuration',
             self::DEV_TOOLS => 'Developer tools and utilities',
             self::SUBSCRIPTIONS => 'Manage user subscriptions',
-            self::TICKETS => 'Manage all support tickets (Admin)',
+            self::TICKETS => 'View and manage support tickets',
         };
     }
     

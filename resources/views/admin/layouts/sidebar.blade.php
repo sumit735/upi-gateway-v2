@@ -36,6 +36,15 @@
 					</a>
 				</li>
 				@endif
+				
+				<!-- My Tickets -->
+				@if(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::VIEW))
+				<li>
+					<a href="{{ route('admin.tickets.index') }}">
+						<i class="ti ti-ticket"></i><span>My Tickets</span>
+					</a>
+				</li>
+				@endif
 			</ul>
 			<div class="d-xl-flex align-items-center d-none">
 				<a href="#" class="me-3 avatar avatar-sm">

@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\RolePermission;
+use Illuminate\Support\Facades\DB;
 
 trait HasPermissions
 {
@@ -129,5 +130,41 @@ trait HasPermissions
     public function isAdmin(): bool
     {
         return $this->hasRole('admin');
+    }
+
+    /**
+     * Refresh user permissions in session from database
+     *
+     * @return void
+     */
+    public function refreshPermissions(): void
+    {
+        if (!$this->role_id) {
+            session(['user_permissions' => []]);
+            return;
+        }
+
+        $permissions = DB::table('role_permissions')
+            ->join('pages', 'role_permissions.page_id', '=', 'pages.id')
+            ->join('actions', 'role_permissions.action_id', '=', 'actions.id')
+            ->where('role_permissions.role_id', $this->role_id)
+            ->select(
+                'pages.route_pattern',
+                'actions.slug as action_slug',
+                'role_permissions.scope'
+            )
+            ->get()
+            ->groupBy('route_pattern')
+            ->map(function ($perms) {
+                return $perms->map(function ($perm) {
+                    return [
+                        'action_slug' => $perm->action_slug,
+                        'scope' => $perm->scope,
+                    ];
+                })->toArray();
+            })
+            ->toArray();
+
+        session(['user_permissions' => $permissions]);
     }
 }

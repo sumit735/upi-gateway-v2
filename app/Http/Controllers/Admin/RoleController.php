@@ -178,24 +178,23 @@ class RoleController extends Controller
                 }
             }
         });
-        // invalidate the session cache for current user
 
-        // Immediate forced logout: delete sessions for users of this role
+        // Refresh permissions for current user if they belong to this role
+        if (auth()->check() && auth()->user()->role_id === $role->id) {
+            auth()->user()->refreshPermissions();
+        }
+
+        // Invalidate sessions for other users of this role (they'll need to re-login)
         try {
             $userIds = $role->users()->pluck('id')->toArray();
-            // exclude the current user (admin performing update)
-            $current = auth()->id();
-            $userIds = array_filter($userIds, fn($id) => $id !== $current);
+            $currentUserId = auth()->id();
+            $userIds = array_filter($userIds, fn($id) => $id !== $currentUserId);
 
             if (count($userIds) > 0) {
-                // Get session ids from mapping
                 $sessionIds = UserSession::whereIn('user_id', $userIds)->pluck('session_id')->toArray();
 
                 if (!empty($sessionIds)) {
-                    // Delete actual session rows (works if using database session driver)
                     DB::table('sessions')->whereIn('id', $sessionIds)->delete();
-
-                    // Remove mappings
                     UserSession::whereIn('session_id', $sessionIds)->delete();
                 }
             }

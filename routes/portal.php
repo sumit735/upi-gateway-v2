@@ -247,12 +247,12 @@ Route::middleware(['auth'])->group(function () {
         
         Route::get('/', [\App\Http\Controllers\Admin\TicketManagementController::class, 'index'])
         ->name('index')
-        ->middleware(permission(PageEnum::TICKETS, ActionEnum::VIEW, ScopeEnum::ALL));
+        ->middleware(permission(PageEnum::TICKETS, ActionEnum::VIEW));
         
         Route::get('/create', [\App\Http\Controllers\Admin\TicketManagementController::class, 'createIndex'])
             ->name('create')
             ->middleware(permission(PageEnum::TICKETS, ActionEnum::CREATE, ScopeEnum::SELF));
-
+        
         Route::post('/create', [\App\Http\Controllers\Admin\TicketManagementController::class, 'store'])
             ->name('store')
             ->middleware(permission(PageEnum::TICKETS, ActionEnum::CREATE, ScopeEnum::SELF));
