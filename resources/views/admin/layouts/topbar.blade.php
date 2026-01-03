@@ -1319,7 +1319,7 @@
                             <a href="javascript:void(0);"
                                 class="{{ request()->routeIs('tickets.*') || request()->routeIs('admin.tickets.*') ? 'active subdrop' : '' }}">
                                 <i class="ti ti-ticket"></i>
-                                <span>Support Tickets</span>
+                                <span>Support Ticketss</span>
                                 <span class="menu-arrow"></span>
                             </a>
                             <ul style="{{ request()->routeIs('tickets.*') || request()->routeIs('admin.tickets.*') ? 'display: block;' : '' }}">
