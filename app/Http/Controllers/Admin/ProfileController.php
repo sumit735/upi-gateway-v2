@@ -74,25 +74,23 @@ class ProfileController extends Controller
     public function uploadPhoto(Request $request)
     {
         $request->validate([
-            'profile_photo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'profile_photo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:5120'],
         ]);
 
         $user = Auth::user();
+        $fileService = \App\Services\FileService::forProfilePhotos();
 
-        // Delete old photo if exists
-        if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
-            Storage::disk('public')->delete($user->profile_photo);
+        if ($user->profile_photo) {
+            $fileService->delete($user->profile_photo);
         }
 
-        // Store new photo
-        $path = $request->file('profile_photo')->store('profile-photos', 'public');
-        
-        $user->update(['profile_photo' => $path]);
+        $uploadedFile = $fileService->upload($request->file('profile_photo'));
+        $user->update(['profile_photo' => $uploadedFile['file_path']]);
 
         return response()->json([
             'success' => true,
             'message' => 'Profile photo updated successfully!',
-            'photo_url' => Storage::url($path)
+            'photo_url' => $fileService->getUrl($uploadedFile['file_path'])
         ]);
     }
 
@@ -102,9 +100,10 @@ class ProfileController extends Controller
     public function deletePhoto()
     {
         $user = Auth::user();
+        $fileService = \App\Services\FileService::forProfilePhotos();
 
-        if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
-            Storage::disk('public')->delete($user->profile_photo);
+        if ($user->profile_photo) {
+            $fileService->delete($user->profile_photo);
         }
 
         $user->update(['profile_photo' => null]);

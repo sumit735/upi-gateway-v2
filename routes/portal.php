@@ -252,14 +252,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create', [\App\Http\Controllers\Admin\TicketManagementController::class, 'createIndex'])
             ->name('create')
             ->middleware(permission(PageEnum::TICKETS, ActionEnum::CREATE, ScopeEnum::SELF));
-        
+
         Route::post('/create', [\App\Http\Controllers\Admin\TicketManagementController::class, 'store'])
             ->name('store')
             ->middleware(permission(PageEnum::TICKETS, ActionEnum::CREATE, ScopeEnum::SELF));
-        
-        Route::get('/attachments/{attachment}', [\App\Http\Controllers\Admin\TicketManagementController::class, 'downloadAttachment'])
-            ->name('attachment')
-            ->middleware(permission(PageEnum::TICKETS, ActionEnum::VIEW));
         
         Route::get('/{ticket}', [\App\Http\Controllers\Admin\TicketManagementController::class, 'show'])
             ->name('show')

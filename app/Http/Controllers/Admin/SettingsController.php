@@ -40,29 +40,35 @@ class SettingsController extends Controller
 
         try {
             $uploads = [];
+            $fileService = \App\Services\FileService::forSettings();
             
-            // Handle file uploads for logo and favicon
             if ($request->hasFile('logo_file')) {
-                $logoFile = $request->file('logo_file');
-                $logoName = 'logo_' . time() . '.' . $logoFile->getClientOriginalExtension();
-                $logoFile->move(public_path('admin/assets/img'), $logoName);
-                
                 $logoSetting = Settings::where('key', 'logo')->first();
+                if ($logoSetting && $logoSetting->value) {
+                    $fileService->deleteFromPublic('admin/assets/img/' . $logoSetting->value);
+                }
+                
+                $logoName = 'logo_' . time();
+                $uploadedFile = $fileService->uploadToPublic($request->file('logo_file'), 'admin/assets/img', $logoName);
+                
                 if ($logoSetting) {
-                    $logoSetting->update(['value' => $logoName]);
-                    $uploads['logo'] = asset('admin/assets/img/' . $logoName);
+                    $logoSetting->update(['value' => basename($uploadedFile['file_path'])]);
+                    $uploads['logo'] = $uploadedFile['url'];
                 }
             }
             
             if ($request->hasFile('favicon_file')) {
-                $faviconFile = $request->file('favicon_file');
-                $faviconName = 'favicon_' . time() . '.' . $faviconFile->getClientOriginalExtension();
-                $faviconFile->move(public_path('admin/assets/img'), $faviconName);
-                
                 $faviconSetting = Settings::where('key', 'favicon')->first();
+                if ($faviconSetting && $faviconSetting->value) {
+                    $fileService->deleteFromPublic('admin/assets/img/' . $faviconSetting->value);
+                }
+                
+                $faviconName = 'favicon_' . time();
+                $uploadedFile = $fileService->uploadToPublic($request->file('favicon_file'), 'admin/assets/img', $faviconName);
+                
                 if ($faviconSetting) {
-                    $faviconSetting->update(['value' => $faviconName]);
-                    $uploads['favicon'] = asset('admin/assets/img/' . $faviconName);
+                    $faviconSetting->update(['value' => basename($uploadedFile['file_path'])]);
+                    $uploads['favicon'] = $uploadedFile['url'];
                 }
             }
 

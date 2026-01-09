@@ -41,7 +41,7 @@ class TicketAttachment extends Model
      */
     public function getFileUrlAttribute()
     {
-        return route('admin.tickets.attachment', $this->id);
+        return route('attachments.download', $this->id);
     }
 
     /**

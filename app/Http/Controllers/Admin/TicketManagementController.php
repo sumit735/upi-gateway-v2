@@ -8,12 +8,12 @@ use App\Models\TicketCategory;
 use App\Models\TicketReply;
 use App\Models\TicketAttachment;
 use App\Models\User;
+use App\Services\FileService;
 use App\Enums\PageEnum;
 use App\Enums\ActionEnum;
 use App\Enums\ScopeEnum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class TicketManagementController extends Controller
 {
@@ -141,7 +141,7 @@ class TicketManagementController extends Controller
                     'file_name' => $attachment->file_name,
                     'file_type' => $attachment->file_type,
                     'file_size' => round($attachment->file_size / 1024, 2) . ' KB',
-                    'file_url' => route('admin.tickets.attachment', $attachment->id),
+                    'file_url' => route('attachments.download', $attachment->id),
                     'is_image' => $attachment->isImage(),
                 ];
             }
@@ -177,30 +177,17 @@ class TicketManagementController extends Controller
      */
     private function uploadAttachment($ticket, $reply, $file)
     {
-        $fileName = $file->getClientOriginalName();
-        $fileSize = $file->getSize();
-        $mimeType = $file->getMimeType();
-        
-        // Determine file type
-        $fileType = 'document';
-        if (str_starts_with($mimeType, 'image/')) {
-            $fileType = 'image';
-        } elseif (str_starts_with($mimeType, 'video/')) {
-            $fileType = 'video';
-        }
+        $fileService = FileService::forTicketAttachments();
+        $uploadedFile = $fileService->upload($file, (string)$ticket->id);
 
-        // Store file
-        $path = $file->store('ticket-attachments/' . $ticket->id, 'public');
-
-        // Create attachment record with reply_id
-        return \App\Models\TicketAttachment::create([
+        return TicketAttachment::create([
             'ticket_id' => $ticket->id,
             'reply_id' => $reply ? $reply->id : null,
-            'file_name' => $fileName,
-            'file_path' => $path,
-            'file_type' => $fileType,
-            'mime_type' => $mimeType,
-            'file_size' => $fileSize,
+            'file_name' => $uploadedFile['file_name'],
+            'file_path' => $uploadedFile['file_path'],
+            'file_type' => $uploadedFile['file_type'],
+            'mime_type' => $uploadedFile['mime_type'],
+            'file_size' => $uploadedFile['file_size'],
         ]);
     }
 
@@ -279,36 +266,4 @@ class TicketManagementController extends Controller
             ->with('success', 'Ticket created successfully! Your ticket number is: ' . $ticket->ticket_number);
     }
 
-    /**
-     * Download or view ticket attachment
-     */
-    public function downloadAttachment(TicketAttachment $attachment)
-    {
-        $user = Auth::user();
-        $ticket = $attachment->ticket;
-
-        // Check if user has permission to view this ticket
-        $hasAllScope = $user->hasPermission(PageEnum::TICKETS->value, ActionEnum::VIEW->value, ScopeEnum::ALL->value);
-        $hasSelfScope = $user->hasPermission(PageEnum::TICKETS->value, ActionEnum::VIEW->value, ScopeEnum::SELF->value);
-
-        if (!$hasAllScope && !$hasSelfScope) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        // If user only has self scope, check if they own the ticket
-        if (!$hasAllScope && $ticket->user_id !== $user->id) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        // Check if file exists
-        if (!Storage::disk('public')->exists($attachment->file_path)) {
-            abort(404, 'File not found.');
-        }
-
-        $filePath = Storage::disk('public')->path($attachment->file_path);
-        return response()->file($filePath, [
-            'Content-Type' => $attachment->mime_type,
-            'Content-Disposition' => 'inline; filename="' . $attachment->file_name . '"',
-        ]);
-    }
 }

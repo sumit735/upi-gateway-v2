@@ -57,6 +57,15 @@ Route::prefix('admin')->group(function () {
     
 });
 
+// ================================
+// File Attachments Route (Application Level)
+// ================================
+Route::middleware(['auth'])->group(function () {
+    Route::get('/attachments/{attachment}', [\App\Http\Controllers\FileController::class, 'downloadAttachment'])
+        ->name('attachments.download')
+        ->where('attachment', '[0-9]+');
+});
+
 // Portal Routes (Authenticated)
 Route::prefix('portal')->group(function () {
     require __DIR__.'/portal.php';
