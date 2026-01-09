@@ -37,8 +37,14 @@
 				</li>
 				@endif
 				
-				<!-- My Tickets -->
-				@if(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::VIEW))
+				<!-- Tickets -->
+				@if(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::VIEW, \App\Enums\ScopeEnum::ALL))
+				<li>
+					<a href="{{ route('admin.tickets.index') }}">
+						<i class="ti ti-ticket"></i><span>All Tickets</span>
+					</a>
+				</li>
+				@elseif(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::VIEW, \App\Enums\ScopeEnum::SELF))
 				<li>
 					<a href="{{ route('admin.tickets.index') }}">
 						<i class="ti ti-ticket"></i><span>My Tickets</span>

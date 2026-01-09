@@ -1323,8 +1323,14 @@
                                 <span class="menu-arrow"></span>
                             </a>
                             <ul style="{{ request()->routeIs('tickets.*') || request()->routeIs('admin.tickets.*') ? 'display: block;' : '' }}">
-                                <!-- My Tickets - Available to users with TICKETS permission (any scope) -->
-                                @if(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::VIEW, \App\Enums\ScopeEnum::SELF))
+                                <!-- All Tickets - Admin only (prioritize ALL scope) -->
+                                @if(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::VIEW, \App\Enums\ScopeEnum::ALL))
+                                    <li class="{{ request()->routeIs('admin.tickets.index') || request()->routeIs('admin.tickets.show') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.tickets.index', ['status' => 'open']) }}"
+                                            class="{{ request()->routeIs('admin.tickets.index') || request()->routeIs('admin.tickets.show') ? 'active' : '' }}">All Tickets</a>
+                                    </li>
+                                @elseif(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::VIEW, \App\Enums\ScopeEnum::SELF))
+                                    <!-- My Tickets - Users with SELF scope only -->
                                     <li class="{{ request()->routeIs('admin.tickets.index') || request()->routeIs('admin.tickets.show') || request()->routeIs('admin.tickets.create') ? 'active' : '' }}">
                                         <a href="{{ route('admin.tickets.index') }}"
                                             class="{{ request()->routeIs('admin.tickets.index') || request()->routeIs('admin.tickets.show') || request()->routeIs('admin.tickets.create') ? 'active' : '' }}">My Tickets</a>
@@ -1341,14 +1347,6 @@
                                     <li class="{{ request()->routeIs('admin.tickets.create') ? 'active' : '' }}">
                                         <a href="{{ route('admin.tickets.create') }}"
                                             class="{{ request()->routeIs('admin.tickets.create') ? 'active' : '' }}">Create Ticket</a>
-                                    </li>
-                                @endif
-                                
-                                <!-- All Tickets - Admin only -->
-                                @if(can_page(\App\Enums\PageEnum::TICKETS, \App\Enums\ActionEnum::VIEW, \App\Enums\ScopeEnum::ALL))
-                                    <li class="{{ request()->routeIs('admin.tickets.index') || request()->routeIs('admin.tickets.show') ? 'active' : '' }}">
-                                        <a href="{{ route('admin.tickets.index') }}"
-                                            class="{{ request()->routeIs('admin.tickets.index') || request()->routeIs('admin.tickets.show') ? 'active' : '' }}">All Tickets</a>
                                     </li>
                                 @endif
                             </ul>

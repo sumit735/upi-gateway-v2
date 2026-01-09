@@ -109,7 +109,7 @@ class Ticket extends Model
      */
     public function scopeResolved($query)
     {
-        return $query->where('status', 'resolved');
+        return $query->where('status', 'closed');
     }
 
     /**

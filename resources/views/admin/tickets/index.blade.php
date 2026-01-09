@@ -81,8 +81,8 @@
                                             <i class="ti ti-checks fs-20"></i>
                                         </span>
                                     </div>
-                                    <p class="fw-medium fs-12 mb-1">Solved Tickets</p>
-                                    <h4>{{ $tickets->where('status', 'resolved')->count() }}</h4>
+                                    <p class="fw-medium fs-12 mb-1">Closed Tickets</p>
+                                    <h4>{{ $tickets->where('status', 'closed')->count() }}</h4>
                                 </div>
                             </div>
                         </div>

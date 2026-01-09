@@ -347,6 +347,8 @@
                 const formData = new FormData(editForm);
                 // method spoofing
                 formData.set('_method', 'PUT');
+                // convert to boolean
+                formData.set('is_active', (formData.get('is_active') == 'on' ? '1' : '0'));
 
                 const action = editForm.action;
                 fetch(action, {
