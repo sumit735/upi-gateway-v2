@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Ticket;
 use App\Models\TicketCategory;
 use App\Models\TicketReply;
+use App\Models\TicketAttachment;
 use App\Models\User;
 use App\Enums\PageEnum;
 use App\Enums\ActionEnum;
 use App\Enums\ScopeEnum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class TicketManagementController extends Controller
 {
@@ -139,7 +141,7 @@ class TicketManagementController extends Controller
                     'file_name' => $attachment->file_name,
                     'file_type' => $attachment->file_type,
                     'file_size' => round($attachment->file_size / 1024, 2) . ' KB',
-                    'file_url' => asset('storage/' . $attachment->file_path),
+                    'file_url' => route('admin.tickets.attachment', $attachment->id),
                     'is_image' => $attachment->isImage(),
                 ];
             }
@@ -275,5 +277,38 @@ class TicketManagementController extends Controller
 
         return redirect()->route('tickets.show', $ticket)
             ->with('success', 'Ticket created successfully! Your ticket number is: ' . $ticket->ticket_number);
+    }
+
+    /**
+     * Download or view ticket attachment
+     */
+    public function downloadAttachment(TicketAttachment $attachment)
+    {
+        $user = Auth::user();
+        $ticket = $attachment->ticket;
+
+        // Check if user has permission to view this ticket
+        $hasAllScope = $user->hasPermission(PageEnum::TICKETS->value, ActionEnum::VIEW->value, ScopeEnum::ALL->value);
+        $hasSelfScope = $user->hasPermission(PageEnum::TICKETS->value, ActionEnum::VIEW->value, ScopeEnum::SELF->value);
+
+        if (!$hasAllScope && !$hasSelfScope) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // If user only has self scope, check if they own the ticket
+        if (!$hasAllScope && $ticket->user_id !== $user->id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Check if file exists
+        if (!Storage::disk('public')->exists($attachment->file_path)) {
+            abort(404, 'File not found.');
+        }
+
+        $filePath = Storage::disk('public')->path($attachment->file_path);
+        return response()->file($filePath, [
+            'Content-Type' => $attachment->mime_type,
+            'Content-Disposition' => 'inline; filename="' . $attachment->file_name . '"',
+        ]);
     }
 }

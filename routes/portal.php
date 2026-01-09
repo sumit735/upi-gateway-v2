@@ -257,6 +257,10 @@ Route::middleware(['auth'])->group(function () {
             ->name('store')
             ->middleware(permission(PageEnum::TICKETS, ActionEnum::CREATE, ScopeEnum::SELF));
         
+        Route::get('/attachments/{attachment}', [\App\Http\Controllers\Admin\TicketManagementController::class, 'downloadAttachment'])
+            ->name('attachment')
+            ->middleware(permission(PageEnum::TICKETS, ActionEnum::VIEW));
+        
         Route::get('/{ticket}', [\App\Http\Controllers\Admin\TicketManagementController::class, 'show'])
             ->name('show')
             ->middleware(permission(PageEnum::TICKETS, ActionEnum::VIEW, ScopeEnum::ALL));
